@@ -1,4 +1,10 @@
 package entities;
+/*
+The Class Year divides each Field by its individual year
+A field will have a year attribute that contains everything done on it that year
+A field's year gets updated yearly(funny right)
+A field has a list of multiples years
+ */
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -117,6 +123,10 @@ public class Year{
         return this.year;
     }
 
+    /**
+     * Return the date the year started
+     * @return the Date the year started
+     */
     public Date getNewYearDate() {
         return this.new_year;
     }
@@ -129,67 +139,120 @@ public class Year{
         return this.crop;
     }
 
+    /**
+     * Return the date the crops got seeded/planted
+     * @return the Date the crop got planted
+     */
     public Date getSeeding_date(){
         return this.seeding_date;
     }
 
+    /**
+     * Sets the seeding date
+     */
     public void setSeeding_date( Date newSeedingDate){
         this.seeding_date = newSeedingDate;
     }
 
+    /**
+     * Returns the rate of seed application
+     * @return the seed application rate
+     */
     public double getSeeding_rate(){
         return this.seeding_rate;
     }
 
+    /**
+     * Sets the seeding rate
+     */
     public void setSeeding_rate(double newSeedingRate){
         this.seeding_rate = newSeedingRate;
     }
 
+    /**
+     * Returns the rate of fertilizer application
+     * @return the fertilizer application rate
+     */
     public double getFertilizer_rate(){
         return this.fertilizer_rate;
     }
 
+    /**
+     * Sets the fertilizer rate
+     */
     public void setFertilizer_rate(double newFertilizerRate){
         this.fertilizer_rate = newFertilizerRate;
     }
 
+    /**
+     * Returns the date of the most recent chemical application
+     * @return the date of the most recent chemical application
+     */
     public Date getSpraying_date(){
         return this.spraying_date;
     }
 
+    /**
+     * Returns the Chemical that was most recently sprayed
+     * @return a chemical
+     */
     public Chemical getChemical_sprayed(){
         return this.chemical_sprayed;
     }
 
+    /**
+     * Performs a spraying task by updating the chemical sprayed and updating
+     * the list of chemical sprayed
+     */
     public void sprayChemical(Chemical newChemical, Date newSprayingDate){
         this.chemical_sprayed = newChemical;
         this.spraying_date = newSprayingDate;
         Chemical_record newRecord = new Chemical_record(newChemical, newSprayingDate);
         this.chemical_records.add(newRecord);
-
     }
 
+    /**
+     * Add a task to the list of field tasks that have been done
+     */
     public void doTask(Task newTask, Date newTaskDate){
         Task_record newRecord = new Task_record(newTask, newTaskDate);
         this.task_records.add(newRecord);
     }
 
+    /**
+     * Sets the harvest date
+     */
     public void harvest( Date harvestDate){
         this.harvest_date = harvestDate;
     }
 
+    /**
+     * Obtains the harvest date
+     * @return the date of the harvest
+     */
     public Date getHarvest_date() {
         return harvest_date;
     }
 
+    /**
+     * Obtains the end of year date
+     * @return the date the year ends
+     */
     public Date getEnd_of_year(){
         return this.end_of_year;
     }
 
+    /**
+     * Sets the end of the year date
+     */
     public void endOfYear( Date endOfYearDate){
         this.end_of_year = endOfYearDate;
     }
 
+    /**
+     * Displays all the information on a field for a given year
+     * @return the field information for the year
+     */
     @Override
     public String toString() {
         return "Year{ " +
