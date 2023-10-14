@@ -107,6 +107,7 @@ public class Year{
     /**
      * Initializes a year
      * @param _year the current year
+     * @param new_year_date  the date the new year begins
      */
     public Year( int _year, Date new_year_date){
         year = _year;
@@ -149,6 +150,7 @@ public class Year{
 
     /**
      * Sets the seeding date
+     * @param newSeedingDate the date the crop was/will be seeded
      */
     public void setSeeding_date( Date newSeedingDate){
         this.seeding_date = newSeedingDate;
@@ -164,6 +166,7 @@ public class Year{
 
     /**
      * Sets the seeding rate
+     * @param newSeedingRate the rate at which the crop was seeded
      */
     public void setSeeding_rate(double newSeedingRate){
         this.seeding_rate = newSeedingRate;
@@ -179,6 +182,7 @@ public class Year{
 
     /**
      * Sets the fertilizer rate
+     * @param newFertilizerRate the rate at which the fertilizer was applied
      */
     public void setFertilizer_rate(double newFertilizerRate){
         this.fertilizer_rate = newFertilizerRate;
@@ -203,6 +207,8 @@ public class Year{
     /**
      * Performs a spraying task by updating the chemical sprayed and updating
      * the list of chemical sprayed
+     * @param newChemical The chemical to be added to the field
+     * @param newSprayingDate the date the chemical was/will be added to the field
      */
     public void sprayChemical(Chemical newChemical, Date newSprayingDate){
         this.chemical_sprayed = newChemical;
@@ -213,6 +219,8 @@ public class Year{
 
     /**
      * Add a task to the list of field tasks that have been done
+     * @param newTask The task to be added to the list after its done
+     * @param newTaskDate the date the new task was completed
      */
     public void doTask(Task newTask, Date newTaskDate){
         Task_record newRecord = new Task_record(newTask, newTaskDate);
@@ -221,6 +229,7 @@ public class Year{
 
     /**
      * Sets the harvest date
+     * @param harvestDate the date of the harvest
      */
     public void harvest( Date harvestDate){
         this.harvest_date = harvestDate;
@@ -230,24 +239,19 @@ public class Year{
      * Obtains the harvest date
      * @return the date of the harvest
      */
-    public Date getHarvest_date() {
-        return harvest_date;
-    }
+    public Date getHarvest_date() { return harvest_date; }
 
     /**
      * Obtains the end of year date
      * @return the date the year ends
      */
-    public Date getEnd_of_year(){
-        return this.end_of_year;
-    }
+    public Date getEnd_of_year(){ return this.end_of_year; }
 
     /**
      * Sets the end of the year date
+     * @param endOfYearDate the date the year ends
      */
-    public void endOfYear( Date endOfYearDate){
-        this.end_of_year = endOfYearDate;
-    }
+    public void endOfYear( Date endOfYearDate){ this.end_of_year = endOfYearDate; }
 
     /**
      * Displays all the information on a field for a given year

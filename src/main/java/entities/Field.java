@@ -54,32 +54,58 @@ public class Field
         this.years = new LinkedList<Year>();
     }
 
+    /**
+     * Sets the current year
+     * @param newYear The new year to be created
+     * @param newYearDate The date the new year was created
+     */
     public void newYear (int newYear, Date newYearDate){
         this.years.add(this.current_Year);
         this.current_Year = new Year(newYear, newYearDate);
     }
 
+    /**
+     * Returns the current year
+     * @return the current year
+     */
+    public Year getCurrent_Year(){ return this.current_Year; }
 
-    public String getID() {
-        return ID;
-    }
+    /**
+     * Returns the ID of the field
+     * @return the field ID
+     */
+    public String getID() { return ID; }
 
-    public String getName() {
-        return name;
-    }
+    /**
+     * Returns the field Name
+     * @return the Name of the field
+     */
+    public String getName() { return name; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    /**
+     * Updates the name of the field
+     * @param name the new name of the field
+     */
+    public void setName(String name) { this.name = name; }
 
-    public String getLocation() {
-        return location;
-    }
+    /**
+     * Returns the location of the field
+     * @return the location of the field
+     */
+    public String getLocation() { return location; }
 
+    /**
+     * Returns the size of the field
+     * @return the size of the field
+     */
     public double getSize() {
         return size;
     }
 
+    /**
+     * Updates the size of the field
+     * @param size the new size value to be updated
+     */
     public void setSize(double size) {
         this.size = size;
     }
