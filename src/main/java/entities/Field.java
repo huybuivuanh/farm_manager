@@ -1,4 +1,9 @@
 package entities;
+/*
+Class field that creates/instantiates a field object.
+Every field has a unique ID, a name, size, and location.
+Every field has a year that houses all the activities performed on the field that year
+*/
 
 import java.util.Date;
 import java.util.LinkedList;
