@@ -1,0 +1,19 @@
+>> Feild
+	(Attributes)
+	-ID
+	-Name
+	-location
+	-size
+	-current_year
+
+
+	(Methods)
+	constructor
+	newYear
+	get year
+	get ID
+	get name
+	set name
+	get location
+	get size
+	set size

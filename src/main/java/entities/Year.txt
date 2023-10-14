@@ -1,0 +1,33 @@
+Year
+
+	--year
+	--crop
+	--Seeding date
+	--seeding rate
+	--spraying date
+	--chemical sprayed
+	--list of chemical history and time
+	--list of jobs done and time
+	--harvest date
+	--end-of_year_date
+	--new_year_date
+
+	(Methods)
+	  constructor
+	  get year
+	  get crop
+	  get seeding date
+	  set seeding date
+	  get seeding rate
+	  set seeding rate
+	  get fertilizer rate
+	  set fertilizer rate
+	  get spraying date
+	  get chemical sprayed
+	  spray chemical (updates chemical sprayed and date sprayed ad updates)
+	  update task records
+	  get harvest date
+	  get end_of_year date
+	  get new_year date
+
+	  all info // toStrings!!
