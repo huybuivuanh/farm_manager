@@ -22,20 +22,49 @@ public class dataManager {
      * 2) build it using constructor;
      * 3) return it;
      */
-    public static dummy fetchobject(String classType, String classInfo1, String classInfo2) throws NoSuchFieldException {
+    public static dummy fetchObject(String classType, String classInfo1, String classInfo2) throws NoSuchFieldException {
         Document doc=  grab("FarmData", "farm_list", classType, classInfo1);
         //ObjectId id = new ObjectId(doc.getString("fieldName"), doc.get("_id", Document.class).getString("$oid"));
-        return new dummy( 31, doc.getString("fieldName"), doc.getString("$id"));
+
+        // the id is a special case in mongodb and needs to be put into an ObjectId, it cant be cast to string right away
+        ObjectId id = doc.getObjectId("_id");
+        return new dummy( 31, doc.getString("fieldName"), ""+ id);
     }
 
     // method2:
+
+    /**
+    * Translates an object into a JSON Document representation of itself.
+    */
+    public static Document translateToDoc ( dummy dum)
+    {
+        Document newDoc = new Document();
+        int dumsInt = dum.dummyHeight;
+        String dumsName = dum.dummyName;
+        String dumsId= dum.dummyId;
+
+        newDoc.append("fieldName", dumsName);
+        newDoc.append("acres", dumsInt);
+        Date added = new Date();
+        newDoc.append("Date Added:",added.getTime());
+        newDoc.append("fieldid", dumsId);
+        return newDoc;
+    }
+
+    // method2:
+//    public static void sync (dummy dum){
+//
+//    }
+//
 
 
     public static void main(String[] args) throws NoSuchFieldException {
         System.out.println(grab("FarmData","farm_list","fieldName","FieldGerald"));
 
-          dummy test =  fetchobject("fieldName", "FieldGerald", "randominfo");
+          dummy test =  fetchObject("fieldName", "FieldGerald", "randominfo");
           System.out.println(test);
+
+          System.out.println(translateToDoc(test));
 
 //        Document newDoc = new Document();
 //        newDoc.append("fieldName", "kamal's Field");
