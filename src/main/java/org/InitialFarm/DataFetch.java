@@ -49,7 +49,7 @@ public class DataFetch {
      * @param collection a string of the collection of the database you want to add to.
      */
 
-    public static void insertDoc(Document input,String databaseName,String collection) throws FileAlreadyExistsException{
+    public static void insertDoc(Document input,String databaseName,String collection) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
             database.getCollection(collection).insertOne(input);
@@ -59,12 +59,25 @@ public class DataFetch {
         }
     }
 
-    public static void AddID(String key, Object newdata, ObjectId newId,String databaseName,String collections){
+    /**
+     *
+     * @param key
+     * @param newdata
+     * @param newId
+     * @param databaseName
+     * @param collections
+     */
+    public static void addID(String key, Object newdata, ObjectId newId,String databaseName,String collections){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
             BasicDBObject query = new BasicDBObject();
             query.put("_id", newId);
-            database.getCollection(collections).find(query).first().append(key,newdata);
+            Document add = new Document();
+            add.append(key,newdata);
+            Document finaly = new Document();
+            finaly.append("$set",add);
+
+            database.getCollection(collections).findOneAndUpdate(query,finaly);
             mongoClient.close();
             System.out.println("Removed the database item successfully");
 
@@ -72,18 +85,34 @@ public class DataFetch {
         }
     }
 
-    public static void modifyID(String key, Object newdata, ObjectId newId,String databaseName,String collections){
+    /**
+     *
+     * @param docy a document containing ONLY key and values that you  want to modify
+     * @param newId
+     * @param databaseName
+     * @param collections
+     */
+    public static void modifyID(Document docy, ObjectId newId,String databaseName,String collections){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
             BasicDBObject query = new BasicDBObject();
             query.put("_id", newId);
-            Document mod = database.getCollection(collections).findOneAndUpdate(query);
+
+            database.getCollection(collections).findOneAndReplace(query,docy);
+
             mongoClient.close();
-            System.out.println("Removed the database item successfully");
+            System.out.println("modified data succesfully :)");
 
 
         }
     }
+
+    /**
+     *
+     * @param newId
+     * @param databaseName
+     * @param collections
+     */
     public static void remove(ObjectId newId,String databaseName,String collections){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
@@ -176,9 +205,10 @@ public class DataFetch {
         System.out.println(exists(newdocky,"FarmData","farm_list"));
 
 
-        ObjectId test = new ObjectId("652c5824a621762adc7e5a04");
+        ObjectId test = new ObjectId("652c63c018584b74f8bd31df");
 
-        remove(test,"FarmData","farm_list");
+        addID("fieldyNameyboi","This is a test for adding",test,"FarmData","farm_list");
+        // remove(test,"FarmData","farm_list");
 
 
     }
