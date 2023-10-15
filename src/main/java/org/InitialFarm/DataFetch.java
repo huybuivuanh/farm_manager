@@ -2,9 +2,8 @@ package org.InitialFarm;
 
 import com.mongodb.client.*;
 import org.bson.Document;
-import org.bson.json.JsonObject;
 
-import java.awt.*;
+import javax.print.Doc;
 import java.util.Date;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -24,14 +23,14 @@ public class DataFetch {
      * @return
      */
 
-    public static String grab(String databaseName,String collectionFind,String fieldName,String fieldValue) throws NoSuchFieldException {
+    public static Document grab(String databaseName, String collectionFind, String fieldName, String fieldValue) throws NoSuchFieldException {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
             MongoCollection<Document> collection = database.getCollection(collectionFind);
             Document doc = collection.find(eq(fieldName, fieldValue)).first();
             if (doc != null) {
                 mongoClient.close();
-                return doc.toJson();
+                return doc;
             } else {
                 mongoClient.close();
                 throw new NoSuchFieldException("no matching documents found.");
