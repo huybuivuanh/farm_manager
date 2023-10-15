@@ -42,6 +42,25 @@ public class DataFetch {
         }
     }
 
+
+    /**
+     *
+     * @param databaseName
+     * @param collectionFind
+     * @param newdata
+     * @return
+     */
+    public static Document grabByID(String databaseName, String collectionFind,ObjectId newdata){
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            MongoDatabase database = mongoClient.getDatabase(databaseName);
+
+            BasicDBObject query = new BasicDBObject();
+            query.put("_id", newdata);
+            return database.getCollection(collectionFind).find(query).first();
+
+
+        }
+    }
     /**
      * Adds a document to the database
      * @param input A Document containing the input data you want to send to the database
