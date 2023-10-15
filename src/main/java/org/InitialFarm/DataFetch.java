@@ -207,7 +207,6 @@ public class DataFetch {
 
         ObjectId test = new ObjectId("652c63c018584b74f8bd31df");
 
-        modifyID("fieldName","This is stupid and annoying",test,"FarmData","farm_list");
         addID("fieldyNameyboi","This is a test for adding",test,"FarmData","farm_list");
         // remove(test,"FarmData","farm_list");
 
