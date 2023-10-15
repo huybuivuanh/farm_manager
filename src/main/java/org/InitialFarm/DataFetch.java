@@ -49,7 +49,7 @@ public class DataFetch {
      * @param collection a string of the collection of the database you want to add to.
      */
 
-    public static void insertDoc(Document input,String databaseName,String collection) throws FileAlreadyExistsException{
+    public static void insertDoc(Document input,String databaseName,String collection) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
             database.getCollection(collection).insertOne(input);
