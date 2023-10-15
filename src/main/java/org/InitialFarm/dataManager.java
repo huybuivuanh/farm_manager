@@ -23,10 +23,9 @@ public class dataManager {
      * 3) return it;
      */
     public static dummy fetchobject(String classType, String classInfo1, String classInfo2) throws NoSuchFieldException {
-        String dataBaseEntry = grab("FarmData", "farm_list", classType, classInfo1);
-        Document doc = Document.parse(dataBaseEntry);
+        Document doc=  grab("FarmData", "farm_list", classType, classInfo1);
         //ObjectId id = new ObjectId(doc.getString("fieldName"), doc.get("_id", Document.class).getString("$oid"));
-        return new dummy( 31, doc.getString("fieldName"), doc.get("_id", Document.class).getString("$oid"));
+        return new dummy( 31, doc.getString("fieldName"), doc.getString("$id"));
     }
 
     // method2:
