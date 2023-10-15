@@ -162,6 +162,19 @@ public class DataFetch {
         }
         return false;
     }
+    public static boolean existsID(ObjectId idcheck,String databaseName,String collections){
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            MongoDatabase database = mongoClient.getDatabase(databaseName);
+            BasicDBObject query = new BasicDBObject();
+            query.put("_id", idcheck);
+
+            if (database.getCollection(collections).find(query).first() != null){
+                return true;
+            }
+
+        }
+        return false;
+    }
     /**
      *  Adds a collection to the database of your choice
      * @param databaseName a string of the database you want to add the collection to
