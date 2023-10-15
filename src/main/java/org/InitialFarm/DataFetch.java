@@ -40,11 +40,12 @@ public class DataFetch {
     }
 
     /**
-     *
-     * @param input
-     * @param databaseName
-     * @param collection
+     * Adds a document to the database
+     * @param input A Document containing the input data you want to send to the database
+     * @param databaseName a string containing the database name you wanty to add the document to
+     * @param collection a string of the collection of the database you want to add to.
      */
+
     public static void insertDoc(Document input,String databaseName,String collection){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
@@ -55,6 +56,11 @@ public class DataFetch {
         }
     }
 
+    /**
+     *  Adds a collection to the database of your choice
+     * @param databaseName a string of the database you want to add the collection to
+     * @param collection the name of the collection you want to add
+     */
     public static void addCollection(String databaseName, String collection){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
@@ -65,6 +71,10 @@ public class DataFetch {
         }
     }
 
+    /**
+     *
+     * @return List of all the databases
+     */
     public static ListDatabasesIterable<Document> getDatabaseList(){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
 
@@ -74,6 +84,12 @@ public class DataFetch {
 
         }
     }
+
+    /**
+     *
+     * @param databaseName String of the database you want to get all the collections of.
+     * @return a list containing all the collections of style document.
+     */
     public static ListCollectionsIterable<Document> getCollectionList(String databaseName){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
