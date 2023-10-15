@@ -52,10 +52,11 @@ public class dataManager {
     }
 
     // method2:
-//    public static void sync (dummy dum){
-//
-//    }
-//
+    public static void sync (dummy dum){
+        Document synced = translateToDoc(dum);
+
+    }
+
 
 
     public static void main(String[] args) throws NoSuchFieldException {
