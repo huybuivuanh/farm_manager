@@ -1,7 +1,9 @@
 package org.InitialFarm;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.*;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 
 import java.nio.file.FileAlreadyExistsException;
@@ -57,6 +59,18 @@ public class DataFetch {
         }
     }
 
+    public static void remove(ObjectId newId,String databaseName,String collections){
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            MongoDatabase database = mongoClient.getDatabase(databaseName);
+            BasicDBObject query = new BasicDBObject();
+            query.put("_id", newId);
+            database.getCollection(collections).findOneAndDelete(query);
+            mongoClient.close();
+            System.out.println("Removed the database item successfully");
+
+
+        }
+    }
     /**
      * Checks to see if a document is contained in a collection/database
      * @param input the document you want to check if it existys (Document)
@@ -67,6 +81,7 @@ public class DataFetch {
     public static boolean exists(Document input,String databaseName,String collections){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
+
             if (database.getCollection(collections).find(input).first() != null){
                 return true;
             }
@@ -90,7 +105,7 @@ public class DataFetch {
     }
 
     /**
-     *
+     * NOT FUNCTIONAL
      * @return List of all the databases
      */
     public static ListDatabasesIterable<Document> getDatabaseList(){
@@ -104,7 +119,7 @@ public class DataFetch {
     }
 
     /**
-     *
+     * NOT FUNCTIONAL
      * @param databaseName String of the database you want to get all the collections of.
      * @return a list containing all the collections of style document.
      */
@@ -135,10 +150,10 @@ public class DataFetch {
         insertDoc(newDoc,"FarmData","farm_list");
         System.out.println(exists(newdocky,"FarmData","farm_list"));
 
-        addCollection("FarmData","farm_bins");
 
-        System.out.println(getCollectionList("FarmData"));
-        System.out.println(getDatabaseList());
+        ObjectId test = new ObjectId("652c5824a621762adc7e5a04");
+
+        remove(test,"FarmData","farm_list");
 
 
     }
