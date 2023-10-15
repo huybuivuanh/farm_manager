@@ -87,20 +87,17 @@ public class DataFetch {
 
     /**
      *
-     * @param key
-     * @param newdata
+     * @param docy a document containing ONLY key and values that you  want to modify
      * @param newId
      * @param databaseName
      * @param collections
      */
-    public static void modifyID(String key, Object newdata, ObjectId newId,String databaseName,String collections){
+    public static void modifyID(Document docy, ObjectId newId,String databaseName,String collections){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
             BasicDBObject query = new BasicDBObject();
             query.put("_id", newId);
 
-            Document docy = new Document();
-            docy.append(key,newdata);
             database.getCollection(collections).findOneAndReplace(query,docy);
 
             mongoClient.close();
