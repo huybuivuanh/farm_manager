@@ -55,6 +55,19 @@ public class dataManager {
     public static void sync (dummy dum){
         Document synced = translateToDoc(dum);
 
+        if (exists(synced,"FarmData", "farm_list"))
+        {
+
+            modifyID();
+        }
+        else {
+            insertDoc(synced, " FarmData", "farm_list");
+        }
+
+
+        // check if exists
+        //if yes modify
+        // if not insert
     }
 
 
