@@ -59,6 +59,31 @@ public class DataFetch {
         }
     }
 
+    public static void AddID(String key, Object newdata, ObjectId newId,String databaseName,String collections){
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            MongoDatabase database = mongoClient.getDatabase(databaseName);
+            BasicDBObject query = new BasicDBObject();
+            query.put("_id", newId);
+            database.getCollection(collections).find(query).first().append(key,newdata);
+            mongoClient.close();
+            System.out.println("Removed the database item successfully");
+
+
+        }
+    }
+
+    public static void modifyID(String key, Object newdata, ObjectId newId,String databaseName,String collections){
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            MongoDatabase database = mongoClient.getDatabase(databaseName);
+            BasicDBObject query = new BasicDBObject();
+            query.put("_id", newId);
+            Document mod = database.getCollection(collections).findOneAndUpdate(query);
+            mongoClient.close();
+            System.out.println("Removed the database item successfully");
+
+
+        }
+    }
     public static void remove(ObjectId newId,String databaseName,String collections){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
