@@ -1,15 +1,17 @@
 package org.InitialFarm;
 
+import org.bson.types.ObjectId;
+
 public class dummy {
 
-    String dummyId;
+    ObjectId dummyId;
     int dummyHeight ;
     String dummyName;
 
-    public dummy( int dH1, String dN, String dId){
+    public dummy( int dH1, String dN, ObjectId dId){
         dummyHeight= dH1;
         dummyName = dN;
-        dummyId=dId;
+        dummyId= dId;
 
     }
 

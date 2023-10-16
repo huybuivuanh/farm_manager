@@ -28,7 +28,7 @@ public class dataManager {
 
         // the id is a special case in mongodb and needs to be put into an ObjectId, it cant be cast to string right away
         ObjectId id = doc.getObjectId("_id");
-        return new dummy( 31, doc.getString("fieldName"), ""+ id);
+        return new dummy( 31, doc.getString("fieldName"),  id);
     }
 
     // method2:
@@ -41,33 +41,32 @@ public class dataManager {
         Document newDoc = new Document();
         int dumsInt = dum.dummyHeight;
         String dumsName = dum.dummyName;
-        String dumsId= dum.dummyId;
+        ObjectId dumsId= dum.dummyId;
 
+        newDoc.append("_id", dumsId);
         newDoc.append("fieldName", dumsName);
         newDoc.append("acres", dumsInt);
         Date added = new Date();
         newDoc.append("Date Added:",added.getTime());
-        newDoc.append("fieldid", dumsId);
+
         return newDoc;
     }
 
     // method2:
     public static void sync (dummy dum){
         Document synced = translateToDoc(dum);
-
-        if (exists(synced,"FarmData", "farm_list"))
+        ObjectId id = synced.getObjectId("_id");
+        System.out.println("this is whats in synced: " + id);
+        System.out.println( existsID(synced.getObjectId("_id"),"FarmData", "farm_list"));
+        if (existsID(synced.getObjectId("_id"),"FarmData", "farm_list"))
         {
-
-            modifyID();
+            //Document old = grabByID("FarmData", "farmer_list",  synced.getObjectId("_id"));
+            modifyID(synced, synced.getObjectId("_id") ,"FarmData", "farm_list");
         }
         else {
-            insertDoc(synced, " FarmData", "farm_list");
+            insertDoc(synced, "FarmData", "farm_list");
         }
 
-
-        // check if exists
-        //if yes modify
-        // if not insert
     }
 
 
@@ -79,6 +78,13 @@ public class dataManager {
           System.out.println(test);
 
           System.out.println(translateToDoc(test));
+          sync(test);
+//        ObjectId tester = new ObjectId("652c789b68062b52deac5427");
+//
+//
+//        remove(tester,"FarmData","farm_list");
+
+
 
 //        Document newDoc = new Document();
 //        newDoc.append("fieldName", "kamal's Field");
