@@ -306,11 +306,11 @@ public class Task {
 
     /**
      * remove a staff from list with staff id
-     * @param id id of staff
+     * @param staff_id id of staff
      */
-    public void removeStaff(String id) {
+    public void removeStaff(String staff_id) {
         for (User user : staffList) {
-            if (user.getID().equals(id)) {
+            if (user.getID().equals(staff_id)) {
                 staffList.remove(user);
                 return;
             }
@@ -359,7 +359,7 @@ public class Task {
                 "\nStaffs: [");
         if (!staffList.isEmpty()) {
             for (User staff : staffList) {
-                result.append(staff.getName()).append(", ");
+                result.append(staff.getFirstName()).append(", ");
             }
         }
         result.append( "]");
@@ -372,8 +372,9 @@ public class Task {
      */
     public static void main(String[] args){
         Task task = new Task("1", "task 1", "task 1 description", new Date());
-        User staff1 = new User("ID_1", "John1");
-        User staff2 = new User("ID_2", "John2");
+        Date dob = new Date(2002 - 1900, Calendar.FEBRUARY, 2, 2, 2, 2);
+        User staff1 = new User("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob);
+        User staff2 = new User("ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob);
         task.addStaff(staff1);
         task.addStaff(staff2);
 
@@ -391,7 +392,7 @@ public class Task {
 
         StringBuilder result = new StringBuilder("[");
         for (User staff : task.getStaffList()) {
-            result.append(staff.getName()).append(", ");
+            result.append(staff.getFirstName()).append(", ");
         }
         System.out.println("Staff List: " + result + "]\n");
         System.out.println("Detailed Status:\n" + task.status);
@@ -399,8 +400,9 @@ public class Task {
 
 
         // testing setters
-        User staff3 = new User("ID_3", "John 3");
+        User staff3 = new User("ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob);
         Date specificDate = new Date(2111 - 1900, Calendar.JANUARY, 1, 1, 1, 1);
+
         task.setID("2");
         task.setTaskName("task 2");
         task.setDescription("task 2 description");
@@ -410,7 +412,7 @@ public class Task {
         task.setInProgress(true);
         task.addStaff(staff3);
         task.removeStaff(staff2.getID());
-        task.removeAllStaffs();
+//        task.removeAllStaffs();
 
         System.out.println("\n");
         System.out.println("Task ID: " + task.getID());
@@ -425,7 +427,7 @@ public class Task {
 
         result = new StringBuilder();
         for (User staff : task.getStaffList()) {
-            result.append(staff.getName()).append(", ");
+            result.append(staff.getFirstName()).append(", ");
         }
         System.out.println("Staff List: [" + result + "]\n");
         System.out.println("Detailed Status:\n" + task.status);
