@@ -34,7 +34,7 @@ public class Field
     /**
      * The information of previous years
      */
-    private LinkedList<Year> years;
+    private final LinkedList<Year> years;
 
 
     /**
@@ -43,9 +43,8 @@ public class Field
      * @param fName    the name of the animal being created
      * @param size     the alphanumeric ID of the animal being created
      * @param location the type of animal as a string
-     * @param years    the list of years
      */
-    public Field(String ID, String fName, double size, String location, LinkedList<Year> years)
+    public Field(String ID, String fName, double size, String location)
     {
         this.ID = ID;
         this.name = fName;
@@ -108,5 +107,34 @@ public class Field
      */
     public void setSize(double size) {
         this.size = size;
+    }
+
+    /**
+     * Returns the list of years under a field
+     * @return the list of years
+     */
+    public LinkedList<Year> getYears() {
+        return this.years;
+    }
+
+    /**
+     *  Returns the information about a year
+     * @param year the year in question
+     * @return all the field information for a given year
+     */
+    public String toString(Year year) {
+        return "Field{" +
+                "ID='" + ID + '\'' +
+                ", name='" + name + '\'' +
+                ", location='" + location + '\'' +
+                ", size=" + size +
+                ", current_Year=" + current_Year +
+                ", year info = " + year.toString() +
+                ", years=" + years +
+                '}';
+    }
+
+    public static void main(String[] args){
+
     }
 }
