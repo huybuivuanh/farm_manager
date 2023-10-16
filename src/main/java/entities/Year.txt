@@ -1,33 +1,37 @@
-Year
-
-	--year
-	--crop
-	--Seeding date
-	--seeding rate
-	--spraying date
-	--chemical sprayed
-	--list of chemical history and time
-	--list of jobs done and time
-	--harvest date
-	--end-of_year_date
-	--new_year_date
+>>Year
+	-int year
+	-Crop crop
+	-Date seeding_date
+	-Double seeding_rate
+	-Date spraying_date
+	-double fertilizer_rate;
+	-Chemical chemical_sprayed
+	-LinkedList<Chemical_record> chemical_records
+	-LinkedList<Task_record> task_records;
+	-Date harvest_date
+	-Date end_of_year
+	-Date new_year
 
 	(Methods)
-	  constructor
-	  get year
-	  get crop
-	  get seeding date
-	  set seeding date
-	  get seeding rate
-	  set seeding rate
-	  get fertilizer rate
-	  set fertilizer rate
-	  get spraying date
-	  get chemical sprayed
-	  spray chemical (updates chemical sprayed and date sprayed ad updates)
-	  update task records
-	  get harvest date
-	  get end_of_year date
-	  get new_year date
-
-	  all info // toStrings!!
+	 constructor( int _year, Date new_year_date)
+	 int getYear()
+	 Date getNewYearDate()
+	 Crop getCrop()
+	 void setCrop(Crop crop)
+	 Date getSeedingDate()
+	 void setSeedingDate(Date newDate)
+	 double getSeedingRate()
+	 void setSeedingRate(double newRate)
+	 double getFertilizerRate()
+	 void setFertilizerRate()
+	 Date getSprayingDate()
+	 Chemical getChemical_sprayed()
+	 Chemical spray_chemical(Chemical newChemical, Date newDate)
+	 LinkedList<Chemical_record> getChemical_records()
+	 void doTask(Task newTask, Date newTaskDate)
+	 LinkedList<Task_record> getTask_records()
+	 void harvest( Date harvestDate)
+	 Date getHarvest_date()
+	 Date getEnd_of_year()
+	 void endOfYear( Date endOfYearDate)
+	 public String toString()

@@ -141,6 +141,12 @@ public class Year{
     }
 
     /**
+     * Updates the crop to be planted on the field that year
+     * @param crop the crop to be planted that year
+     */
+    public void setCrop(Crop crop) { this.crop = crop; }
+
+    /**
      * Return the date the crops got seeded/planted
      * @return the Date the crop got planted
      */
@@ -218,6 +224,12 @@ public class Year{
     }
 
     /**
+     * Returns the chemical history of the field
+     * @return the chemical history complete with dates
+     */
+    public LinkedList<Chemical_record> getChemical_records() { return chemical_records; }
+
+    /**
      * Add a task to the list of field tasks that have been done
      * @param newTask The task to be added to the list after its done
      * @param newTaskDate the date the new task was completed
@@ -225,6 +237,14 @@ public class Year{
     public void doTask(Task newTask, Date newTaskDate){
         Task_record newRecord = new Task_record(newTask, newTaskDate);
         this.task_records.add(newRecord);
+    }
+
+    /**
+     * Returns the Task history of the field
+     * @return the task history of the field complete with dates
+     */
+    public LinkedList<Task_record> getTask_records() {
+        return task_records;
     }
 
     /**
