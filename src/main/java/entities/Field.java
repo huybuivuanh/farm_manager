@@ -1,6 +1,7 @@
 package entities;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.LinkedList;
 
 public class Field
@@ -58,7 +59,7 @@ public class Field
      * @param newYear The new year to be created
      * @param newYearDate The date the new year was created
      */
-    public void newYear(int newYear, Date newYearDate){
+    public void newYear(int newYear, LocalDate newYearDate){
         if ( this.current_Year != null ) {this.years.add(this.current_Year);}
         this.current_Year = new Year(newYear, newYearDate);
         this.years.add(this.current_Year);
@@ -224,7 +225,7 @@ public class Field
         }
 
         reason = "Testing years list after constructor";
-        int yearResult = Field1.years.size();
+        int yearResult = Field1.getYears().size();
         if (yearResult != 0)
         {
             System.out.println("Error: Expected: 0, Obtained: " + yearResult
@@ -234,7 +235,7 @@ public class Field
 
         reason = "Testing getCurrent_year() with  newYear()";
         int year = 2013;
-        Date new_date = new Date(2013, 8, 23);
+        LocalDate new_date = LocalDate.of(2013, Calendar.AUGUST, 23);
         Field1.newYear(year, new_date);
         int test_year = Field1.getCurrent_Year().getYear();
         if (test_year != year)
@@ -244,7 +245,7 @@ public class Field
         }
 
         reason = "Testing years list after newYear()";
-        yearResult = Field1.years.size();
+        yearResult = Field1.getYears().size();
         if (yearResult != 1)
         {
             System.out.println("Error: Expected: 1, Obtained: " + yearResult
@@ -259,13 +260,12 @@ public class Field
                     + " (" + reason + ")");
         }
 
-
         reason = "Testing toString(year)";
         result = Field1.toString(Field1.getCurrent_Year());
-        expected ="""
+        expected = """
                 Name = Field2  ID = F123  Location = Northwest  Size = 233.0 acres.  Year = 2013
                 Year{ year = 2013,
-                 new year starting date = Tue Sep 23 00:00:00 CST 3913,
+                 new year starting date = 2013-07-23,
                  crop = null,
                  seeding_date = null,
                  seeding_rate = 0.0,
@@ -274,7 +274,7 @@ public class Field
                  chemical_records = [],
                  task_records = [],
                  harvest_date = null,
-                 end_of_year = null}
+                 end_of_year = null  }
                 """;
         if (!result.equals(expected))
         {
@@ -286,7 +286,7 @@ public class Field
         result = Field1.toString();
         expected = """
                 Name = Field2  ID = F123  Location = Northwest  Size = 233.0 acres.  Years = [Year{ year = 2013,
-                 new year starting date = Tue Sep 23 00:00:00 CST 3913,
+                 new year starting date = 2013-07-23,
                  crop = null,
                  seeding_date = null,
                  seeding_rate = 0.0,
@@ -295,7 +295,7 @@ public class Field
                  chemical_records = [],
                  task_records = [],
                  harvest_date = null,
-                 end_of_year = null}]}""";
+                 end_of_year = null  }]}""";
         if (!result.equals(expected))
         {
             System.out.println("Error: Expected: \n" + expected + " Obtained: \n" + result

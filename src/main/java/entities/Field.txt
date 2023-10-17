@@ -10,7 +10,7 @@
 
 	(Methods)
 	-constructor(String ID, String fName, double size, String location)
-	-void newYear(int newYear, Date newYearDate)
+	-void newYear(int newYear, LocalDate newYearDate)
 	-Year getCurrent_year()
 	-LinkedList<Year> getYears()
 	-String get ID()
