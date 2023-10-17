@@ -1,4 +1,4 @@
->>Year
+>>entities.Year
 	-int year
 	-Crop crop
 	-Date seeding_date

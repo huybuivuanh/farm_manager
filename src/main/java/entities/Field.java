@@ -120,19 +120,6 @@ public class Field
     }
 
     /**
-     *  Returns all information about a field
-     * @return all the field information
-     */
-    public String toString() {
-        return "Name = " + name +
-                "  ID = " + ID +
-                "  Location = " + location +
-                "  Size = " + size + " acres." +
-                "  Years = " + years +
-                '}';
-    }
-
-    /**
      *  Returns the information about a year
      * @param year the year in question
      * @return all the field information for the year
@@ -142,8 +129,8 @@ public class Field
                 "  ID = " + ID +
                 "  Location = " + location +
                 "  Size = " + size + " acres." +
-                "  Year = " + year.getYear() +
-                "\n" + year + "\n";
+                "\nYear = " +
+                year + "\n";
     }
 
     public static void main(String[] args){
@@ -263,39 +250,21 @@ public class Field
         reason = "Testing toString(year)";
         result = Field1.toString(Field1.getCurrent_Year());
         expected = """
-                Name = Field2  ID = F123  Location = Northwest  Size = 233.0 acres.  Year = 2013
-                Year{ year = 2013,
+                Name = Field2  ID = F123  Location = Northwest  Size = 233.0 acres.
+                Year = 2013,
                  new year starting date = 2013-07-23,
                  crop = null,
                  seeding_date = null,
-                 seeding_rate = 0.0,
-                 fertilizer_rate = 0.0,
+                 seeding_rate = 0.0lbs/acre,
+                 fertilizer_rate = 0.0lbs/acre,
                  spraying_date = null,
-                 chemical_records = [],
-                 task_records = [],
                  harvest_date = null,
-                 end_of_year = null  }
+                 end_of_year = null,
+                 chemical_records
+                 \s
+                 task_records
+                 \s
                 """;
-        if (!result.equals(expected))
-        {
-            System.out.println("Error: Expected: \n" + expected + " Obtained: \n" + result
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing toString()";
-        result = Field1.toString();
-        expected = """
-                Name = Field2  ID = F123  Location = Northwest  Size = 233.0 acres.  Years = [Year{ year = 2013,
-                 new year starting date = 2013-07-23,
-                 crop = null,
-                 seeding_date = null,
-                 seeding_rate = 0.0,
-                 fertilizer_rate = 0.0,
-                 spraying_date = null,
-                 chemical_records = [],
-                 task_records = [],
-                 harvest_date = null,
-                 end_of_year = null  }]}""";
         if (!result.equals(expected))
         {
             System.out.println("Error: Expected: \n" + expected + " Obtained: \n" + result
