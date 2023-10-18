@@ -5,8 +5,11 @@ Every field has a unique ID, a name, size, and location.
 Every field has a year that houses all the activities performed on the field that year
 */
 
+import org.bson.Document;
+
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 
 public class Field
@@ -122,6 +125,37 @@ public class Field
      */
     public LinkedList<Year> getYears() {
         return this.years;
+    }
+
+    /**
+     * Translates an object into a JSON Document representation of itself.
+     * @param field : a field object that is going to be translated into a doc
+     */
+    public Document translateToDoc (Field field)
+    {
+        Document newDoc = new Document();
+
+        //  ObjectId fieldId= field.fieldId; => this is for the database
+        String field_id = field.getID();
+        String field_name= field.getName();
+        Double field_size= field.getSize() ;
+        String field_location = field.getLocation();
+        // not sure how to include year below
+        LinkedList<Year> field_years = field.years;
+
+
+        // might need to add the objectID here still
+        newDoc.append("_id", field_id);
+        newDoc.append("field_name", field_name);
+        newDoc.append("field_size", field_size);
+        newDoc.append("field_location", field_location);
+        //not sure how to include years below
+        newDoc.append("field_years", field_years);
+
+        Date added = new Date();
+        newDoc.append("Date Added:",added.getTime());
+
+        return newDoc;
     }
 
     /**

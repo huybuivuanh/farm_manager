@@ -21,21 +21,22 @@ public class Employee extends User{
 
     /**
      * Translates an object into a JSON Document representation of itself.
+     * @param emp : an employee object that is going to be translated into a doc
      */
     public Document translateToDoc (Employee emp)
     {
         Document newDoc = new Document();
 
-        String emp_id = emp.ID;
+        //  ObjectId employee_Id= emp.employeeId; => this is for the database
+
+        String emp_id = emp.getID();
         String emp_first_name= emp.getFirstName();
         String emp_last_name= emp.getLastName() ;
         Date emp_dob = emp.getDOB();
         String emp_user_email= emp.getEmail();
         String emp_user_password= emp.getPassword();
 
-
-       //  ObjectId dumsId= emp.dummyId;
-
+        // might need to add the objectID here still
         newDoc.append("_id", emp_id);
         newDoc.append("first_name", emp_first_name);
         newDoc.append("last_name", emp_last_name);
