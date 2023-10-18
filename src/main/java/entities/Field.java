@@ -5,6 +5,8 @@ Every field has a unique ID, a name, size, and location.
 Every field has a year that houses all the activities performed on the field that year
 */
 
+import org.bson.types.ObjectId;
+
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -16,6 +18,11 @@ public class Field
      * The unique ID of the field
      */
     private final String ID;
+
+    /**
+     * The unique ID of the field to link to the DataBase
+     */
+    private final ObjectId dbID;
 
     /**
      * The name of the field
@@ -57,6 +64,7 @@ public class Field
         this.size = size;
         this.location = location;
         this.years = new LinkedList<>();
+        this.dbID = null;
     }
 
     /**
