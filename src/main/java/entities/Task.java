@@ -1,12 +1,13 @@
 package entities;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Task {
+public class Task implements DatabaseInterface<Task>{
     /**
      * task ID
      */
@@ -41,7 +42,6 @@ public class Task {
      * list of staffs working on this task
      */
     private ArrayList<User> staffList = new ArrayList<>();
-
 
     /**
      * helper class to keep track of the status
@@ -350,11 +350,35 @@ public class Task {
 
 
     /**
-     * Translates an object into a JSON Document representation of itself.
-     * @param task : an employee object that is going to be translated into a doc
+     * get a string representation of task
+     * @return string representation of task
      */
-    public Document translateToDoc (Task task)
-    {
+    public String toString(){
+        StringBuilder result = new StringBuilder("Task ID: " + ID +
+                "\nTask name: " + taskName +
+                "\nTask Description: " + description +
+                "\nCreated: " + date +
+                "\nDue: " + dueDate +
+                "\nStatus: " + getStatus() +
+                "\nStaffs: [");
+        if (!staffList.isEmpty()) {
+            for (User staff : staffList) {
+                result.append(staff.getFirstName()).append(", ");
+            }
+        }
+        result.append( "]");
+        return result.toString();
+    }
+
+
+
+    /**
+     * Translates an object into a JSON Document representation of itself.
+     * @param task : an employee object that is going to be translated into a doc.
+     * @return: a document that is a representation of the task passed.
+     */
+    @Override
+    public Document classToDoc(Task task) {
         Document newDoc = new Document();
 
         //  ObjectId task_Id= task.taskId; => this is for the database
@@ -382,25 +406,45 @@ public class Task {
     }
 
     /**
-     * get a string representation of task
-     * @return string representation of task
+     * @return
      */
-    public String toString(){
-        StringBuilder result = new StringBuilder("Task ID: " + ID +
-                "\nTask name: " + taskName +
-                "\nTask Description: " + description +
-                "\nCreated: " + date +
-                "\nDue: " + dueDate +
-                "\nStatus: " + getStatus() +
-                "\nStaffs: [");
-        if (!staffList.isEmpty()) {
-            for (User staff : staffList) {
-                result.append(staff.getFirstName()).append(", ");
-            }
-        }
-        result.append( "]");
-        return result.toString();
+    @Override
+    public Document docToClass() {
+        return null;
     }
+
+    /**
+     *
+     */
+    @Override
+    public void save() {
+
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void sync() {
+
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public ObjectId getDbId() {
+        return null;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isDatabase() {
+        return false;
+    }
+
 
     /**
      * testing

@@ -31,7 +31,6 @@ public class dataManager {
     // construct of same and return back to the developer. They should set their class as this new class.
     // IF it does exist (ID is not null). THen we need update that ID position with whatever information it has.
     //
-
     public <T extends DatabaseInterface<T>> T saveClass(T test) throws NoSuchFieldException {
         ObjectId newID = null;
         Document newDoc= null;
@@ -128,8 +127,6 @@ public class dataManager {
             newObj =  new Task(objectDoc.getString("_id"), objectDoc.getString("task_name"),
                     objectDoc.getString("task_description"), objectDoc.getDate("task_dueDate"));
         }
-
-
         return (T)newObj;
     }
 

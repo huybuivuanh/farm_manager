@@ -6,13 +6,14 @@ Every field has a year that houses all the activities performed on the field tha
 */
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 
-public class Field
+public class Field implements DatabaseInterface<Field>
 {
 
     /**
@@ -129,10 +130,11 @@ public class Field
 
     /**
      * Translates an object into a JSON Document representation of itself.
-     * @param field : a field object that is going to be translated into a doc
+     * @param field : a field object that is going to be translated into a doc.
+     * @return : a document representation of the field object being passed.
      */
-    public Document translateToDoc (Field field)
-    {
+    @Override
+    public Document classToDoc(Field field) {
         Document newDoc = new Document();
 
         //  ObjectId fieldId= field.fieldId; => this is for the database
@@ -156,6 +158,46 @@ public class Field
         newDoc.append("Date Added:",added.getTime());
 
         return newDoc;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public Document docToClass() {
+        return null;
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void save() {
+
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void sync() {
+
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public ObjectId getDbId() {
+        return null;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isDatabase() {
+        return false;
     }
 
     /**
