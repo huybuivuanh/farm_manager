@@ -1,5 +1,9 @@
 package entities;
 
+import org.InitialFarm.dummy;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,6 +17,39 @@ public class Employee extends User{
         String userType = this.getClass().getSimpleName();
         return "User type: " + userType + "\n" + super.toString();
     }
+
+
+    /**
+     * Translates an object into a JSON Document representation of itself.
+     */
+    public Document translateToDoc (Employee emp)
+    {
+        Document newDoc = new Document();
+
+        String emp_id = emp.ID;
+        String emp_first_name= emp.getFirstName();
+        String emp_last_name= emp.getLastName() ;
+        Date emp_dob = emp.getDOB();
+        String emp_user_email= emp.getEmail();
+        String emp_user_password= emp.getPassword();
+
+
+       //  ObjectId dumsId= emp.dummyId;
+
+        newDoc.append("_id", emp_id);
+        newDoc.append("first_name", emp_first_name);
+        newDoc.append("last_name", emp_last_name);
+        newDoc.append("dob", emp_dob);
+        newDoc.append("user_email", emp_user_email);
+        newDoc.append("user_password", emp_user_password);
+        Date added = new Date();
+        newDoc.append("Date Added:",added.getTime());
+
+        return newDoc;
+    }
+
+
+
     /**
      * testing
      * @param args args

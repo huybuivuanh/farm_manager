@@ -25,7 +25,6 @@ public class dataManager {
     public static dummy fetchObject(String classType, String classInfo1, String classInfo2) throws NoSuchFieldException {
         Document doc=  grab("FarmData", "farm_list", classType, classInfo1);
         //ObjectId id = new ObjectId(doc.getString("fieldName"), doc.get("_id", Document.class).getString("$oid"));
-
         // the id is a special case in mongodb and needs to be put into an ObjectId, it cant be cast to string right away
         ObjectId id = doc.getObjectId("_id");
         return new dummy( 31, doc.getString("fieldName"),  id);
