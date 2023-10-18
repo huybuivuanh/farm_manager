@@ -32,12 +32,12 @@ public class dataManager {
     // IF it does exist (ID is not null). THen we need update that ID position with whatever information it has.
     //
 
-    public <T extends DatabaseInterface<T>> T saveClass(T test){
-        ObjectId newID;
+    public <T extends DatabaseInterface<T>> T saveClass(T test) throws NoSuchFieldException {
+        ObjectId newID = null;
         Document newDoc= null;
         // Option below represents type.
         //1 is employee, 2 is owner,3 is field, 4 is task
-        String classType ;
+        String classType = null;
 
 
         if (test.getDbId() == null){
@@ -71,30 +71,9 @@ public class dataManager {
                 System.out.println("not of type Employee, owner, field, or task");
             }
         }
+        assert classType != null;
+        return fetchObject(classType, newDoc,newID);
 
-        //So far, ive inserted the object in its right place, and grabbed it by id from whereever it was.
-        //All i have to do now is to create it back in the type based on its class type
-        // I have an indication of the type (option), the ID, and the document.
-        // just need to build the document as an object of the class
-//
-//        switch (option){
-//            case 1:
-//                return Employee ... ;
-//                break;
-//            case 2:
-//                return Owner ... ;
-//                break;
-//            case 3:
-//                return Field ... ;
-//                break;
-//            case 4:
-//                return Task ... ;
-//                break;
-//            default:
-//                return null;
-//                break;
-//        }
-        return null;
     }
     // didnt get to work on this
     public static <T extends DatabaseInterface<T>> Boolean adderMethod(T test){
