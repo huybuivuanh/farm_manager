@@ -1,4 +1,6 @@
 package org.InitialFarm;
+import entities.DatabaseInterface;
+import entities.Employee;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -22,6 +24,30 @@ public class dataManager {
      * 2) build it using constructor;
      * 3) return it;
      */
+
+
+    // Initialize a class  Does this have an ID yes or no?
+    // No it doesnt. Okay re-initalize this class inside the database. Pull out what the database Makes as a new class
+    // construct of same and return back to the developer. They should set their class as this new class.
+    // IF it does exist (ID is not null). THen we need update that ID position with whatever information it has.
+    //
+
+    public static DatabaseInterface saveClass(DatabaseInterface test){
+        if (test.getID() == null){
+
+        }
+
+        return null;
+    }
+    public static Boolean adderMethod(DatabaseInterface test){
+
+        if (test instanceof Employee){
+            Document toDatabase = test.classToDoc();
+
+        }
+        return null;
+
+    }
     public static dummy fetchObject(String classType, String classInfo1, String classInfo2) throws NoSuchFieldException {
         Document doc=  grab("FarmData", "farm_list", classType, classInfo1);
         //ObjectId id = new ObjectId(doc.getString("fieldName"), doc.get("_id", Document.class).getString("$oid"));

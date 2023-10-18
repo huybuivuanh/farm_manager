@@ -6,6 +6,9 @@ A field's year gets updated yearly(funny right)
 A field has a list of multiples years
  */
 
+import org.InitialFarm.Chemical;
+import org.InitialFarm.Crop;
+
 import java.time.LocalDate;
 //import java.util.Date;
 import java.util.Calendar;
