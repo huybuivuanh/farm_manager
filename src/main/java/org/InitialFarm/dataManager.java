@@ -31,6 +31,14 @@ public class dataManager {
     // construct of same and return back to the developer. They should set their class as this new class.
     // IF it does exist (ID is not null). THen we need update that ID position with whatever information it has.
     //
+
+    public static DatabaseInterface saveClass(DatabaseInterface test){
+        if (test.getID() == null){
+
+        }
+
+        return null;
+    }
     public static Boolean adderMethod(DatabaseInterface test){
 
         if (test instanceof Employee){

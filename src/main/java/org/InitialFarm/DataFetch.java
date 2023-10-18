@@ -68,12 +68,16 @@ public class DataFetch {
      * @param collection a string of the collection of the database you want to add to.
      */
 
-    public static void insertDoc(Document input,String databaseName,String collection) {
+    public static ObjectId insertDoc(Document input,String databaseName,String collection) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
             database.getCollection(collection).insertOne(input);
+            database.getCollection(collection);
+            database.getCollection(collection).find(input);
+            ObjectId output = input.getObjectId("_id");
             mongoClient.close();
             System.out.println("Document inserted to database successfully!");
+            return output;
 
         }
     }
@@ -233,7 +237,8 @@ public class DataFetch {
 
         Document newdocky = new Document();
         newdocky.append("big test","It is quite testy");
-        insertDoc(newDoc,"FarmData","farm_list");
+        ObjectId test5 = insertDoc(newDoc,"FarmData","farm_list");
+        System.out.println(test5);
         System.out.println(exists(newdocky,"FarmData","farm_list"));
 
 
