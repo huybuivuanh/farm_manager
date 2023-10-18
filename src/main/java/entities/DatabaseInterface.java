@@ -5,19 +5,18 @@ import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 
-public interface DatabaseInterface {
-    public Document classToDoc();
-
+public interface DatabaseInterface<T> {
+    public Document classToDoc(T inter);
 
     public Document docToClass();
+
+
 
     public void save();
 
     public void sync();
-
-    public ObjectId getID();
-
-
+    //changed below to getDbId bcz other classes have ID and getID methods was leading to class
+     public ObjectId getDbId();
 
 
     public boolean isDatabase();

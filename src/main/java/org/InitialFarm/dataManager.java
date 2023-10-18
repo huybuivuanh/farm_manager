@@ -1,10 +1,10 @@
 package org.InitialFarm;
-import entities.DatabaseInterface;
-import entities.Employee;
+import entities.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.util.Date;
+import java.util.Objects;
 
 import static org.InitialFarm.DataFetch.*;
 
@@ -32,31 +32,128 @@ public class dataManager {
     // IF it does exist (ID is not null). THen we need update that ID position with whatever information it has.
     //
 
-    public static DatabaseInterface saveClass(DatabaseInterface test){
-        if (test.getID() == null){
+    public <T extends DatabaseInterface<T>> T saveClass(T test){
+        ObjectId newID;
+        Document newDoc= null;
+        // Option below represents type.
+        //1 is employee, 2 is owner,3 is field, 4 is task
+        String classType ;
 
+
+        if (test.getDbId() == null){
+            Document doc=  test.classToDoc(test);
+
+
+            if ( test instanceof Employee){
+                newID= insertDoc(doc, "FarmData", "employee_list");
+                newDoc= grabByID("FarmData", "employee_list", newID);
+                classType= "Employee";}
+
+            // Was getting an error that this ill always be wrong, that's because owner inherits from employee,
+            // so if it is an owner, it will never get here. Left comment. not sure how you want to handle this
+
+//            else if ( test instanceof Owner){
+//              newID=   insertDoc(doc, "FarmData", "owner_list");
+//              newDoc= grabByID("FarmData", "employee_list", newID);
+//              classType= "Owner";}
+
+            else if ( test instanceof Field){
+                newID=  insertDoc(doc, "FarmData","farm_list");
+                newDoc= grabByID("FarmData", "farm_list", newID);
+                classType = "Field";}
+
+            else if ( test instanceof Task){
+                newID=  insertDoc(doc, "FarmData","task_list");
+                newDoc= grabByID("FarmData", "task_list", newID);
+                classType = "Task";}
+
+            else {
+                System.out.println("not of type Employee, owner, field, or task");
+            }
         }
 
+        //So far, ive inserted the object in its right place, and grabbed it by id from whereever it was.
+        //All i have to do now is to create it back in the type based on its class type
+        // I have an indication of the type (option), the ID, and the document.
+        // just need to build the document as an object of the class
+//
+//        switch (option){
+//            case 1:
+//                return Employee ... ;
+//                break;
+//            case 2:
+//                return Owner ... ;
+//                break;
+//            case 3:
+//                return Field ... ;
+//                break;
+//            case 4:
+//                return Task ... ;
+//                break;
+//            default:
+//                return null;
+//                break;
+//        }
         return null;
     }
-    public static Boolean adderMethod(DatabaseInterface test){
+    // didnt get to work on this
+    public static <T extends DatabaseInterface<T>> Boolean adderMethod(T test){
 
         if (test instanceof Employee){
-            Document toDatabase = test.classToDoc();
-
+            Document toDatabase = test.classToDoc(test);
         }
         return null;
 
     }
-    public static dummy fetchObject(String classType, String classInfo1, String classInfo2) throws NoSuchFieldException {
-        Document doc=  grab("FarmData", "farm_list", classType, classInfo1);
-        //ObjectId id = new ObjectId(doc.getString("fieldName"), doc.get("_id", Document.class).getString("$oid"));
-        // the id is a special case in mongodb and needs to be put into an ObjectId, it cant be cast to string right away
-        ObjectId id = doc.getObjectId("_id");
-        return new dummy( 31, doc.getString("fieldName"),  id);
+
+
+
+    // old fetch object
+//    public static dummy fetchObject(String classType, String classInfo1, String classInfo2) throws NoSuchFieldException {
+//        Document doc=  grab("FarmData", "farm_list", classType, classInfo1);
+//        //ObjectId id = new ObjectId(doc.getString("fieldName"), doc.get("_id", Document.class).getString("$oid"));
+//        // the id is a special case in mongodb and needs to be put into an ObjectId, it cant be cast to string right away
+//        ObjectId id = doc.getObjectId("_id");
+//        return new dummy( 31, doc.getString("fieldName"),  id);
+//    }
+
+    // new fetch object
+    public  <T extends DatabaseInterface<T>> T fetchObject(String classType, Document objectDoc, ObjectId id) throws NoSuchFieldException {
+
+        Object newObj = null;
+
+        if (classType.equals("Employee"))
+        {
+            newObj =  new Employee(objectDoc.getString("_id"), objectDoc.getString("user_email"),
+                    objectDoc.getString("user_password"), objectDoc.getString("first_name"),
+                    objectDoc.getString("last_name"), objectDoc.getDate("dob") );
+        }
+
+        else if (classType.equals("Owner"))
+        {
+            newObj =  new Owner(objectDoc.getString("_id"), objectDoc.getString("user_email"),
+                    objectDoc.getString("user_password"), objectDoc.getString("first_name"),
+                    objectDoc.getString("last_name"), objectDoc.getDate("dob") );
+        }
+
+//        else if (classType.equals("Field"))
+//        {
+//            // unsure about years and how that's gonna work with constructor and db
+//        }
+
+        else if (classType.equals("Task")){
+
+            // below is another property that we saved into db, but isnt part of constructor ?? idk
+            // "task_date"
+
+            newObj =  new Task(objectDoc.getString("_id"), objectDoc.getString("task_name"),
+                    objectDoc.getString("task_description"), objectDoc.getDate("task_dueDate"));
+        }
+
+
+        return (T)newObj;
     }
 
-    // method2:
 
     /**
     * Translates an object into a JSON Document representation of itself.
@@ -99,11 +196,13 @@ public class dataManager {
     public static void main(String[] args) throws NoSuchFieldException {
         System.out.println(grab("FarmData","farm_list","fieldName","FieldGerald"));
 
-          dummy test =  fetchObject("fieldName", "FieldGerald", "randominfo");
-          System.out.println(test);
+        // old version of fetch object run only once
+         //  dummy test =  fetchObject("fieldName", "FieldGerald", "randominfo");
+          //System.out.println(test);
+          //System.out.println(translateToDoc(test));
+         // sync(test);
 
-          System.out.println(translateToDoc(test));
-          sync(test);
+
 //        ObjectId tester = new ObjectId("652c789b68062b52deac5427");
 //
 //

@@ -1,13 +1,12 @@
 package entities;
 
-import org.InitialFarm.dummy;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.util.Calendar;
 import java.util.Date;
 
-public class Employee extends User{
+public class Employee extends User implements DatabaseInterface<Employee>{
     public Employee(String id,String user_email, String user_password, String first_name, String last_name, Date dob){
         super(id, user_email, user_password, first_name, last_name, dob);
     }
@@ -21,10 +20,11 @@ public class Employee extends User{
 
     /**
      * Translates an object into a JSON Document representation of itself.
-     * @param emp : an employee object that is going to be translated into a doc
+     * @param emp : an employee to be translated into a document
+     * @return : a document representation of the employee object passed
      */
-    public Document translateToDoc (Employee emp)
-    {
+    @Override
+    public Document classToDoc(Employee emp) {
         Document newDoc = new Document();
 
         //  ObjectId employee_Id= emp.employeeId; => this is for the database
@@ -48,6 +48,47 @@ public class Employee extends User{
 
         return newDoc;
     }
+
+    /**
+     * @return
+     */
+    @Override
+    public Document docToClass() {
+        return null;
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void save() {
+
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void sync() {
+
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public ObjectId getDbId() {
+        return null;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isDatabase() {
+        return false;
+    }
+
 
 
 
@@ -81,4 +122,6 @@ public class Employee extends User{
 //        staff.removeAllTasks();
         System.out.println(staff);
     }
+
+
 }
