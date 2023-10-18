@@ -237,8 +237,9 @@ public class DataFetch {
         System.out.println(exists(newdocky,"FarmData","farm_list"));
 
 
-        ObjectId test = new ObjectId("652c63c018584b74f8bd31df");
+        ObjectId test = new ObjectId("652c0dfc5dfa02f36944c6c6");
 
+        System.out.println("testing exist: " + existsID(test,"FarmData","farm_list"));
         addID("fieldyNameyboi","This is a test for adding",test,"FarmData","farm_list");
         // remove(test,"FarmData","farm_list");
 
