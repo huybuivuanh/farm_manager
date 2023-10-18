@@ -1,8 +1,11 @@
 package entities;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class Task {
     /**
@@ -23,12 +26,12 @@ public class Task {
     /**
      * date created
      */
-    private final Date date;
+    private final LocalDateTime date;
 
     /**
      * task due date
      */
-    private Date dueDate;
+    private LocalDateTime dueDate;
 
     /**
      * status of task
@@ -38,7 +41,7 @@ public class Task {
     /**
      * list of staffs working on this task
      */
-    private ArrayList<User> staffList = new ArrayList<>();
+    private final ArrayList<User> staffList;
 
 
     /**
@@ -48,20 +51,20 @@ public class Task {
 
         // status and date attributes
         private boolean isCompleted = false;
-        private Date completionDate;
+        private LocalDateTime completionDate;
         private boolean inProgress = false;
-        private Date inProgressDate;
+        private LocalDateTime inProgressDate;
         private boolean isPaused = false;
 
-        private ArrayList<Date> pauseHistory = new ArrayList<>();
+        private final ArrayList<LocalDateTime> pauseHistory;
 
-        private Status(){}
+        private Status(){ pauseHistory = new ArrayList<>();}
 
         public boolean isCompleted() {
             return isCompleted;
         }
 
-        public Date getCompletionDate() {
+        public LocalDateTime getCompletionDate() {
             return completionDate;
         }
 
@@ -69,7 +72,7 @@ public class Task {
             return inProgress;
         }
 
-        public Date getInProgressDate() {
+        public LocalDateTime getInProgressDate() {
             return inProgressDate;
         }
 
@@ -77,7 +80,7 @@ public class Task {
             return isPaused;
         }
 
-        public ArrayList<Date> getPauseHistory() {
+        public ArrayList<LocalDateTime> getPauseHistory() {
             return pauseHistory;
         }
 
@@ -87,10 +90,10 @@ public class Task {
             if (isPaused == completed) {
                 setPaused(!completed);
             }
-            setCompletionDate(new Date());
+            setCompletionDate(LocalDateTime.now());
         }
 
-        public void setCompletionDate(Date completion_date) {
+        public void setCompletionDate(LocalDateTime completion_date) {
             completionDate = completion_date;
         }
 
@@ -100,10 +103,10 @@ public class Task {
             if (isPaused() == in_progress){
                 setPaused(!in_progress);
             }
-            setInProgressDate(new Date());
+            setInProgressDate(LocalDateTime.now());
         }
 
-        public void setInProgressDate(Date inProgressDate) {
+        public void setInProgressDate(LocalDateTime inProgressDate) {
             this.inProgressDate = inProgressDate;
         }
 
@@ -111,10 +114,13 @@ public class Task {
             isPaused = paused;
             inProgress = !paused;
             isCompleted = !paused;
-            pauseHistory.add(new Date());
+            pauseHistory.add(LocalDateTime.now());
         }
 
         public String toString(){
+            DateTimeFormatter formatter
+                    = DateTimeFormatter.ofPattern(
+                    "yyyy-MM-dd HH:mm a");
             String status;
             if (isCompleted()){
                 status = "Completed";
@@ -128,12 +134,19 @@ public class Task {
             else{
                 status = "Incomplete";
             }
+            String formatProgressDate = null;
+            String formatCompletionDate = null;
+            if(getInProgressDate() != null)
+            {formatProgressDate = getInProgressDate().format(formatter);}
+            if (getCompletionDate() != null)
+            {formatCompletionDate = getCompletionDate().format(formatter);}
             StringBuilder result = new StringBuilder("Status: " + status +
-                    "\nIn Progress Date: " + getInProgressDate() +
-                    "\nCompletion Date: " + getCompletionDate() +
-                    "\nPause History: [" );
-            for (Date date : getPauseHistory()){
-                result.append(date).append(", ");
+                            "\nIn Progress Date: " + formatProgressDate +
+                            "\nCompletion Date: " + formatCompletionDate +
+                            "\nPause History: [");
+            for (LocalDateTime dateTime : getPauseHistory()){
+                String formatPauseHistory = dateTime.format(formatter);
+                result.append(formatPauseHistory).append(", ");
             }
             result.append("]");
             return result.toString();
@@ -147,13 +160,14 @@ public class Task {
      * @param descr task description
      * @param due_date task due date
      */
-    public Task(String id, String task_name, String descr, Date due_date){
+    public Task(String id, String task_name, String descr, LocalDateTime due_date){
         ID = id;
         taskName = task_name;
         description = descr;
         dueDate = due_date;
         status = new Status();
-        date = new Date();
+        date = LocalDateTime.now();
+        staffList = new ArrayList<>();
     }
 
     /**
@@ -184,7 +198,7 @@ public class Task {
      * get task creation date
      * @return creation date
      */
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
@@ -192,7 +206,7 @@ public class Task {
      * get task due date
      * @return task due date
      */
-    public Date getDueDate() {
+    public LocalDateTime getDueDate() {
         return dueDate;
     }
 
@@ -258,7 +272,7 @@ public class Task {
      * set due date
      * @param dueDate due date
      */
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -291,8 +305,8 @@ public class Task {
      * @return true/false
      */
     public boolean isOverDue(){
-        Date today = new Date();
-        return dueDate.before(today);
+        LocalDateTime today = LocalDateTime.now();
+        return dueDate.isBefore(today);
     }
 
     /**
@@ -320,7 +334,7 @@ public class Task {
     /**
      * remove all staffs from the list
      */
-    public void removeAllStaffs(){
+    public void removeAllStaff(){
         staffList.clear();
     }
 
@@ -362,6 +376,8 @@ public class Task {
                 result.append(staff.getFirstName()).append(", ");
             }
         }
+        else
+            result.append(" empty ");
         result.append( "]");
         return result.toString();
     }
@@ -371,8 +387,8 @@ public class Task {
      * @param args args
      */
     public static void main(String[] args){
-        Task task = new Task("1", "task 1", "task 1 description", new Date());
-        Date dob = new Date(2002 - 1900, Calendar.FEBRUARY, 2, 2, 2, 2);
+        Task task = new Task("1", "task 1", "task 1 description", LocalDateTime.now());
+        LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY, 2);
         User staff1 = new User("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob);
         User staff2 = new User("ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob);
         task.addStaff(staff1);
@@ -401,7 +417,7 @@ public class Task {
 
         // testing setters
         User staff3 = new User("ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob);
-        Date specificDate = new Date(2111 - 1900, Calendar.JANUARY, 1, 1, 1, 1);
+        LocalDateTime specificDate = LocalDateTime.of(2012, Month.JANUARY, 2, 0, 32, 43);
 
         task.setID("2");
         task.setTaskName("task 2");
@@ -431,5 +447,8 @@ public class Task {
         }
         System.out.println("Staff List: [" + result + "]\n");
         System.out.println("Detailed Status:\n" + task.status);
+
+        task.removeAllStaff();
+        System.out.println("Staff List: [" + result + "]\n");
     }
 }
