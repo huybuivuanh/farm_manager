@@ -18,7 +18,7 @@ public class Task {
     /**
      * The unique ID of the Task for the DataBase
      */
-    private final ObjectId dbID;
+    private final ObjectId dbID = null;
 
     /**
      * task name
@@ -175,7 +175,6 @@ public class Task {
         status = new Status();
         date = LocalDateTime.now();
         staffList = new ArrayList<>();
-        dbID = null;
     }
 
     /**

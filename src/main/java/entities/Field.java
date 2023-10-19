@@ -22,7 +22,7 @@ public class Field
     /**
      * The unique ID of the field to link to the DataBase
      */
-    private final ObjectId dbID;
+    private final ObjectId dbID = null;
 
     /**
      * The name of the field
@@ -64,7 +64,6 @@ public class Field
         this.size = size;
         this.location = location;
         this.years = new LinkedList<>();
-        this.dbID = null;
     }
 
     /**
