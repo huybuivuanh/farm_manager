@@ -86,9 +86,9 @@ public class Task {
 
         public void setCompleted(boolean completed) {
             isCompleted = completed;
-            inProgress = !completed;
-            if (isPaused == completed) {
-                setPaused(!completed);
+            inProgress = false;
+            if (completed && isPaused){
+                setPaused(false);
             }
             setCompletionDate(LocalDateTime.now());
         }
@@ -99,9 +99,9 @@ public class Task {
 
         public void setInProgress(boolean in_progress) {
             inProgress = in_progress;
-            isCompleted = !inProgress;
-            if (isPaused() == in_progress){
-                setPaused(!in_progress);
+            isCompleted = false;
+            if (in_progress && isPaused) {
+                setPaused(false);
             }
             setInProgressDate(LocalDateTime.now());
         }
@@ -112,8 +112,10 @@ public class Task {
 
         public void setPaused(boolean paused) {
             isPaused = paused;
-            inProgress = !paused;
-            isCompleted = !paused;
+            if (paused){
+                inProgress = false;
+                isCompleted = false;
+            }
             pauseHistory.add(LocalDateTime.now());
         }
 
@@ -359,6 +361,29 @@ public class Task {
         return taskStatus;
     }
 
+    public Status getStatusObject(){
+        return status;
+    }
+
+    // this method may not be necessary
+    public void setStatus(String status){
+        if (status.equals("Completed")){
+            markAsCompleted(true);
+        }
+        else if (status.equals("Paused")) {
+            pauseTask(true);
+        }
+        else if (status.equals("In Progress")){
+            setInProgress(true);
+        }
+        else if (status.equals("Incomplete")){
+            markAsCompleted(false);
+        }
+        else{
+            System.out.println("Status parameter must be (Completed/Paused/In Progress/Incomplete");
+        }
+    }
+
     /**
      * get a string representation of task
      * @return string representation of task
@@ -411,7 +436,7 @@ public class Task {
             result.append(staff.getFirstName()).append(", ");
         }
         System.out.println("Staff List: " + result + "]\n");
-        System.out.println("Detailed Status:\n" + task.status);
+        System.out.println("Detailed Status:\n" + task.getStatusObject());
 
 
 
@@ -423,9 +448,10 @@ public class Task {
         task.setTaskName("task 2");
         task.setDescription("task 2 description");
         task.setDueDate(specificDate);
+
+        task.setInProgress(true);
         task.pauseTask(true);
         task.markAsCompleted(true);
-        task.setInProgress(true);
         task.addStaff(staff3);
         task.removeStaff(staff2.getID());
 //        task.removeAllStaffs();
@@ -446,7 +472,7 @@ public class Task {
             result.append(staff.getFirstName()).append(", ");
         }
         System.out.println("Staff List: [" + result + "]\n");
-        System.out.println("Detailed Status:\n" + task.status);
+        System.out.println("Detailed Status:\n" + task.getStatusObject().toString());
 
         task.removeAllStaff();
         System.out.println("Staff List: [" + result + "]\n");
