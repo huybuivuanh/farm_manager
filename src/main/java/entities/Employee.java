@@ -1,10 +1,12 @@
 package entities;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Calendar;
-import java.util.Date;
 
 public class Employee extends User{
-    public Employee(String id,String user_email, String user_password, String first_name, String last_name, Date dob){
+    public Employee(String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob){
         super(id, user_email, user_password, first_name, last_name, dob);
     }
 
@@ -18,12 +20,12 @@ public class Employee extends User{
      * @param args args
      */
     public static void main(String[] args){
-        Date dob = new Date(2002 - 1900, Calendar.FEBRUARY, 2, 2, 2, 2);
+        LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY,2);
         Employee staff = new Employee("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob);
-        Task task1 = new Task("1", "task 1", "task 1 description", new Date());
-        Task task2 = new Task("2", "task 2", "task 2 description", new Date());
-        Task task3 = new Task("3", "task 3", "task 3 description", new Date());
-        Date specificDate = new Date(2111 - 1900, Calendar.JANUARY, 1, 1, 1, 1);
+        Task task1 = new Task("1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        Task task2 = new Task("2", "task 2", "task 2 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        Task task3 = new Task("3", "task 3", "task 3 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        LocalDate specificDate = LocalDate.of(2110, Month.JANUARY, 1);
 
         // testing getters method with toString();
         System.out.println(staff + "\n");
