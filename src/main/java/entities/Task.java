@@ -1,5 +1,7 @@
 package entities;
 
+import org.bson.types.ObjectId;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -12,6 +14,11 @@ public class Task {
      * task ID
      */
     private String ID;
+
+    /**
+     * The unique ID of the Task for the DataBase
+     */
+    private final ObjectId dbID = null;
 
     /**
      * task name

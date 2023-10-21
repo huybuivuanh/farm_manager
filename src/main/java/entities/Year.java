@@ -86,9 +86,6 @@ public class Year{
         private Task getTask(){ return this.task; }
         private LocalDate getCompletedDate(){ return this.completedDate; }
     }
-    private static class Crop{}
-
-    private static class Chemical{}
 
 
     /**
