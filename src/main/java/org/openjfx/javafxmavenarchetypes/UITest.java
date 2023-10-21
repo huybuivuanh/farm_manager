@@ -1,4 +1,4 @@
-package org.InitialFarm;
+package org.openjfx.javafxmavenarchetypes;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,6 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import org.InitialFarm.Crop;
 //HBox root = new HBox();
 //root.setStyle("-fx-background-color: Green");
 //Button grainButton = new Button("Make it Grain");

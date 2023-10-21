@@ -1,4 +1,4 @@
-package entities;
+package org.entities;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;

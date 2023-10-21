@@ -1,4 +1,4 @@
-package entities;
+package org.entities;
 /*
 The Class Year divides each Field by its individual year
 A field will have a year attribute that contains everything done on it that year
@@ -10,7 +10,6 @@ import org.InitialFarm.Chemical;
 import org.InitialFarm.Crop;
 
 import java.time.LocalDate;
-//import java.util.Date;
 import java.util.Calendar;
 import java.util.LinkedList;
 
