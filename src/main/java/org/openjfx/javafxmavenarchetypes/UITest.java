@@ -123,7 +123,7 @@ public class UITest extends Application {
         DatePicker dueDate = new DatePicker();
         Button submitTask = new Button("submit");
 
-        userBox.getChildren().addAll(taskNameF,descriptionF,dueDate,submitTask);
+        userBox.getChildren().addAll(idInput,taskNameF,descriptionF,dueDate,submitTask);
 
         // Finished add pop up
         RectButton addTask = new RectButton("","add Task");
