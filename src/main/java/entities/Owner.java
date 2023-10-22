@@ -6,8 +6,8 @@ import java.time.Month;
 import java.util.Calendar;
 
 public class Owner extends Employee{
-    public Owner(String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob){
-        super(id, user_email, user_password, first_name, last_name, dob);
+    public Owner(String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob, Boolean ownership){
+        super(id, user_email, user_password, first_name, last_name, dob, ownership);
     }
 
     @Override
@@ -21,7 +21,7 @@ public class Owner extends Employee{
      */
     public static void main(String[] args){
         LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY, 2);
-        Owner staff = new Owner("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob);
+        Owner staff = new Owner("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob, true);
         Task task1 = new Task("1", "task 1", "task 1 description",  LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
         Task task2 = new Task("2", "task 2", "task 2 description",  LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
         Task task3 = new Task("3", "task 3", "task 3 description",  LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
