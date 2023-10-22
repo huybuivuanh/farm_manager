@@ -12,11 +12,22 @@ public class TaskBar extends Pane {
 
     private RectButton viewCompleted;
 
+    RectButton current;
+
+
     public TaskBar(){
         VBox root = new VBox();
 
         root.getChildren().addAll(addTask,editTask,markComplete,viewCompleted);
 
+
+    }
+
+    public void setController(BarController controller){
+        addTask.setOnMouseClicked(e ->{
+            current = addTask;
+            controller.addTaskSelect();
+        });
 
     }
 
