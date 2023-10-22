@@ -1,5 +1,6 @@
 package entities;
 
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
@@ -8,8 +9,9 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
-public class Task {
+public class Task implements DatabaseInterface<Task> {
     /**
      * task ID
      */
@@ -49,6 +51,79 @@ public class Task {
      * list of staffs working on this task
      */
     private final ArrayList<User> staffList;
+
+    /**
+     * Translates an object into a JSON Document representation of itself.
+     * @param task : an employee object that is going to be translated into a doc.
+     * @return: a document that is a representation of the task passed.
+     */
+    @Override
+    public Document classToDoc(Task task) {
+        Document newDoc = new Document();
+
+        //  ObjectId task_Id= task.taskId; => this is for the database
+
+        String task_id = task.getID();
+        String task_name= task.getTaskName();
+        String task_description= task.getDescription();
+        LocalDateTime task_date= task.getDate();
+        LocalDateTime task_dueDate = task.getDueDate();
+        String task_status= task.getStatus();
+
+
+        // might need to add the objectID here still
+        newDoc.append("_id", task_id);
+        newDoc.append("task_name", task_name);
+        newDoc.append("task_description", task_description);
+        newDoc.append("task_date", task_dueDate);
+        newDoc.append("task_dueDate", task_dueDate);
+        // not sure how to include status below
+        //newDoc.append("task_status", task_status);
+        Date added = new Date();
+        newDoc.append("Date Added:",added.getTime());
+
+        return newDoc;
+        }
+
+    /**
+     * @return
+     */
+    @Override
+    public Document docToClass() {
+        return null;
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void save() {
+
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void sync() {
+
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public ObjectId getDbId() {
+        return null;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isDatabase() {
+        return false;
+    }
 
 
     /**
