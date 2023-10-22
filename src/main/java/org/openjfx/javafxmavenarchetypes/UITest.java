@@ -23,6 +23,7 @@ import org.InitialFarm.Crop;
 import org.entities.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -111,18 +112,28 @@ public class UITest extends Application {
 
 
         //Making the add pop up
+
+        VBox userBox = new VBox(30);
+        Scene addUserScene = new Scene(userBox,300,250);
+
         Label albel = new Label("Popup");
+        TextField idInput = new TextField("Input ID (optional)");
         TextField taskNameF = new TextField("Please up taskName");
         TextField descriptionF = new TextField("Description");
-        TextField dueDate = new TextField("due date");
+        DatePicker dueDate = new DatePicker();
         Button submitTask = new Button("submit");
-        Popup addTaskPop = new Popup();
-        addTaskPop.getContent().addAll(albel,taskNameF,descriptionF,dueDate,submitTask);
+
+        userBox.getChildren().addAll(taskNameF,descriptionF,dueDate,submitTask);
 
         // Finished add pop up
         RectButton addTask = new RectButton("","add Task");
         addTask.setOnMouseClicked(e ->{
-            addTaskPop.show(stage);
+           stage.setScene(addUserScene);
+        });
+        submitTask.setOnMouseClicked(e ->{
+            Task newTask = new Task(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
+            taskData.add(newTask);
+            stage.setScene(taskScene);
         });
         RectButton editTask = new RectButton("","edit task");
 
