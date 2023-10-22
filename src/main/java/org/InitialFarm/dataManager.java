@@ -96,6 +96,17 @@ public class dataManager {
 //        return new dummy( 31, doc.getString("fieldName"),  id);
 //    }
 
+    public <T extends DatabaseInterface<T>> T fetchObjectById(String classType, ObjectId id)throws NoSuchFieldException{
+
+        Object newObj = null;
+
+        if (classType.equals("Field")){
+            Document test = grabByID("FarmData","farm_list",id);
+            Field newfield = new Field(id.toString(),test.getString("fieldName"),Double.parseDouble(test.getString("acres")),test.getString("location"));
+            return (T) newfield;
+        }
+        return null;
+    }
     // new fetch object
     public  <T extends DatabaseInterface<T>> T fetchObject(String classType, Document objectDoc, ObjectId id) throws NoSuchFieldException {
 
