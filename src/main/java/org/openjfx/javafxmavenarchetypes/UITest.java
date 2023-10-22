@@ -142,7 +142,7 @@ public class UITest extends Application {
 
         taskTable.setItems(taskData);
         taskTable.getColumns().addAll(taskIDCol,taskName,taskDescription,taskDueDate);
-        taskPage.getChildren().addAll(taskTable);
+        taskPage.getChildren().addAll(topBar,taskTable);
         //Making out crop page
 
         final Label label = new Label("Crop Table");

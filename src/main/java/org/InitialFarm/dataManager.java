@@ -5,6 +5,7 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.entities.DatabaseInterface;
 
+import java.time.ZoneId;
 import java.util.Date;
 
 import static org.InitialFarm.DataFetch.*;
@@ -116,14 +117,14 @@ public class dataManager {
         {
             newObj =  new Employee(objectDoc.getString("_id"), objectDoc.getString("user_email"),
                     objectDoc.getString("user_password"), objectDoc.getString("first_name"),
-                    objectDoc.getString("last_name"), objectDoc.getDate("dob") );
+                    objectDoc.getString("last_name"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate() );
         }
 
         else if (classType.equals("Owner"))
         {
             newObj =  new Owner(objectDoc.getString("_id"), objectDoc.getString("user_email"),
                     objectDoc.getString("user_password"), objectDoc.getString("first_name"),
-                    objectDoc.getString("last_name"), objectDoc.getDate("dob") );
+                    objectDoc.getString("last_name"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate() );
         }
 
 //        else if (classType.equals("Field"))
@@ -137,7 +138,7 @@ public class dataManager {
             // "task_date"
 
             newObj =  new Task(objectDoc.getString("_id"), objectDoc.getString("task_name"),
-                    objectDoc.getString("task_description"), objectDoc.getDate("task_dueDate"));
+                    objectDoc.getString("task_description"), objectDoc.getDate("task_dueDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         }
         return (T)newObj;
     }
