@@ -19,6 +19,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.InitialFarm.Crop;
+import org.entities.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 //HBox root = new HBox();
 //root.setStyle("-fx-background-color: Green");
 //Button grainButton = new Button("Make it Grain");
@@ -40,16 +46,31 @@ public class UITest extends Application {
                     new Person("Michael", "Brown", "michael.brown@example.com")
             );
     private TableView<Crop> grainTable = new TableView<Crop>();
-    private final ObservableList<Crop>  cropData =
+    private final ObservableList<Crop> cropData =
             FXCollections.observableArrayList(
-                    new Crop("Canola","LibertyLink",55),
-                    new Crop("Canola","RoundupReady",54),
-                    new Crop("Durum","Navigator", 60),
-                    new Crop("Red Lentil", "Clearfield",58),
-                    new Crop("Wheat & Barley","All the other Grains",45)
+                    new Crop("Canola", "LibertyLink", 55),
+                    new Crop("Canola", "RoundupReady", 54),
+                    new Crop("Durum", "Navigator", 60),
+                    new Crop("Red Lentil", "Clearfield", 58),
+                    new Crop("Wheat & Barley", "All the other Grains", 45)
 
             );
 
+    private TableView<Task> taskTable = new TableView<Task>();
+
+
+    /**
+     * new Task("124124", "Do the tasky", "This is my description", LocalDateTime.now()),
+     *                     new Task("1243263456", "Do the tasky2", "My second description", LocalDateTime.now())
+     */
+    private ObservableList<Task> taskData =
+            FXCollections.observableArrayList(
+                    new Task("124124", "Do the tasky", "This is my description", LocalDateTime.now()),
+                    new Task("1243263456", "Do the tasky2", "My second description", LocalDateTime.now())
+            );
+
+
+    private TableView<TaskBar> bars = new TableView<TaskBar>();
     public static void main(String[] args) {
         launch(args);
     }
@@ -68,12 +89,8 @@ public class UITest extends Application {
         VBox taskSelector = new VBox(30);
         Scene MenuScene = new Scene(taskSelector,300,250);
 
-        VBox taskPage = new VBox(30);
-        Scene taskScene = new Scene(taskPage,300,250);
-
-        Button btasks = new Button();
-        btasks.setText("Tasks");
-
+        TableColumn taskID = new TableColumn("Task ID");
+        taskID.setMinWidth(130);
 
         Button bfield = new Button();
         bfield.setText("Fields");
@@ -82,9 +99,50 @@ public class UITest extends Application {
         Button bbins = new Button();
         bbins.setText("Bins");
 
+        VBox taskPage = new VBox(30);
+        Scene taskScene = new Scene(taskPage,300,250);
+
+        Button btasks = new Button();
+        btasks.setText("Tasks");
+        btasks.setOnAction(e -> stage.setScene(taskScene));
         taskSelector.getChildren().addAll(btasks,bfield,bbins);
         taskSelector.setAlignment(Pos.CENTER);
 
+        RectButton addTask = new RectButton("#00ffff","add Task");
+        RectButton editTask = new RectButton("","edit task");
+        RectButton markComplete = new RectButton("", "Mark Complete");
+
+        RectButton viewCompleted = new RectButton("","newView");
+        HBox topBar= new HBox();
+        topBar.getChildren().addAll(addTask,editTask,markComplete);
+
+        TableColumn taskIDCol = new TableColumn("Task ID");
+        taskIDCol.setMinWidth(130);
+        taskIDCol.setCellValueFactory(
+                new PropertyValueFactory<Task, String>("ID")
+        );
+
+        TableColumn taskName = new TableColumn("Task Name");
+        taskName.setMinWidth(130);
+        taskName.setCellValueFactory(
+                new PropertyValueFactory<Task, String>("taskName")
+        );
+
+        TableColumn taskDescription = new TableColumn("Task description");
+        taskDescription.setMinWidth(130);
+        taskDescription.setCellValueFactory(
+                new PropertyValueFactory<Task, String>("description")
+        );
+
+        TableColumn taskDueDate = new TableColumn("Due date");
+        taskDueDate.setMinWidth(130);
+        taskDueDate.setCellValueFactory(
+                new PropertyValueFactory<Task, LocalDateTime>("dueDate")
+        );
+
+        taskTable.setItems(taskData);
+        taskTable.getColumns().addAll(taskIDCol,taskName,taskDescription,taskDueDate);
+        taskPage.getChildren().addAll(taskTable);
         //Making out crop page
 
         final Label label = new Label("Crop Table");

@@ -1,10 +1,20 @@
 package org.openjfx.javafxmavenarchetypes;
 
+import java.util.ArrayList;
+
 public class TaskModel {
 
 
-    public void addTask() {
 
+
+    private ArrayList<ModelSubscriber> subs;
+    public void addTask() {
+        notifySubscribers();
+
+    }
+
+    public void addSubscriber(ModelSubscriber aSub ){
+        subs.add(aSub);
     }
 
     public void editTask() {
@@ -17,5 +27,9 @@ public class TaskModel {
 
     public void viewTask(){
 
+    }
+
+    private void notifySubscribers(){
+        subs.forEach(sub -> sub.modelChanged());
     }
 }

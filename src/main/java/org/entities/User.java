@@ -1,7 +1,7 @@
 package org.entities;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class User {
     /**
@@ -32,7 +32,7 @@ public class User {
     /**
      * user date of birth
      */
-    Date DOB;
+    LocalDate DOB;
 
     /**
      * list of all the task user is doing
@@ -49,7 +49,7 @@ public class User {
      * @param last_name user last name
      * @param dob user date of birth
      */
-    public User(String id,String user_email, String user_password, String first_name, String last_name, Date dob){
+    public User(String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob){
         ID = id;
         email = user_email;
         password = user_password;
@@ -103,7 +103,7 @@ public class User {
      * get user date of birth
      * @return user date of birth
      */
-    public Date getDOB() {
+    public LocalDate getDOB() {
         return DOB;
     }
 
@@ -159,7 +159,7 @@ public class User {
      * set user date of birth
      * @param dob date of birth to be set
      */
-    public void setDOB(Date dob) {
+    public void setDOB(LocalDate dob) {
         DOB = dob;
     }
 

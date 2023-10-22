@@ -12,6 +12,7 @@ public class TaskBar extends Pane {
 
     private RectButton viewCompleted;
 
+    InteractionModel iModel;
     RectButton current;
 
 
@@ -21,6 +22,10 @@ public class TaskBar extends Pane {
         root.getChildren().addAll(addTask,editTask,markComplete,viewCompleted);
 
 
+    }
+
+    public void setInteractionModel(InteractionModel newModel){
+        iModel = newModel;
     }
 
     public void setController(BarController controller){
