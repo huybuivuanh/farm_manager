@@ -116,7 +116,7 @@ public class UITest extends Application {
         bfield.setOnAction(e -> stage.setScene(sceneFields));
 
 
-        //Make bin view scene
+        //Make bin view scene this
         Group binPage = new Group();
         Scene sceneBins = new Scene(binPage,300,250);
         Button bbins = new Button();
