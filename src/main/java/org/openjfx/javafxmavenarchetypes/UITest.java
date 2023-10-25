@@ -130,7 +130,6 @@ public class UITest extends Application {
         Button busers= new Button();
         busers.setText("Users");
         busers.setOnAction(e->stage.setScene(userScene) );
-
         taskSelector.getChildren().addAll(btasks,bfield,bbins,busers);
         taskSelector.setAlignment(Pos.CENTER);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -162,8 +161,12 @@ public class UITest extends Application {
             stage.setScene(userScene);
         });
 
+        Button userBackToMain = new Button("back");
+        userBackToMain.setOnMouseClicked(e ->{
+            stage.setScene(MenuScene);
+        });
         HBox topUserBar= new HBox();
-        topUserBar.getChildren().addAll(addUser);
+        topUserBar.getChildren().addAll(addUser, userBackToMain);
 
         TableColumn userIDCol = new TableColumn("User ID");
         userIDCol.setMinWidth(130);
@@ -236,8 +239,14 @@ public class UITest extends Application {
         RectButton markComplete = new RectButton("", "Mark Complete");
 
         RectButton viewCompleted = new RectButton("","newView");
+
+        Button taskBackToMain = new Button("back");
+        taskBackToMain.setOnMouseClicked(e ->{
+            stage.setScene(MenuScene);
+        });
+
         HBox topBar= new HBox();
-        topBar.getChildren().addAll(addTask,editTask,markComplete);
+        topBar.getChildren().addAll(addTask,editTask,markComplete, taskBackToMain);
 
         TableColumn taskIDCol = new TableColumn("Task ID");
         taskIDCol.setMinWidth(130);
