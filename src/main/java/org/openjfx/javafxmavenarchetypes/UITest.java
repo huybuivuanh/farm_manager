@@ -73,6 +73,23 @@ public class UITest extends Application {
 
 
     private TableView<TaskBar> bars = new TableView<TaskBar>();
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private TableView<User> userTable = new TableView<User>();
+
+
+    /**
+     * new User ...
+     */
+    private ObservableList<User> userData =
+            FXCollections.observableArrayList(
+                    new Employee("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", LocalDate.of(2002, Calendar.FEBRUARY,2)),
+                    new Employee("ID_2", "notJohn@gmail.com", "notpass1", "John'nt", "Josh'nt", LocalDate.of(2012, Calendar.MAY,2))
+                    );
+
+
+    private TableView<TaskBar> bars2= new TableView<TaskBar>();
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -107,10 +124,88 @@ public class UITest extends Application {
         Button btasks = new Button();
         btasks.setText("Tasks");
         btasks.setOnAction(e -> stage.setScene(taskScene));
-        taskSelector.getChildren().addAll(btasks,bfield,bbins);
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        VBox userPage= new VBox(30);
+        Scene userScene = new Scene(userPage, 300, 250);
+        Button busers= new Button();
+        busers.setText("Users");
+        busers.setOnAction(e->stage.setScene(userScene) );
+        taskSelector.getChildren().addAll(btasks,bfield,bbins,busers);
         taskSelector.setAlignment(Pos.CENTER);
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // adding functionality to the user tab
+
+        VBox userBox2 = new VBox(30);
+        Scene addUserScene2 = new Scene(userBox2,300,250);
+        Label userLabel = new Label("User Popup");
+        userLabel.setFont(new Font("Arial", 20));
 
 
+        TextField userIdInput = new TextField("Input user ID (optional)");
+        TextField emailInput = new TextField("User Email");
+        TextField passwordInput = new TextField("User Password");
+        TextField fNameInput = new TextField("User First Name");
+        TextField lNameInput = new TextField("User Last Name");
+        DatePicker dob = new DatePicker();
+        Button submitUserInfo = new Button("submit");
+
+        userBox2.getChildren().addAll(userIdInput,emailInput,passwordInput,fNameInput,lNameInput,dob,submitUserInfo);
+
+        RectButton addUser = new RectButton("","add User");
+        addUser.setOnMouseClicked(e ->{
+            stage.setScene(addUserScene2);
+        });
+        submitUserInfo.setOnMouseClicked(e ->{
+            User newUser = new Employee(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue());
+            userData.add(newUser);
+            stage.setScene(userScene);
+        });
+
+        Button userBackToMain = new Button("back");
+        userBackToMain.setOnMouseClicked(e ->{
+            stage.setScene(MenuScene);
+        });
+        HBox topUserBar= new HBox();
+        topUserBar.getChildren().addAll(addUser, userBackToMain);
+
+        TableColumn userIDCol = new TableColumn("User ID");
+        userIDCol.setMinWidth(130);
+        userIDCol.setCellValueFactory(
+                new PropertyValueFactory<User, String>("ID")
+        );
+
+        TableColumn userEmailCol = new TableColumn("User Email");
+        userEmailCol.setMinWidth(130);
+        userEmailCol.setCellValueFactory(
+                new PropertyValueFactory<User, String>("email")
+        );
+        TableColumn userPasswordCol = new TableColumn("User Password");
+        userPasswordCol.setMinWidth(130);
+        userPasswordCol.setCellValueFactory(
+                new PropertyValueFactory<User, String>("password")
+        );
+        TableColumn userFirstNameCol = new TableColumn("User First Name");
+        userFirstNameCol.setMinWidth(130);
+        userFirstNameCol.setCellValueFactory(
+                new PropertyValueFactory<User, String>("firstName")
+        );
+        TableColumn userLastNameCol = new TableColumn("User Last Name");
+        userLastNameCol.setMinWidth(130);
+        userLastNameCol.setCellValueFactory(
+                new PropertyValueFactory<User, String>("lastName")
+        );
+
+
+        TableColumn userDOBCol = new TableColumn("User Date of Birth");
+        userDOBCol.setMinWidth(130);
+        userDOBCol.setCellValueFactory(
+                new PropertyValueFactory<Task, LocalDate>("DOB")
+        );
+
+        userTable.setItems(userData);
+        userTable.getColumns().addAll(userIDCol,userEmailCol,userPasswordCol,userFirstNameCol, userLastNameCol, userDOBCol);
+        userPage.getChildren().addAll(topUserBar,userTable);
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Making the add pop up
 
         VBox userBox = new VBox(30);
@@ -144,8 +239,14 @@ public class UITest extends Application {
         RectButton markComplete = new RectButton("", "Mark Complete");
 
         RectButton viewCompleted = new RectButton("","newView");
+
+        Button taskBackToMain = new Button("back");
+        taskBackToMain.setOnMouseClicked(e ->{
+            stage.setScene(MenuScene);
+        });
+
         HBox topBar= new HBox();
-        topBar.getChildren().addAll(addTask,editTask,markComplete);
+        topBar.getChildren().addAll(addTask,editTask,markComplete, taskBackToMain);
 
         TableColumn taskIDCol = new TableColumn("Task ID");
         taskIDCol.setMinWidth(130);
