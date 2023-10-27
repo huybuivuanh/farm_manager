@@ -22,6 +22,7 @@ import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static java.lang.Boolean.parseBoolean;
 import static org.entities.Owner.owner;
 //HBox root = new HBox();
 //root.setStyle("-fx-background-color: Green");
@@ -78,8 +79,8 @@ public class UITest extends Application {
      */
     private ObservableList<User> userData =
             FXCollections.observableArrayList(
-                    new Employee("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", LocalDate.of(2002, Calendar.FEBRUARY,2), owner),
-                    new Employee("ID_2", "notJohn@gmail.com", "notpass1", "John'nt", "Josh'nt", LocalDate.of(2012, Calendar.MAY,2), owner)
+                    new Employee("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", LocalDate.of(2002, Calendar.FEBRUARY,2), true),
+                    new Employee("ID_2", "notJohn@gmail.com", "notpass1", "John'nt", "Josh'nt", LocalDate.of(2012, Calendar.MAY,2), false)
                     );
 
 
@@ -137,23 +138,23 @@ public class UITest extends Application {
         userLabel.setFont(new Font("Arial", 20));
 
 
-        TextField userIdInput = new TextField("Input user ID (optional)");
+        TextField userIdInput = new TextField("Input User ID");
         TextField emailInput = new TextField("User Email");
         TextField passwordInput = new TextField("User Password");
         TextField fNameInput = new TextField("User First Name");
         TextField lNameInput = new TextField("User Last Name");
+        TextField ownerInput = new TextField("Ownership");
         DatePicker dob = new DatePicker();
-        Button submitUserInfo = new Button("submit");
+        Button submitAddUserInfo = new Button("submit");
 
-        userBox2.getChildren().addAll(userIdInput,emailInput,passwordInput,fNameInput,lNameInput,dob,submitUserInfo);
+        userBox2.getChildren().addAll(fNameInput,lNameInput, ownerInput,userIdInput,emailInput,passwordInput,dob,submitAddUserInfo);
 
         Button addUser = new Button("add User");
         addUser.setOnMouseClicked(e ->{
             stage.setScene(addUserScene2);
         });
-        submitUserInfo.setOnMouseClicked(e ->{
-            Boolean owner = null;
-            User newUser = new Employee(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), owner);
+        submitAddUserInfo.setOnMouseClicked(e ->{
+            User newUser = new Employee(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), parseBoolean(ownerInput.getText()));
             userData.add(newUser);
             stage.setScene(userScene);
         });
@@ -162,8 +163,66 @@ public class UITest extends Application {
         userBackToMain.setOnMouseClicked(e ->{
             stage.setScene(MenuScene);
         });
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TODO: Complete the functionality of the user tab:
+        // Todo: remove user, edit user ( adjust edit to promote users and assign them roles)
+
+        //Todo 1: remove user (done - might need revisiting later)
+
+        Button removeUser = new Button("Remove User");
+        removeUser.setOnMouseClicked(e-> {
+            // not sure if any additional work is needed here within the class itself
+            //userTable.getSelectionModel().getSelectedItem().
+            userTable.getItems().remove(userTable.getSelectionModel().getSelectedItem());
+            userTable.refresh();
+        });
+
+        //Todo 2: edit user (done)
+        Button editUser = new Button("edit user");
+
+        //Making editPopup
+        VBox actualUserEditBox = new VBox(30);
+        Scene actualUserEditScene = new Scene(actualUserEditBox,300,250);
+
+        TextField userIdEdit = new TextField("");
+        TextField emailEdit = new TextField("");
+        TextField passwordEdit = new TextField("");
+        TextField fNameEdit = new TextField("");
+        TextField lNameEdit = new TextField("");
+        TextField ownerEdit = new TextField("");
+        DatePicker dobEdit = new DatePicker();
+        Button submitUserInfoEdit = new Button("submit");
+
+        actualUserEditBox.getChildren().addAll(fNameEdit,lNameEdit,ownerEdit,userIdEdit, emailEdit, passwordEdit, dobEdit,submitUserInfoEdit);
+        submitUserInfoEdit.setOnMouseClicked(e-> {
+            userTable.getSelectionModel().getSelectedItem().setFirstName(fNameEdit.getText());
+            userTable.getSelectionModel().getSelectedItem().setLastName(lNameEdit.getText());
+            userTable.getSelectionModel().getSelectedItem().setOwner(parseBoolean(ownerEdit.getText()));
+            userTable.getSelectionModel().getSelectedItem().setID(userIdEdit.getText());
+            userTable.getSelectionModel().getSelectedItem().setEmail(emailEdit.getText());
+            userTable.getSelectionModel().getSelectedItem().setPassword(passwordEdit.getText());
+            userTable.getSelectionModel().getSelectedItem().setDOB(dobEdit.getValue());
+            System.out.println(userTable.getSelectionModel().getSelectedItem());
+            stage.setScene(userScene);
+            userTable.refresh();
+        });
+
+        editUser.setOnMouseClicked(e-> {
+            fNameEdit.setText(userTable.getSelectionModel().getSelectedItem().getFirstName());
+            lNameEdit.setText(userTable.getSelectionModel().getSelectedItem().getLastName());
+            ownerEdit.setText(String.valueOf(userTable.getSelectionModel().getSelectedItem().getOwner()));
+            userIdEdit.setText(userTable.getSelectionModel().getSelectedItem().getID());
+            emailEdit.setText(userTable.getSelectionModel().getSelectedItem().getEmail());
+            passwordEdit.setText(userTable.getSelectionModel().getSelectedItem().getPassword());
+            dobEdit.setValue(userTable.getSelectionModel().getSelectedItem().getDOB());
+
+            stage.setScene(actualUserEditScene);
+        });
+
+// TODO: -----------------------------------------------------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         HBox topUserBar= new HBox();
-        topUserBar.getChildren().addAll(addUser, userBackToMain);
+        topUserBar.getChildren().addAll(addUser,editUser,removeUser ,userBackToMain);
 
         TableColumn userIDCol = new TableColumn("User ID");
         userIDCol.setMinWidth(130);
@@ -196,14 +255,20 @@ public class UITest extends Application {
         TableColumn userDOBCol = new TableColumn("User Date of Birth");
         userDOBCol.setMinWidth(130);
         userDOBCol.setCellValueFactory(
-                new PropertyValueFactory<Task, LocalDate>("DOB")
+                new PropertyValueFactory<User, LocalDate>("DOB")
+        );
+
+        TableColumn userOwnership = new TableColumn("Owner (T/F)");
+        userOwnership.setMinWidth(130);
+        userOwnership.setCellValueFactory(
+                new PropertyValueFactory<User, Boolean>("owner")
         );
 
         userTable.setItems(userData);
-        userTable.getColumns().addAll(userIDCol,userEmailCol,userPasswordCol,userFirstNameCol, userLastNameCol, userDOBCol);
+        userTable.getColumns().addAll(userFirstNameCol, userLastNameCol, userOwnership,userIDCol,userEmailCol,userPasswordCol, userDOBCol);
         userPage.getChildren().addAll(topUserBar,userTable);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //Making the add pop up
+        //Todo: Making the add task window pop up (done)
 
         VBox userBox = new VBox(30);
         Scene addUserScene = new Scene(userBox,300,250);
@@ -217,7 +282,7 @@ public class UITest extends Application {
 
         userBox.getChildren().addAll(idInput,taskNameF,descriptionF,dueDate,submitTask);
 
-        // Finished add pop up
+        //Todo: Finished add task pop up (done)
         Button addTask = new Button("add Task");
         addTask.setOnMouseClicked(e ->{
            stage.setScene(addUserScene);
@@ -229,7 +294,7 @@ public class UITest extends Application {
         });
         Button editTask = new Button("edit task");
 
-        //Making editPopup
+        //Todo: Making edit task Popup (done)
         VBox userEditBox = new VBox(30);
         Scene editUserScene = new Scene(userEditBox,300,250);
 
@@ -252,7 +317,7 @@ public class UITest extends Application {
 
 
 
-        //This actually adds the functionality required.
+        //Todo: adding functionality required for editing task.
         editTask.setOnMouseClicked(e ->{
             idInputEdit.setText(taskTable.getSelectionModel().getSelectedItem().getID());
             taskNameFEdit.setText(taskTable.getSelectionModel().getSelectedItem().getTaskName());

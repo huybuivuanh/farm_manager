@@ -39,6 +39,11 @@ public class User {
      */
     ArrayList<Task> taskList;
 
+    /**
+     * whether is owner
+     */
+    boolean owner;
+
 
     /**
      * constructor
@@ -49,7 +54,7 @@ public class User {
      * @param last_name user last name
      * @param dob user date of birth
      */
-    public User(String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob){
+    public User(String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob, boolean ownership){
         ID = id;
         email = user_email;
         password = user_password;
@@ -57,7 +62,24 @@ public class User {
         lastName = last_name;
         DOB = dob;
         taskList = new ArrayList<>();
+        owner = ownership;
     }
+
+    /**
+     * get user ownership
+     * @return user ownership boolean
+     */
+    public boolean getOwner() {
+        return owner;
+    }
+
+    /**
+     * set user ownership
+     */
+    public void setOwner(boolean X) {
+        owner=X;
+    }
+
 
     /**
      * get user id

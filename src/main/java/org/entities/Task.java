@@ -421,8 +421,8 @@ public class Task {
     public static void main(String[] args){
         Task task = new Task("1", "task 1", "task 1 description", LocalDateTime.now());
         LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY, 2);
-        User staff1 = new User("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob);
-        User staff2 = new User("ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob);
+        User staff1 = new User("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob, true);
+        User staff2 = new User("ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob, true);
         task.addStaff(staff1);
         task.addStaff(staff2);
 
@@ -448,7 +448,7 @@ public class Task {
 
 
         // testing setters
-        User staff3 = new User("ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob);
+        User staff3 = new User("ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob, false);
         LocalDateTime specificDate = LocalDateTime.of(2012, Month.JANUARY, 2, 0, 32, 43);
 
         task.setID("2");
