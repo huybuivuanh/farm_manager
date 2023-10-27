@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import org.InitialFarm.Chemical;
 import org.InitialFarm.Crop;
 import org.entities.*;
 import java.time.LocalDate;
@@ -26,7 +27,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 //HBox root = new HBox();
 //root.setStyle("-fx-background-color: Green");
 //Button grainButton = new Button("Make it Grain");
@@ -95,6 +98,12 @@ public class UITest extends Application {
             FXCollections.observableArrayList(new Field("1", "field 1", 69, "Mars"),
                     new Field("2", "field 2", 69, "Venus"),
                     new Field("3", "field 3", 69, "Mercury"));
+
+    private TableView<Record> recordTable = new TableView<>();
+    private ObservableList<Record> recordData =
+            FXCollections.observableArrayList(new Record("chem1", LocalDate.now(), "seed1", 11.0, LocalDate.now(), "fertilizer 1", LocalDate.now()),
+                    new Record("chem2", LocalDate.now(), "seed2", 22.0, LocalDate.now(), "fertilizer 2", LocalDate.now()),
+                    new Record("chem3", LocalDate.now(), "seed3", 33.0, LocalDate.now(), "fertilizer 3", LocalDate.now()));
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(String[] args) {
@@ -116,7 +125,6 @@ public class UITest extends Application {
         TableColumn taskID = new TableColumn("Task ID");
         taskID.setMinWidth(130);
 
-        // fields
         VBox fieldPage = new VBox(30);
         Scene fieldScene = new Scene(fieldPage,300,250);
 
@@ -286,33 +294,8 @@ public class UITest extends Application {
         taskPage.getChildren().addAll(topBar,taskTable);
 
 
-        //Making out crop page
-//        final Label label = new Label("Crop Table");
-//        label.setFont(new Font("Arial", 20));
-//
-//        table.setEditable(true);
-//
-//        // crop table
-//        TableColumn firstNameCol = new TableColumn("Crop Type");
-//        firstNameCol.setMinWidth(130);
-//        firstNameCol.setCellValueFactory(
-//                new PropertyValueFactory<Crop, String>("cropType"));
-//
-//        TableColumn lastNameCol = new TableColumn("Crop Variety");
-//        lastNameCol.setMinWidth(130);
-//        lastNameCol.setCellValueFactory(
-//                new PropertyValueFactory<Crop, String>("cropVariety"));
-//
-//        TableColumn emailCol = new TableColumn("Bushel Weight");
-//        emailCol.setMinWidth(70);
-//        emailCol.setCellValueFactory(
-//                new PropertyValueFactory<Crop, Float>("bushelWeight"));
-//
-//        grainTable.setItems(cropData);
-//        grainTable.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
-//
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // fields page
 
         TableColumn fieldIDCol = new TableColumn("Field ID");
         fieldIDCol.setMinWidth(130);
@@ -342,7 +325,7 @@ public class UITest extends Application {
         fieldTable.getColumns().addAll(fieldIDCol, fieldNameCol, fieldSizeCol, fieldLocationCol);
 
 
-        // add fields
+        // add fields page
         VBox addFieldBox = new VBox(30);
         Scene addFieldScene = new Scene(addFieldBox,300,250);
 
@@ -364,19 +347,140 @@ public class UITest extends Application {
             stage.setScene(fieldScene);
         });
 
-        // back to main button
+        // crop pop up
+        VBox cropPage = new VBox(30);
+        Scene cropScene = new Scene(cropPage,300,250);
+
+        Label yearLabel = new Label("Year: 2023");
+        yearLabel.setFont(new Font("Arial", 20));
+        yearLabel.setStyle("-fx-font-weight: bold;");
+
+        Label cropLabel = new Label("Crop Table");
+        cropLabel.setFont(new Font("Arial", 20));
+
+        Label recordLabel = new Label("Records");
+        recordLabel.setFont(new Font("Arial", 20));
+
+        // crop table
+        TableColumn cropTypeCol = new TableColumn("Crop Type");
+        cropTypeCol.setMinWidth(130);
+        cropTypeCol.setCellValueFactory(
+                new PropertyValueFactory<Crop, String>("cropType"));
+
+        TableColumn cropVarietyCol = new TableColumn("Crop Variety");
+        cropVarietyCol.setMinWidth(130);
+        cropVarietyCol.setCellValueFactory(
+                new PropertyValueFactory<Crop, String>("cropVariety"));
+
+        TableColumn bushelWeightCol = new TableColumn("Bushel Weight");
+        bushelWeightCol.setMinWidth(70);
+        bushelWeightCol.setCellValueFactory(
+                new PropertyValueFactory<Crop, Float>("bushelWeight"));
+
+        grainTable.setItems(cropData);
+        grainTable.getColumns().addAll(cropTypeCol, cropVarietyCol, bushelWeightCol);
+
+
+        fieldTable.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
+                if (selectedData != null) {
+                    stage.setScene(cropScene);
+                }
+            }
+        });
+
+        // record table
+        TableColumn chemCol = new TableColumn("Chemical Sprayed");
+        chemCol.setMinWidth(130);
+        chemCol.setCellValueFactory(
+                new PropertyValueFactory<Record, String>("chemSprayed"));
+
+        TableColumn sprayingDateCol = new TableColumn("Spraying Date");
+        sprayingDateCol.setMinWidth(130);
+        sprayingDateCol.setCellValueFactory(
+                new PropertyValueFactory<Record, LocalDate>("sprayingDate"));
+
+        TableColumn seedPlantedCol = new TableColumn("Seed Planted");
+        seedPlantedCol.setMinWidth(130);
+        seedPlantedCol.setCellValueFactory(
+                new PropertyValueFactory<Record, String>("seedPlanted"));
+
+        TableColumn seedingRateCol = new TableColumn("Seeding Rate (lbs/acre)");
+        seedingRateCol.setMinWidth(150);
+        seedingRateCol.setCellValueFactory(
+                new PropertyValueFactory<Record, Double>("seedingRate"));
+
+        TableColumn seedingDateCol = new TableColumn("Seeding Date");
+        seedingDateCol.setMinWidth(130);
+        seedingDateCol.setCellValueFactory(
+                new PropertyValueFactory<Record, LocalDate>("seedingDate"));
+
+        TableColumn fertilizerCol = new TableColumn("Fertilizer");
+        fertilizerCol.setMinWidth(130);
+        fertilizerCol.setCellValueFactory(
+                new PropertyValueFactory<Record, String>("fertilizer"));
+
+        TableColumn fertilizerDateCol = new TableColumn("Fertilizer Date");
+        fertilizerDateCol.setMinWidth(130);
+        fertilizerDateCol.setCellValueFactory(
+                new PropertyValueFactory<Record, LocalDate>("fertilizerDate"));
+
+
+        recordTable.setItems(recordData);
+        recordTable.getColumns().addAll(chemCol, sprayingDateCol, seedPlantedCol, seedingRateCol, seedingDateCol, fertilizerCol, fertilizerDateCol);
+
+        Button cropBackToFields = new Button("Back");
+        cropBackToFields.setOnMouseClicked(e ->{
+            stage.setScene(fieldScene);
+        });
+
+        HBox cropFunctionsBar = new HBox();
+        cropFunctionsBar.getChildren().addAll(cropBackToFields);
+        cropPage.getChildren().addAll(cropFunctionsBar, yearLabel, cropLabel, grainTable, recordLabel, recordTable);
+
+        // delete field
+        VBox deleteFieldBox = new VBox(30);
+        Scene deleteFieldScene = new Scene(deleteFieldBox,300,250);
+
+
+        RectButton deleteField = new RectButton("", "Delete Field");
+        deleteField.setOnMouseClicked(e ->{
+            stage.setScene(deleteFieldScene);
+        });
+
+        Label deleteLabel = new Label("Enter Field ID");
+        deleteLabel.setFont(new Font("Arial", 20));
+        TextField IDInput = new TextField();
+        Button submitID = new Button("Submit");
+
+        submitID.setOnMousePressed(e -> {
+            String deleteID = IDInput.getText();
+            Iterator<Field> iterator = fieldData.iterator();
+            while (iterator.hasNext()) {
+                Field field = iterator.next();
+                if (deleteID.equals(field.getID())) {
+                    iterator.remove();
+                    stage.setScene(fieldScene);
+                    return;
+                }
+            }
+            stage.setScene(fieldScene);
+        });
+
+        deleteFieldBox.getChildren().addAll(deleteLabel, IDInput, submitID);
+
+        // fields back to menu button
         Button fieldsBackToMain = new Button("Back");
         fieldsBackToMain.setOnMouseClicked(e ->{
             stage.setScene(MenuScene);
         });
 
-        RectButton viewField = new RectButton("", "View Field");
-        RectButton editField = new RectButton("", "Edit Field");
 
         // field functions bar
-        HBox fieldFunctions = new HBox();
-        fieldFunctions.getChildren().addAll(addField, viewField, editField, fieldsBackToMain);
-        fieldPage.getChildren().addAll(fieldFunctions, fieldTable);
+        HBox fieldFunctionsBar = new HBox();
+        fieldFunctionsBar.getChildren().addAll(addField, deleteField, fieldsBackToMain);
+        fieldPage.getChildren().addAll(fieldFunctionsBar, fieldTable);
 
         stage.setScene(MenuScene);
         stage.show();
@@ -416,6 +520,53 @@ public class UITest extends Application {
 
         public void setEmail(String fName) {
             email.set(fName);
+        }
+    }
+
+    public static class Record{
+        private String chemSprayed;
+        private LocalDate sprayingDate;
+        private String seedPlanted;
+        private Double seedingRate;
+        private LocalDate seedingDate;
+        private String fertilizer;
+        private LocalDate fertilizerDate;
+        private Record(String chem, LocalDate cDate, String seed, Double rate, LocalDate sDate, String fer, LocalDate fDate){
+            chemSprayed = chem;
+            sprayingDate = cDate;
+            seedPlanted = seed;
+            seedingRate = rate;
+            seedingDate = sDate;
+            fertilizer = fer;
+            fertilizerDate = fDate;
+        }
+
+        public String getChemSprayed() {
+            return chemSprayed;
+        }
+
+        public LocalDate getSprayingDate() {
+            return sprayingDate;
+        }
+
+        public String getSeedPlanted() {
+            return seedPlanted;
+        }
+
+        public Double getSeedingRate() {
+            return seedingRate;
+        }
+
+        public LocalDate getSeedingDate() {
+            return seedingDate;
+        }
+
+        public String getFertilizer() {
+            return fertilizer;
+        }
+
+        public LocalDate getFertilizerDate() {
+            return fertilizerDate;
         }
     }
 }
