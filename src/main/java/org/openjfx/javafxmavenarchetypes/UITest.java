@@ -98,7 +98,7 @@ public class UITest extends Application {
         Group fieldPage = new Group();
         Scene sceneFields = new Scene(fieldPage,300,250);
         stage.setTitle("Table View Sample");
-        stage.setWidth(450);
+        stage.setWidth(925);
         stage.setHeight(500);
 
 
@@ -126,11 +126,13 @@ public class UITest extends Application {
         Scene userScene = new Scene(userPage, 300, 250);
         Button busers= new Button();
         busers.setText("Users");
-        busers.setOnAction(e->stage.setScene(userScene) );
+        busers.setOnAction(e-> {
+            stage.setScene(userScene);
+        });
         taskSelector.getChildren().addAll(btasks,bfield,bbins,busers);
         taskSelector.setAlignment(Pos.CENTER);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // adding functionality to the user tab
+        // Todo: adding functionality to the user tab (done)
 
         VBox userBox2 = new VBox(30);
         Scene addUserScene2 = new Scene(userBox2,300,250);
@@ -165,7 +167,7 @@ public class UITest extends Application {
         });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // TODO: Complete the functionality of the user tab:
-        // Todo: remove user, edit user ( adjust edit to promote users and assign them roles)
+        // Todo: remove user, edit user , promote user, add & remove ( tasks or responsibilities)
 
         //Todo 1: remove user (done - might need revisiting later)
 
@@ -219,10 +221,27 @@ public class UITest extends Application {
             stage.setScene(actualUserEditScene);
         });
 
+        //Todo 3: promote user (done - revisit changes to employee hierarchy)
+
+        Button promoteUser = new Button("Promote User");
+        promoteUser.setOnMouseClicked(e-> {
+            // not sure if any additional work is needed here within the class itself
+            //userTable.getSelectionModel().getSelectedItem().
+            userTable.getSelectionModel().getSelectedItem().setOwner(true);
+            userTable.refresh();
+        });
+
+        //Todo 3: task addition and removal.
+
+        Button userTaskAssigner = new Button("Assign Task");
+
+
+
+
 // TODO: -----------------------------------------------------------------------------------------------------------------------------
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         HBox topUserBar= new HBox();
-        topUserBar.getChildren().addAll(addUser,editUser,removeUser ,userBackToMain);
+        topUserBar.getChildren().addAll(addUser,editUser,removeUser, promoteUser ,userBackToMain);
 
         TableColumn userIDCol = new TableColumn("User ID");
         userIDCol.setMinWidth(130);
@@ -265,6 +284,7 @@ public class UITest extends Application {
         );
 
         userTable.setItems(userData);
+        userTable.setEditable(true);
         userTable.getColumns().addAll(userFirstNameCol, userLastNameCol, userOwnership,userIDCol,userEmailCol,userPasswordCol, userDOBCol);
         userPage.getChildren().addAll(topUserBar,userTable);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
