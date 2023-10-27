@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.InitialFarm.Chemical;
 import org.InitialFarm.Crop;
+import org.InitialFarm.GrainBin;
 import org.entities.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,6 +49,17 @@ public class UITest extends Application {
                     new Person("Emma", "Jones", "emma.jones@example.com"),
                     new Person("Michael", "Brown", "michael.brown@example.com")
             );
+
+
+    private TableView<GrainBin> binTable = new TableView<>();
+    private final ObservableList<GrainBin> grainBinData =
+            FXCollections.observableArrayList(
+                    new GrainBin("Tod", "the moon", 400, false, false),
+                    new GrainBin("Dave", "the moon", 4000, false, false),
+                    new GrainBin("The Big One", "the moon", 40000, false, true),
+                    new GrainBin("Nice", "the moon", 69, true, false)
+            );
+
     private TableView<Crop> grainTable = new TableView<Crop>();
     private final ObservableList<Crop> cropData =
             FXCollections.observableArrayList(
@@ -58,6 +70,10 @@ public class UITest extends Application {
                     new Crop("Wheat & Barley", "All the other Grains", 45)
 
             );
+
+
+
+
 
     private TableView<Task> taskTable = new TableView<Task>();
 
@@ -118,9 +134,10 @@ public class UITest extends Application {
         stage.setWidth(450);
         stage.setHeight(500);
 
-
         VBox taskSelector = new VBox(30);
         Scene MenuScene = new Scene(taskSelector,300,250);
+
+
 
         TableColumn taskID = new TableColumn("Task ID");
         taskID.setMinWidth(130);
@@ -132,8 +149,13 @@ public class UITest extends Application {
         bfield.setText("Fields");
         bfield.setOnAction(e -> stage.setScene(fieldScene));
 
+
+        //Make bin view scene this
+        Group binPage = new Group();
+        Scene sceneBins = new Scene(binPage,300,250);
         Button bbins = new Button();
         bbins.setText("Bins");
+        bbins.setOnAction(e -> stage.setScene(sceneBins));
 
         VBox taskPage = new VBox(30);
         Scene taskScene = new Scene(taskPage,300,250);
@@ -243,6 +265,7 @@ public class UITest extends Application {
         addTask.setOnMouseClicked(e ->{
            stage.setScene(addUserScene);
         });
+
         submitTask.setOnMouseClicked(e ->{
             Task newTask = new Task(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
             taskData.add(newTask);
@@ -534,6 +557,47 @@ public class UITest extends Application {
         HBox fieldFunctionsBar = new HBox();
         fieldFunctionsBar.getChildren().addAll(addField, deleteField, fieldsBackToMain);
         fieldPage.getChildren().addAll(fieldFunctionsBar, fieldTable);
+
+
+
+        final Label binlabel = new Label("Bin Table");
+        binlabel.setFont(new Font("Arial", 20));
+
+        binTable.setEditable(true);
+
+        TableColumn binNameCol = new TableColumn("Bin Name");
+        binNameCol.setMinWidth(130);
+        binNameCol.setCellValueFactory(
+                new PropertyValueFactory<Crop, String>("binName"));
+
+        TableColumn binLocationCol = new TableColumn("Bin Location");
+        binLocationCol.setMinWidth(130);
+        binLocationCol.setCellValueFactory(
+                new PropertyValueFactory<Crop, String>("binLocation"));
+
+        TableColumn binSizeCol = new TableColumn("Bin Size");
+        binSizeCol.setMinWidth(70);
+        binSizeCol.setCellValueFactory(
+                new PropertyValueFactory<Crop, Float>("binSize"));
+
+        TableColumn binHopperCol = new TableColumn("Bin Hopper");
+        binHopperCol.setMinWidth(70);
+        binHopperCol.setCellValueFactory(
+                new PropertyValueFactory<Crop, Boolean>("hopper"));
+
+        TableColumn binFanCol = new TableColumn("Bin Fan");
+        binFanCol.setMinWidth(70);
+        binFanCol.setCellValueFactory(
+                new PropertyValueFactory<Crop, Float>("fan"));
+
+        binTable.setItems(grainBinData);
+        binTable.getColumns().addAll(binNameCol,binLocationCol,binSizeCol,binHopperCol,binFanCol);
+
+        final VBox binvbox = new VBox();
+        binvbox.setSpacing(5);
+        binvbox.setPadding(new Insets(10, 0, 0, 10));
+        binvbox.getChildren().addAll(binlabel, binTable);
+        ((Group) sceneBins.getRoot()).getChildren().addAll(binvbox);
 
         stage.setScene(MenuScene);
         stage.show();
