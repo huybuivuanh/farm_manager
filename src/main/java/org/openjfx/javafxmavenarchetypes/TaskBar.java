@@ -1,19 +1,20 @@
 package org.openjfx.javafxmavenarchetypes;
 
+import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class TaskBar extends Pane {
 
-    private RectButton addTask;
-    private RectButton editTask;
-    private RectButton markComplete;
+    private Button addTask;
+    private Button editTask;
+    private Button markComplete;
 
-    private RectButton viewCompleted;
+    private Button viewCompleted;
 
     InteractionModel iModel;
-    RectButton current;
+    Button current;
 
 
     public TaskBar(){

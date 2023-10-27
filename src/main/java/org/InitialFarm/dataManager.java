@@ -115,9 +115,10 @@ public class dataManager {
 
         if (classType.equals("Employee"))
         {
+            Boolean owner = null;
             newObj =  new Employee(objectDoc.getString("_id"), objectDoc.getString("user_email"),
                     objectDoc.getString("user_password"), objectDoc.getString("first_name"),
-                    objectDoc.getString("last_name"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate() );
+                    objectDoc.getString("last_name"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), owner);
         }
 
         else if (classType.equals("Owner"))

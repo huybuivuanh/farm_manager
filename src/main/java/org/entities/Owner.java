@@ -1,16 +1,17 @@
 package org.entities;
 
-import org.bson.Document;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Calendar;
-import java.util.Date;
+
 
 public class Owner extends Employee {
-    public Owner(String id,String user_email, String user_password, String first_name, String last_name, LocalDate dob){
-        super(id, user_email, user_password, first_name, last_name, dob);
+
+    public static final Boolean owner = null;
+
+    public Owner(String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob){
+        super(id, user_email, user_password, first_name, last_name, dob, owner);
     }
 
 // I don't think we need this here because it will inherit it from employee,

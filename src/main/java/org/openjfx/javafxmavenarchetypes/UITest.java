@@ -1,12 +1,9 @@
 package org.openjfx.javafxmavenarchetypes;
 
 import javafx.application.Application;
-import javafx.application.Preloader;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -14,19 +11,18 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import org.InitialFarm.Crop;
 import org.entities.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static org.entities.Owner.owner;
 //HBox root = new HBox();
 //root.setStyle("-fx-background-color: Green");
 //Button grainButton = new Button("Make it Grain");
@@ -82,8 +78,8 @@ public class UITest extends Application {
      */
     private ObservableList<User> userData =
             FXCollections.observableArrayList(
-                    new Employee("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", LocalDate.of(2002, Calendar.FEBRUARY,2)),
-                    new Employee("ID_2", "notJohn@gmail.com", "notpass1", "John'nt", "Josh'nt", LocalDate.of(2012, Calendar.MAY,2))
+                    new Employee("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", LocalDate.of(2002, Calendar.FEBRUARY,2), owner),
+                    new Employee("ID_2", "notJohn@gmail.com", "notpass1", "John'nt", "Josh'nt", LocalDate.of(2012, Calendar.MAY,2), owner)
                     );
 
 
@@ -151,12 +147,13 @@ public class UITest extends Application {
 
         userBox2.getChildren().addAll(userIdInput,emailInput,passwordInput,fNameInput,lNameInput,dob,submitUserInfo);
 
-        RectButton addUser = new RectButton("","add User");
+        Button addUser = new Button("add User");
         addUser.setOnMouseClicked(e ->{
             stage.setScene(addUserScene2);
         });
         submitUserInfo.setOnMouseClicked(e ->{
-            User newUser = new Employee(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue());
+            Boolean owner = null;
+            User newUser = new Employee(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), owner);
             userData.add(newUser);
             stage.setScene(userScene);
         });
@@ -221,7 +218,7 @@ public class UITest extends Application {
         userBox.getChildren().addAll(idInput,taskNameF,descriptionF,dueDate,submitTask);
 
         // Finished add pop up
-        RectButton addTask = new RectButton("","add Task");
+        Button addTask = new Button("add Task");
         addTask.setOnMouseClicked(e ->{
            stage.setScene(addUserScene);
         });
@@ -230,15 +227,52 @@ public class UITest extends Application {
             taskData.add(newTask);
             stage.setScene(taskScene);
         });
-        RectButton editTask = new RectButton("","edit task");
+        Button editTask = new Button("edit task");
+
+        //Making editPopup
+        VBox userEditBox = new VBox(30);
+        Scene editUserScene = new Scene(userEditBox,300,250);
+
+        TextField idInputEdit = new TextField();
+        TextField taskNameFEdit = new TextField();
+        TextField descriptionFEdit = new TextField();
+        DatePicker dueDateEdit = new DatePicker();
+        Button submitTaskEdit = new Button("submit");
+
+        userEditBox.getChildren().addAll(idInputEdit,taskNameFEdit,descriptionFEdit,dueDateEdit,submitTaskEdit);
+        submitTaskEdit.setOnMouseClicked(e ->{
+            taskTable.getSelectionModel().getSelectedItem().setID(idInputEdit.getText());
+            taskTable.getSelectionModel().getSelectedItem().setTaskName(taskNameFEdit.getText());
+            taskTable.getSelectionModel().getSelectedItem().setDescription(descriptionFEdit.getText());
+            taskTable.getSelectionModel().getSelectedItem().setDueDate(dueDateEdit.getValue().atTime(LocalTime.now()));
+            System.out.println(taskTable.getSelectionModel().getSelectedItem());
+            stage.setScene(taskScene);
+            taskTable.refresh();
+        });
+
+
 
         //This actually adds the functionality required.
         editTask.setOnMouseClicked(e ->{
-            taskTable.getSelectionModel().getSelectedItem();
-        });
-        RectButton markComplete = new RectButton("", "Mark Complete");
+            idInputEdit.setText(taskTable.getSelectionModel().getSelectedItem().getID());
+            taskNameFEdit.setText(taskTable.getSelectionModel().getSelectedItem().getTaskName());
+            descriptionFEdit.setText(taskTable.getSelectionModel().getSelectedItem().getDescription());
+            dueDateEdit.setValue(taskTable.getSelectionModel().getSelectedItem().getDueDate().toLocalDate());
 
-        RectButton viewCompleted = new RectButton("","newView");
+            stage.setScene(editUserScene);
+        });
+
+
+        Button markComplete = new Button("Mark Complete");
+
+        markComplete.setOnMouseClicked(e ->{
+            taskTable.getSelectionModel().getSelectedItem().markAsCompleted(true);
+            taskTable.getSelectionModel().getSelectedItem().setInProgress(false);
+            taskTable.getItems().remove(taskTable.getSelectionModel().getSelectedItem());
+            taskTable.refresh();
+        });
+
+        Button viewCompleted = new Button("newView");
 
         Button taskBackToMain = new Button("back");
         taskBackToMain.setOnMouseClicked(e ->{
@@ -249,6 +283,8 @@ public class UITest extends Application {
         topBar.getChildren().addAll(addTask,editTask,markComplete, taskBackToMain);
 
         TableColumn taskIDCol = new TableColumn("Task ID");
+
+        taskIDCol.editableProperty().setValue(true);
         taskIDCol.setMinWidth(130);
         taskIDCol.setCellValueFactory(
                 new PropertyValueFactory<Task, String>("ID")
@@ -273,9 +309,17 @@ public class UITest extends Application {
         );
 
         taskTable.setItems(taskData);
+        taskTable.setEditable(true);
         taskTable.getColumns().addAll(taskIDCol,taskName,taskDescription,taskDueDate);
         taskPage.getChildren().addAll(topBar,taskTable);
         //Making out crop page
+        /////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////
+
+        Button fieldBackToMain = new Button("back");
+        fieldBackToMain.setOnMouseClicked(e ->{
+            stage.setScene(MenuScene);
+        });
 
         final Label label = new Label("Crop Table");
         label.setFont(new Font("Arial", 20));
@@ -303,7 +347,7 @@ public class UITest extends Application {
         final VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label, grainTable);
+        vbox.getChildren().addAll(label,fieldBackToMain, grainTable);
 
         ((Group) sceneFields.getRoot()).getChildren().addAll(vbox);
 
