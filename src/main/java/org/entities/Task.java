@@ -1,17 +1,24 @@
-package entities;
+package org.entities;
 
-import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
-public class Task implements DatabaseInterface<Task>{
+public class Task {
     /**
      * task ID
      */
     private String ID;
+
+    /**
+     * The unique ID of the Task for the DataBase
+     */
+    private final ObjectId dbID = null;
 
     /**
      * task name
@@ -26,12 +33,12 @@ public class Task implements DatabaseInterface<Task>{
     /**
      * date created
      */
-    private final Date date;
+    private final LocalDateTime date;
 
     /**
      * task due date
      */
-    private Date dueDate;
+    private LocalDateTime dueDate;
 
     /**
      * status of task
@@ -41,7 +48,8 @@ public class Task implements DatabaseInterface<Task>{
     /**
      * list of staffs working on this task
      */
-    private ArrayList<User> staffList = new ArrayList<>();
+    private final ArrayList<User> staffList;
+
 
     /**
      * helper class to keep track of the status
@@ -50,20 +58,20 @@ public class Task implements DatabaseInterface<Task>{
 
         // status and date attributes
         private boolean isCompleted = false;
-        private Date completionDate;
+        private LocalDateTime completionDate;
         private boolean inProgress = false;
-        private Date inProgressDate;
+        private LocalDateTime inProgressDate;
         private boolean isPaused = false;
 
-        private ArrayList<Date> pauseHistory = new ArrayList<>();
+        private final ArrayList<LocalDateTime> pauseHistory;
 
-        private Status(){}
+        private Status(){ pauseHistory = new ArrayList<>();}
 
         public boolean isCompleted() {
             return isCompleted;
         }
 
-        public Date getCompletionDate() {
+        public LocalDateTime getCompletionDate() {
             return completionDate;
         }
 
@@ -71,7 +79,7 @@ public class Task implements DatabaseInterface<Task>{
             return inProgress;
         }
 
-        public Date getInProgressDate() {
+        public LocalDateTime getInProgressDate() {
             return inProgressDate;
         }
 
@@ -79,44 +87,49 @@ public class Task implements DatabaseInterface<Task>{
             return isPaused;
         }
 
-        public ArrayList<Date> getPauseHistory() {
+        public ArrayList<LocalDateTime> getPauseHistory() {
             return pauseHistory;
         }
 
         public void setCompleted(boolean completed) {
             isCompleted = completed;
-            inProgress = !completed;
-            if (isPaused == completed) {
-                setPaused(!completed);
+            inProgress = false;
+            if (completed && isPaused){
+                setPaused(false);
             }
-            setCompletionDate(new Date());
+            setCompletionDate(LocalDateTime.now());
         }
 
-        public void setCompletionDate(Date completion_date) {
+        public void setCompletionDate(LocalDateTime completion_date) {
             completionDate = completion_date;
         }
 
         public void setInProgress(boolean in_progress) {
             inProgress = in_progress;
-            isCompleted = !inProgress;
-            if (isPaused() == in_progress){
-                setPaused(!in_progress);
+            isCompleted = false;
+            if (in_progress && isPaused) {
+                setPaused(false);
             }
-            setInProgressDate(new Date());
+            setInProgressDate(LocalDateTime.now());
         }
 
-        public void setInProgressDate(Date inProgressDate) {
+        public void setInProgressDate(LocalDateTime inProgressDate) {
             this.inProgressDate = inProgressDate;
         }
 
         public void setPaused(boolean paused) {
             isPaused = paused;
-            inProgress = !paused;
-            isCompleted = !paused;
-            pauseHistory.add(new Date());
+            if (paused){
+                inProgress = false;
+                isCompleted = false;
+            }
+            pauseHistory.add(LocalDateTime.now());
         }
 
         public String toString(){
+            DateTimeFormatter formatter
+                    = DateTimeFormatter.ofPattern(
+                    "yyyy-MM-dd HH:mm a");
             String status;
             if (isCompleted()){
                 status = "Completed";
@@ -130,12 +143,19 @@ public class Task implements DatabaseInterface<Task>{
             else{
                 status = "Incomplete";
             }
+            String formatProgressDate = null;
+            String formatCompletionDate = null;
+            if(getInProgressDate() != null)
+            {formatProgressDate = getInProgressDate().format(formatter);}
+            if (getCompletionDate() != null)
+            {formatCompletionDate = getCompletionDate().format(formatter);}
             StringBuilder result = new StringBuilder("Status: " + status +
-                    "\nIn Progress Date: " + getInProgressDate() +
-                    "\nCompletion Date: " + getCompletionDate() +
-                    "\nPause History: [" );
-            for (Date date : getPauseHistory()){
-                result.append(date).append(", ");
+                    "\nIn Progress Date: " + formatProgressDate +
+                    "\nCompletion Date: " + formatCompletionDate +
+                    "\nPause History: [");
+            for (LocalDateTime dateTime : getPauseHistory()){
+                String formatPauseHistory = dateTime.format(formatter);
+                result.append(formatPauseHistory).append(", ");
             }
             result.append("]");
             return result.toString();
@@ -149,13 +169,14 @@ public class Task implements DatabaseInterface<Task>{
      * @param descr task description
      * @param due_date task due date
      */
-    public Task(String id, String task_name, String descr, Date due_date){
+    public Task(String id, String task_name, String descr, LocalDateTime due_date){
         ID = id;
         taskName = task_name;
         description = descr;
         dueDate = due_date;
         status = new Status();
-        date = new Date();
+        date = LocalDateTime.now();
+        staffList = new ArrayList<>();
     }
 
     /**
@@ -186,7 +207,7 @@ public class Task implements DatabaseInterface<Task>{
      * get task creation date
      * @return creation date
      */
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
@@ -194,7 +215,7 @@ public class Task implements DatabaseInterface<Task>{
      * get task due date
      * @return task due date
      */
-    public Date getDueDate() {
+    public LocalDateTime getDueDate() {
         return dueDate;
     }
 
@@ -260,7 +281,7 @@ public class Task implements DatabaseInterface<Task>{
      * set due date
      * @param dueDate due date
      */
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -293,8 +314,8 @@ public class Task implements DatabaseInterface<Task>{
      * @return true/false
      */
     public boolean isOverDue(){
-        Date today = new Date();
-        return dueDate.before(today);
+        LocalDateTime today = LocalDateTime.now();
+        return dueDate.isBefore(today);
     }
 
     /**
@@ -322,7 +343,7 @@ public class Task implements DatabaseInterface<Task>{
     /**
      * remove all staffs from the list
      */
-    public void removeAllStaffs(){
+    public void removeAllStaff(){
         staffList.clear();
     }
 
@@ -347,7 +368,28 @@ public class Task implements DatabaseInterface<Task>{
         return taskStatus;
     }
 
+    public Status getStatusObject(){
+        return status;
+    }
 
+    // this method may not be necessary
+    public void setStatus(String status){
+        if (status.equals("Completed")){
+            markAsCompleted(true);
+        }
+        else if (status.equals("Paused")) {
+            pauseTask(true);
+        }
+        else if (status.equals("In Progress")){
+            setInProgress(true);
+        }
+        else if (status.equals("Incomplete")){
+            markAsCompleted(false);
+        }
+        else{
+            System.out.println("Status parameter must be (Completed/Paused/In Progress/Incomplete");
+        }
+    }
 
     /**
      * get a string representation of task
@@ -366,95 +408,21 @@ public class Task implements DatabaseInterface<Task>{
                 result.append(staff.getFirstName()).append(", ");
             }
         }
+        else
+            result.append(" empty ");
         result.append( "]");
         return result.toString();
     }
-
-
-
-    /**
-     * Translates an object into a JSON Document representation of itself.
-     * @param task : an employee object that is going to be translated into a doc.
-     * @return: a document that is a representation of the task passed.
-     */
-    @Override
-    public Document classToDoc(Task task) {
-        Document newDoc = new Document();
-
-        //  ObjectId task_Id= task.taskId; => this is for the database
-
-        String task_id = task.getID();
-        String task_name= task.getTaskName();
-        String task_description= task.getDescription();
-        Date task_date= task.getDate();
-        Date task_dueDate = task.getDueDate();
-        String task_status= task.getStatus();
-
-
-        // might need to add the objectID here still
-        newDoc.append("_id", task_id);
-        newDoc.append("task_name", task_name);
-        newDoc.append("task_description", task_description);
-        newDoc.append("task_date", task_dueDate);
-        newDoc.append("task_dueDate", task_dueDate);
-        // not sure how to include status below
-        //newDoc.append("task_status", task_status);
-        Date added = new Date();
-        newDoc.append("Date Added:",added.getTime());
-
-        return newDoc;
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public Document docToClass() {
-        return null;
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void save() {
-
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void sync() {
-
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public ObjectId getDbId() {
-        return null;
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public boolean isDatabase() {
-        return false;
-    }
-
 
     /**
      * testing
      * @param args args
      */
     public static void main(String[] args){
-        Task task = new Task("1", "task 1", "task 1 description", new Date());
-        Date dob = new Date(2002 - 1900, Calendar.FEBRUARY, 2, 2, 2, 2);
-        User staff1 = new User("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob);
-        User staff2 = new User("ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob);
+        Task task = new Task("1", "task 1", "task 1 description", LocalDateTime.now());
+        LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY, 2);
+        User staff1 = new User("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob, true);
+        User staff2 = new User("ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob, true);
         task.addStaff(staff1);
         task.addStaff(staff2);
 
@@ -475,21 +443,22 @@ public class Task implements DatabaseInterface<Task>{
             result.append(staff.getFirstName()).append(", ");
         }
         System.out.println("Staff List: " + result + "]\n");
-        System.out.println("Detailed Status:\n" + task.status);
+        System.out.println("Detailed Status:\n" + task.getStatusObject());
 
 
 
         // testing setters
-        User staff3 = new User("ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob);
-        Date specificDate = new Date(2111 - 1900, Calendar.JANUARY, 1, 1, 1, 1);
+        User staff3 = new User("ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob, false);
+        LocalDateTime specificDate = LocalDateTime.of(2012, Month.JANUARY, 2, 0, 32, 43);
 
         task.setID("2");
         task.setTaskName("task 2");
         task.setDescription("task 2 description");
         task.setDueDate(specificDate);
+
+        task.setInProgress(true);
         task.pauseTask(true);
         task.markAsCompleted(true);
-        task.setInProgress(true);
         task.addStaff(staff3);
         task.removeStaff(staff2.getID());
 //        task.removeAllStaffs();
@@ -510,6 +479,9 @@ public class Task implements DatabaseInterface<Task>{
             result.append(staff.getFirstName()).append(", ");
         }
         System.out.println("Staff List: [" + result + "]\n");
-        System.out.println("Detailed Status:\n" + task.status);
+        System.out.println("Detailed Status:\n" + task.getStatusObject().toString());
+
+        task.removeAllStaff();
+        System.out.println("Staff List: [" + result + "]\n");
     }
 }

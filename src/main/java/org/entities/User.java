@@ -1,10 +1,10 @@
-package entities;
+package org.entities;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class User {
+    public Boolean isOwner;
     /**
      * user ID
      */
@@ -33,12 +33,17 @@ public class User {
     /**
      * user date of birth
      */
-    Date DOB;
+    LocalDate DOB;
 
     /**
      * list of all the task user is doing
      */
     ArrayList<Task> taskList;
+
+    /**
+     * whether is owner
+     */
+    boolean owner;
 
 
     /**
@@ -50,7 +55,7 @@ public class User {
      * @param last_name user last name
      * @param dob user date of birth
      */
-    public User(String id,String user_email, String user_password, String first_name, String last_name, Date dob){
+    public User(String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob, boolean ownership){
         ID = id;
         email = user_email;
         password = user_password;
@@ -58,7 +63,24 @@ public class User {
         lastName = last_name;
         DOB = dob;
         taskList = new ArrayList<>();
+        owner = ownership;
     }
+
+    /**
+     * get user ownership
+     * @return user ownership boolean
+     */
+    public boolean getOwner() {
+        return owner;
+    }
+
+    /**
+     * set user ownership
+     */
+    public void setOwner(boolean X) {
+        owner=X;
+    }
+
 
     /**
      * get user id
@@ -104,7 +126,7 @@ public class User {
      * get user date of birth
      * @return user date of birth
      */
-    public Date getDOB() {
+    public LocalDate getDOB() {
         return DOB;
     }
 
@@ -160,7 +182,7 @@ public class User {
      * set user date of birth
      * @param dob date of birth to be set
      */
-    public void setDOB(Date dob) {
+    public void setDOB(LocalDate dob) {
         DOB = dob;
     }
 
