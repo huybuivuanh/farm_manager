@@ -88,6 +88,13 @@ public class UITest extends Application {
 
 
     private TableView<TaskBar> bars2= new TableView<TaskBar>();
+
+    private TableView<Field> fieldTable = new TableView<Field>();
+
+    private ObservableList<Field> fieldData =
+            FXCollections.observableArrayList(new Field("1", "field 1", 69, "Mars"),
+                    new Field("2", "field 2", 69, "Venus"),
+                    new Field("3", "field 3", 69, "Mercury"));
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(String[] args) {
@@ -98,8 +105,6 @@ public class UITest extends Application {
     public void start(Stage stage) {
 
         //Making our farm view scene
-        Group fieldPage = new Group();
-        Scene sceneFields = new Scene(fieldPage,300,250);
         stage.setTitle("Table View Sample");
         stage.setWidth(450);
         stage.setHeight(500);
@@ -111,9 +116,13 @@ public class UITest extends Application {
         TableColumn taskID = new TableColumn("Task ID");
         taskID.setMinWidth(130);
 
+        // fields
+        VBox fieldPage = new VBox(30);
+        Scene fieldScene = new Scene(fieldPage,300,250);
+
         Button bfield = new Button();
         bfield.setText("Fields");
-        bfield.setOnAction(e -> stage.setScene(sceneFields));
+        bfield.setOnAction(e -> stage.setScene(fieldScene));
 
         Button bbins = new Button();
         bbins.setText("Bins");
@@ -275,37 +284,99 @@ public class UITest extends Application {
         taskTable.setItems(taskData);
         taskTable.getColumns().addAll(taskIDCol,taskName,taskDescription,taskDueDate);
         taskPage.getChildren().addAll(topBar,taskTable);
+
+
         //Making out crop page
+//        final Label label = new Label("Crop Table");
+//        label.setFont(new Font("Arial", 20));
+//
+//        table.setEditable(true);
+//
+//        // crop table
+//        TableColumn firstNameCol = new TableColumn("Crop Type");
+//        firstNameCol.setMinWidth(130);
+//        firstNameCol.setCellValueFactory(
+//                new PropertyValueFactory<Crop, String>("cropType"));
+//
+//        TableColumn lastNameCol = new TableColumn("Crop Variety");
+//        lastNameCol.setMinWidth(130);
+//        lastNameCol.setCellValueFactory(
+//                new PropertyValueFactory<Crop, String>("cropVariety"));
+//
+//        TableColumn emailCol = new TableColumn("Bushel Weight");
+//        emailCol.setMinWidth(70);
+//        emailCol.setCellValueFactory(
+//                new PropertyValueFactory<Crop, Float>("bushelWeight"));
+//
+//        grainTable.setItems(cropData);
+//        grainTable.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
+//
 
-        final Label label = new Label("Crop Table");
-        label.setFont(new Font("Arial", 20));
 
-        table.setEditable(true);
 
-        TableColumn firstNameCol = new TableColumn("Crop Type");
-        firstNameCol.setMinWidth(130);
-        firstNameCol.setCellValueFactory(
-                new PropertyValueFactory<Crop, String>("cropType"));
+        TableColumn fieldIDCol = new TableColumn("Field ID");
+        fieldIDCol.setMinWidth(130);
+        fieldIDCol.setCellValueFactory(
+                new PropertyValueFactory<Field, String>("ID")
+        );
 
-        TableColumn lastNameCol = new TableColumn("Crop Variety");
-        lastNameCol.setMinWidth(130);
-        lastNameCol.setCellValueFactory(
-                new PropertyValueFactory<Crop, String>("cropVariety"));
+        TableColumn fieldNameCol = new TableColumn("Field Name");
+        fieldNameCol.setMinWidth(130);
+        fieldNameCol.setCellValueFactory(
+                new PropertyValueFactory<Field, String>("name")
+        );
 
-        TableColumn emailCol = new TableColumn("Bushel Weight");
-        emailCol.setMinWidth(70);
-        emailCol.setCellValueFactory(
-                new PropertyValueFactory<Crop, Float>("bushelWeight"));
+        TableColumn fieldSizeCol = new TableColumn("Field Size");
+        fieldSizeCol.setMinWidth(130);
+        fieldSizeCol.setCellValueFactory(
+                new PropertyValueFactory<Field, Double>("size")
+        );
 
-        grainTable.setItems(cropData);
-        grainTable.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
+        TableColumn fieldLocationCol = new TableColumn("Field Location");
+        fieldLocationCol.setMinWidth(130);
+        fieldLocationCol.setCellValueFactory(
+                new PropertyValueFactory<Field, String>("location")
+        );
 
-        final VBox vbox = new VBox();
-        vbox.setSpacing(5);
-        vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label, grainTable);
+        fieldTable.setItems(fieldData);
+        fieldTable.getColumns().addAll(fieldIDCol, fieldNameCol, fieldSizeCol, fieldLocationCol);
 
-        ((Group) sceneFields.getRoot()).getChildren().addAll(vbox);
+
+        // add fields
+        VBox addFieldBox = new VBox(30);
+        Scene addFieldScene = new Scene(addFieldBox,300,250);
+
+        TextField fieldIDInput = new TextField("Field ID");
+        TextField fieldNameInput = new TextField("Field Name");
+        TextField fieldSizeInput = new TextField("Field Size");
+        TextField fieldLocation = new TextField("Field Location");
+        Button submitFieldInfo = new Button("Submit");
+
+        addFieldBox.getChildren().addAll(fieldIDInput, fieldNameInput, fieldSizeInput, fieldLocation, submitFieldInfo);
+
+        RectButton addField = new RectButton("","Add Field");
+        addField.setOnMouseClicked(e ->{
+            stage.setScene(addFieldScene);
+        });
+        submitFieldInfo.setOnMouseClicked(e ->{
+            Field newField = new Field(fieldIDInput.getText(),fieldNameInput.getText(), Double.parseDouble(fieldSizeInput.getText()), fieldLocation.getText());
+            fieldData.add(newField);
+            stage.setScene(fieldScene);
+        });
+
+        // back to main button
+        Button fieldsBackToMain = new Button("Back");
+        fieldsBackToMain.setOnMouseClicked(e ->{
+            stage.setScene(MenuScene);
+        });
+
+        RectButton viewField = new RectButton("", "View Field");
+        RectButton editField = new RectButton("", "Edit Field");
+
+        // field functions bar
+        HBox fieldFunctions = new HBox();
+        fieldFunctions.getChildren().addAll(addField, viewField, editField, fieldsBackToMain);
+        fieldPage.getChildren().addAll(fieldFunctions, fieldTable);
 
         stage.setScene(MenuScene);
         stage.show();
