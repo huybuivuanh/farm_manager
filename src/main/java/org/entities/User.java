@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class User {
+    public Boolean isOwner;
     /**
      * user ID
      */

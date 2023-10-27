@@ -129,8 +129,8 @@ public class UITest extends Application {
     public void start(Stage stage) {
 
         //Making our farm view scene
-        Group fieldPage = new Group();
-        Scene sceneFields = new Scene(fieldPage,300,250);
+        Group fieldPageGroup = new Group();
+        Scene sceneFields = new Scene(fieldPageGroup,300,250);
         stage.setTitle("Table View Sample");
         stage.setWidth(925);
         stage.setHeight(500);
@@ -442,7 +442,8 @@ public class UITest extends Application {
         taskTable.getColumns().addAll(taskIDCol,taskName,taskDescription,taskDueDate);
         taskPage.getChildren().addAll(topBar,taskTable);
 
-
+        //Bin page
+        
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // fields page
 
@@ -494,7 +495,7 @@ public class UITest extends Application {
 
         addFieldBox.getChildren().addAll(fieldIDInput, fieldNameInput, fieldSizeInput, fieldLocation, submitFieldInfo);
 
-        RectButton addField = new RectButton("","Add Field");
+        Button addField = new Button("Add Field");
         addField.setOnMouseClicked(e ->{
             stage.setScene(addFieldScene);
         });
@@ -541,7 +542,8 @@ public class UITest extends Application {
         final VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label,fieldBackToMain, grainTable);
+        Label test = new Label("Field");
+        vbox.getChildren().addAll(test,fieldBackToMain, grainTable);
         fieldTable.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
@@ -605,7 +607,7 @@ public class UITest extends Application {
         Scene deleteFieldScene = new Scene(deleteFieldBox,300,250);
 
 
-        RectButton deleteField = new RectButton("", "Delete Field");
+        Button deleteField = new Button("Delete Field");
         deleteField.setOnMouseClicked(e ->{
             stage.setScene(deleteFieldScene);
         });
