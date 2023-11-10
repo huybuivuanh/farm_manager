@@ -1,5 +1,6 @@
 package org.openjfx.javafxmavenarchetypes;
 
+import control.TaskControl;
 import control.UserControl;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
@@ -76,26 +77,20 @@ public class UITest extends Application {
 
 
 
-
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private TableView<Task> taskTable = new TableView<Task>();
-
+    TaskControl taskController = new TaskControl();
 
     /**
      * new Task("124124", "Do the tasky", "This is my description", LocalDateTime.now()),
      *                     new Task("1243263456", "Do the tasky2", "My second description", LocalDateTime.now())
      */
-    private ObservableList<Task> taskData =
-            FXCollections.observableArrayList(
-                    new Task("124124", "Do the tasky", "This is my description", LocalDateTime.now()),
-                    new Task("1243263456", "Do the tasky2", "My second description", LocalDateTime.now())
-            );
+    private ObservableList<Task> taskData = taskController.taskList;
 
 
     private TableView<TaskBar> bars = new TableView<TaskBar>();
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private TableView<User> userTable = new TableView<User>();
-
-
     UserControl userController = new UserControl();
     /**
      * new User ...
@@ -360,8 +355,8 @@ public class UITest extends Application {
 
         Label albel = new Label("Popup");
         TextField idInput = new TextField("Input ID (optional)");
-        TextField taskNameF = new TextField("Please up taskName");
-        TextField descriptionF = new TextField("Description");
+        TextField taskNameF = new TextField("Input taskName");
+        TextField descriptionF = new TextField("Input task description");
         DatePicker dueDate = new DatePicker();
         Button submitTask = new Button("submit");
 
@@ -372,19 +367,25 @@ public class UITest extends Application {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Button addTask = new Button("add Task");
         addTask.setOnMouseClicked(e ->{
+           idInput.setText("Input ID (optional)");
+           taskNameF.setText("Input taskName");
+           descriptionF.setText("Input task description");
+           dueDate.setValue(null);
            stage.setScene(addUserScene);
         });
 
         submitTask.setOnMouseClicked(e ->{
-            Task newTask = new Task(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
-            taskData.add(newTask);
+            //Task newTask = new Task(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
+            //taskData.add(newTask);
+            taskController.addTask(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
             stage.setScene(taskScene);
         });
-        Button editTask = new Button("edit task");
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Todo: Task Editing
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        Button editTask = new Button("edit task");
         VBox userEditBox = new VBox(30);
         Scene editUserScene = new Scene(userEditBox,300,250);
 
@@ -396,15 +397,13 @@ public class UITest extends Application {
 
         userEditBox.getChildren().addAll(idInputEdit,taskNameFEdit,descriptionFEdit,dueDateEdit,submitTaskEdit);
         submitTaskEdit.setOnMouseClicked(e ->{
-            taskTable.getSelectionModel().getSelectedItem().setID(idInputEdit.getText());
-            taskTable.getSelectionModel().getSelectedItem().setTaskName(taskNameFEdit.getText());
-            taskTable.getSelectionModel().getSelectedItem().setDescription(descriptionFEdit.getText());
-            taskTable.getSelectionModel().getSelectedItem().setDueDate(dueDateEdit.getValue().atTime(LocalTime.now()));
+            taskController.editTask(taskTable.getSelectionModel().getSelectedItem().getID(),
+                    idInputEdit.getText(), taskNameFEdit.getText(), descriptionFEdit.getText(),
+                    dueDateEdit.getValue().atTime(LocalTime.now()));
             System.out.println(taskTable.getSelectionModel().getSelectedItem());
             stage.setScene(taskScene);
             taskTable.refresh();
         });
-
 
         editTask.setOnMouseClicked(e ->{
             idInputEdit.setText(taskTable.getSelectionModel().getSelectedItem().getID());
@@ -421,13 +420,9 @@ public class UITest extends Application {
         Button markComplete = new Button("Mark Complete");
 
         markComplete.setOnMouseClicked(e ->{
-            taskTable.getSelectionModel().getSelectedItem().markAsCompleted(true);
-            taskTable.getSelectionModel().getSelectedItem().setInProgress(false);
-            taskTable.getItems().remove(taskTable.getSelectionModel().getSelectedItem());
+            taskController.completeTask(taskTable.getSelectionModel().getSelectedItem().getID());
             taskTable.refresh();
         });
-
-        Button viewCompleted = new Button("newView");
 
         Button taskBackToMain = new Button("back");
         taskBackToMain.setOnMouseClicked(e ->{
@@ -435,10 +430,34 @@ public class UITest extends Application {
         });
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Todo: the view of completed tasks
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        VBox completedTaskBox = new VBox(30);
+        Scene completedTaskScene = new Scene(completedTaskBox,300,250);
+
+
+
+        Button viewCompleted = new Button("Completed Tasks");
+        viewCompleted.setOnMouseClicked(e->{
+            stage.setScene(completedTaskScene);
+        });
+
+        Button completedTaskBackToMain = new Button("back");
+        completedTaskBackToMain.setOnMouseClicked(e ->{
+            stage.setScene(taskScene);
+        });
+
+        Label completedTaskLabel = new Label("Popup");
+        completedTaskBox.getChildren().addAll(completedTaskLabel, completedTaskBackToMain);
+
+//        HBox completedTaskTopBar= new HBox();
+//        completedTaskTopBar.getChildren().addAll(completedTaskBackToMain);
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Todo: Task view formatting (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         HBox topBar= new HBox();
-        topBar.getChildren().addAll(addTask,editTask,markComplete, taskBackToMain);
+        topBar.getChildren().addAll(addTask,editTask,markComplete,viewCompleted ,taskBackToMain);
 
         TableColumn<Task, String> taskIDCol = new TableColumn<Task, String>("Task ID");
 

@@ -53,8 +53,7 @@ public class UserControl {
         boolean newIdAlreadyInUse = false;
 
         // check if the user to be edited exists
-        for (User employee: allEmployees)
-        {
+        for (User employee: allEmployees) {
             if (employee.getID().equals(oldId))
             {
                 edited = (Employee) employee;
@@ -67,8 +66,7 @@ public class UserControl {
         }
         else {
             // check if the suggested new ID is already in use by a DIFFERENT USER
-            for (User employee: allEmployees)
-            {
+            for (User employee: allEmployees) {
                 if (employee.getID().equals(newId) && employee != edited) {
                     newIdAlreadyInUse = true;
                     break;
