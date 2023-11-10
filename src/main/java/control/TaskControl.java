@@ -127,7 +127,7 @@ public class TaskControl {
         }
         else{
             completed.markAsCompleted(true);
-            completed.setInProgress(false);
+            //completed.setInProgress(false);
             finishedTaskList.add(completed);
             taskList.remove(completed);
         }
