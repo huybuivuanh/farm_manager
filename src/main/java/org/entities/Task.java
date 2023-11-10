@@ -1,6 +1,5 @@
-package entities;
+package org.entities;
 
-import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
@@ -9,9 +8,8 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
-public class Task implements DatabaseInterface<Task> {
+public class Task {
     /**
      * task ID
      */
@@ -51,79 +49,6 @@ public class Task implements DatabaseInterface<Task> {
      * list of staffs working on this task
      */
     private final ArrayList<User> staffList;
-
-    /**
-     * Translates an object into a JSON Document representation of itself.
-     * @param task : an employee object that is going to be translated into a doc.
-     * @return: a document that is a representation of the task passed.
-     */
-    @Override
-    public Document classToDoc(Task task) {
-        Document newDoc = new Document();
-
-        //  ObjectId task_Id= task.taskId; => this is for the database
-
-        String task_id = task.getID();
-        String task_name= task.getTaskName();
-        String task_description= task.getDescription();
-        LocalDateTime task_date= task.getDate();
-        LocalDateTime task_dueDate = task.getDueDate();
-        String task_status= task.getStatus();
-
-
-        // might need to add the objectID here still
-        newDoc.append("_id", task_id);
-        newDoc.append("task_name", task_name);
-        newDoc.append("task_description", task_description);
-        newDoc.append("task_date", task_dueDate);
-        newDoc.append("task_dueDate", task_dueDate);
-        // not sure how to include status below
-        //newDoc.append("task_status", task_status);
-        Date added = new Date();
-        newDoc.append("Date Added:",added.getTime());
-
-        return newDoc;
-        }
-
-    /**
-     * @return
-     */
-    @Override
-    public Document docToClass() {
-        return null;
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void save() {
-
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void sync() {
-
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public ObjectId getDbId() {
-        return null;
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public boolean isDatabase() {
-        return false;
-    }
 
 
     /**
@@ -225,9 +150,9 @@ public class Task implements DatabaseInterface<Task> {
             if (getCompletionDate() != null)
             {formatCompletionDate = getCompletionDate().format(formatter);}
             StringBuilder result = new StringBuilder("Status: " + status +
-                            "\nIn Progress Date: " + formatProgressDate +
-                            "\nCompletion Date: " + formatCompletionDate +
-                            "\nPause History: [");
+                    "\nIn Progress Date: " + formatProgressDate +
+                    "\nCompletion Date: " + formatCompletionDate +
+                    "\nPause History: [");
             for (LocalDateTime dateTime : getPauseHistory()){
                 String formatPauseHistory = dateTime.format(formatter);
                 result.append(formatPauseHistory).append(", ");
@@ -496,8 +421,8 @@ public class Task implements DatabaseInterface<Task> {
     public static void main(String[] args){
         Task task = new Task("1", "task 1", "task 1 description", LocalDateTime.now());
         LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY, 2);
-        User staff1 = new User("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob);
-        User staff2 = new User("ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob);
+        User staff1 = new User("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob, true);
+        User staff2 = new User("ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob, true);
         task.addStaff(staff1);
         task.addStaff(staff2);
 
@@ -523,7 +448,7 @@ public class Task implements DatabaseInterface<Task> {
 
 
         // testing setters
-        User staff3 = new User("ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob);
+        User staff3 = new User("ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob, false);
         LocalDateTime specificDate = LocalDateTime.of(2012, Month.JANUARY, 2, 0, 32, 43);
 
         task.setID("2");

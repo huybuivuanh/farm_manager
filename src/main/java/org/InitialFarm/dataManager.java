@@ -1,13 +1,12 @@
 package org.InitialFarm;
-import entities.*;
+
+import org.entities.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.entities.DatabaseInterface;
 
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Objects;
 
 import static org.InitialFarm.DataFetch.*;
 
@@ -98,6 +97,17 @@ public class dataManager {
 //        return new dummy( 31, doc.getString("fieldName"),  id);
 //    }
 
+    public <T extends DatabaseInterface<T>> T fetchObjectById(String classType, ObjectId id)throws NoSuchFieldException{
+
+        Object newObj = null;
+
+        if (classType.equals("Field")){
+            Document test = grabByID("FarmData","farm_list",id);
+            Field newfield = new Field(id.toString(),test.getString("fieldName"),Double.parseDouble(test.getString("acres")),test.getString("location"));
+            return (T) newfield;
+        }
+        return null;
+    }
     // new fetch object
     public  <T extends DatabaseInterface<T>> T fetchObject(String classType, Document objectDoc, ObjectId id) throws NoSuchFieldException {
 
@@ -105,16 +115,17 @@ public class dataManager {
 
         if (classType.equals("Employee"))
         {
+            Boolean owner = null;
             newObj =  new Employee(objectDoc.getString("_id"), objectDoc.getString("user_email"),
                     objectDoc.getString("user_password"), objectDoc.getString("first_name"),
-                    objectDoc.getString("last_name"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), objectDoc.getBoolean("bool") );
+                    objectDoc.getString("last_name"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), owner);
         }
 
         else if (classType.equals("Owner"))
         {
             newObj =  new Owner(objectDoc.getString("_id"), objectDoc.getString("user_email"),
                     objectDoc.getString("user_password"), objectDoc.getString("first_name"),
-                    objectDoc.getString("last_name"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), objectDoc.getBoolean("bool") );
+                    objectDoc.getString("last_name"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate() );
         }
 
 //        else if (classType.equals("Field"))
@@ -128,9 +139,7 @@ public class dataManager {
             // "task_date"
 
             newObj =  new Task(objectDoc.getString("_id"), objectDoc.getString("task_name"),
-                    objectDoc.getString("task_description"), Instant.ofEpochMilli(objectDoc.getDate("task_dueDate").getTime())
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDateTime());
+                    objectDoc.getString("task_description"), objectDoc.getDate("task_dueDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         }
         return (T)newObj;
     }

@@ -1,6 +1,6 @@
 package control;
 
-import entities.Task;
+import org.entities.Task;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

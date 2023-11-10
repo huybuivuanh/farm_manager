@@ -1,7 +1,7 @@
 package control;
 
-import entities.Employee;
-import entities.User;
+import org.entities.Employee;
+import org.entities.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ public class UserControl {
     /**
      * list of tasks
      */
-    private ArrayList<entities.User> allEmployees;
+    private ArrayList<org.entities.User> allEmployees;
     private ArrayList<User> owners;
 
     /**

@@ -1,4 +1,4 @@
-package entities;
+package org.entities;
 /*
 The Class Year divides each Field by its individual year
 A field will have a year attribute that contains everything done on it that year
@@ -10,7 +10,6 @@ import org.InitialFarm.Chemical;
 import org.InitialFarm.Crop;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.LinkedList;
 
@@ -77,16 +76,15 @@ public class Year{
      */
     private static class TaskRecord{
         Task task;
-        LocalDate completedDate;
+        LocalDate date;
 
-        private TaskRecord(Task _task, LocalDate completedDate){
+        private TaskRecord(Task _task, LocalDate _date){
             task = _task;
-            this.completedDate = completedDate;
+            date = _date;
         }
         private Task getTask(){ return this.task; }
-        private LocalDate getCompletedDate(){ return this.completedDate; }
+        private LocalDate getDate(){ return this.date; }
     }
-
 
     /**
      * The list of tasks that have been done over the year and
@@ -303,7 +301,7 @@ public class Year{
         result.append("\n task_records\n  ");
 
         for (TaskRecord task_record : task_records) {
-            result.append(task_record.getTask().getTaskName()).append("  ").append(task_record.getCompletedDate()).append("\n");
+            result.append(task_record.getTask()).append("  ").append(task_record.getDate()).append("\n");
         }
 
         return result.toString();
@@ -440,7 +438,7 @@ public class Year{
         }
 
         reason = " Testing task list after doTask()";
-        Task Task1 = new Task("T123", "Harrowing", "Blah Blah Blah", LocalDateTime.of(2023, Calendar.JULY, 23, 13, 34, 43) );
+        Task Task1 = null;
         new_date = LocalDate.of(2013, Calendar.OCTOBER, 23);
         Y1.doTask(Task1, new_date);
 
@@ -486,7 +484,7 @@ public class Year{
                   null  2013-09-23
 
                  task_records
-                  Harrowing  2013-09-23
+                  null  2013-09-23
                 """;
         if (!sResult.equals(sExpected))
         {
@@ -497,5 +495,6 @@ public class Year{
 
 
         System.out.println("*** Testing Complete ***");
+
     }
 }

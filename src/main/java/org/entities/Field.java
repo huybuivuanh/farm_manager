@@ -1,4 +1,4 @@
-package entities;
+package org.entities;
 /*
 Class field that creates/instantiates a field object.
 Every field has a unique ID, a name, size, and location.
