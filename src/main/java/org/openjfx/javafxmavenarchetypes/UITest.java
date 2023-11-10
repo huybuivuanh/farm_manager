@@ -1,5 +1,6 @@
 package org.openjfx.javafxmavenarchetypes;
 
+import control.UserControl;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -95,14 +96,11 @@ public class UITest extends Application {
     private TableView<User> userTable = new TableView<User>();
 
 
+    UserControl userController = new UserControl();
     /**
      * new User ...
      */
-    private ObservableList<User> userData =
-            FXCollections.observableArrayList(
-                    new Employee("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", LocalDate.of(2002, Calendar.FEBRUARY,2), true),
-                    new Employee("ID_2", "notJohn@gmail.com", "notpass1", "John'nt", "Josh'nt", LocalDate.of(2012, Calendar.MAY,2), false)
-                    );
+    private ObservableList<User> userData = userController.allEmployees;
 
 
     private TableView<TaskBar> bars2= new TableView<TaskBar>();
@@ -164,7 +162,11 @@ public class UITest extends Application {
         Button btasks = new Button();
         btasks.setText("Tasks");
         btasks.setOnAction(e -> stage.setScene(taskScene));
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //  TODO : User UI Section ( done )
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         VBox userPage= new VBox(30);
         Scene userScene = new Scene(userPage, 300, 250);
         Button busers= new Button();
@@ -174,9 +176,11 @@ public class UITest extends Application {
         });
         taskSelector.getChildren().addAll(btasks,bfield,bbins,busers);
         taskSelector.setAlignment(Pos.CENTER);
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Todo: adding functionality to the user tab (done)
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // TODO: adding functionality to the user tab (connecting to tasks)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Todo: adding users (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         VBox userBox2 = new VBox(30);
         Scene addUserScene2 = new Scene(userBox2,300,250);
         Label userLabel = new Label("User Popup");
@@ -196,33 +200,43 @@ public class UITest extends Application {
 
         Button addUser = new Button("add User");
         addUser.setOnMouseClicked(e ->{
+                userIdInput.setText("Input User ID");
+                emailInput.setText("User Email");
+                passwordInput.setText("User Password");
+                fNameInput.setText("User First Name");
+                lNameInput.setText("User Last Name");
+                ownerInput.setText("Ownership");
+                dob.setValue(null);
             stage.setScene(addUserScene2);
         });
         submitAddUserInfo.setOnMouseClicked(e ->{
-            User newUser = new Employee(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), parseBoolean(ownerInput.getText()));
-            userData.add(newUser);
+            //User newUser = new Employee(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), parseBoolean(ownerInput.getText()));
+            //userData.add(newUser);
+            userController.addUser(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), parseBoolean(ownerInput.getText()));
             stage.setScene(userScene);
+            // not sure if below line is necessary
+            userTable.refresh();
         });
 
         Button userBackToMain = new Button("back");
         userBackToMain.setOnMouseClicked(e ->{
             stage.setScene(MenuScene);
         });
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// TODO: Complete the functionality of the user tab:
-        // Todo: remove user, edit user , promote user, add & remove ( tasks or responsibilities)
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Todo 1: remove user (done - might need revisiting later)
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Button removeUser = new Button("Remove User");
         removeUser.setOnMouseClicked(e-> {
             // not sure if any additional work is needed here within the class itself
             //userTable.getSelectionModel().getSelectedItem().
-            userTable.getItems().remove(userTable.getSelectionModel().getSelectedItem());
+            //userTable.getItems().remove(userTable.getSelectionModel().getSelectedItem());
+            userController.removeUser(userTable.getSelectionModel().getSelectedItem().getID());
             userTable.refresh();
+            System.out.println(userController.allEmployees);
         });
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Todo 2: edit user (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Button editUser = new Button("edit user");
 
         //Making editPopup
@@ -240,13 +254,10 @@ public class UITest extends Application {
 
         actualUserEditBox.getChildren().addAll(fNameEdit,lNameEdit,ownerEdit,userIdEdit, emailEdit, passwordEdit, dobEdit,submitUserInfoEdit);
         submitUserInfoEdit.setOnMouseClicked(e-> {
-            userTable.getSelectionModel().getSelectedItem().setFirstName(fNameEdit.getText());
-            userTable.getSelectionModel().getSelectedItem().setLastName(lNameEdit.getText());
-            userTable.getSelectionModel().getSelectedItem().setOwner(parseBoolean(ownerEdit.getText()));
-            userTable.getSelectionModel().getSelectedItem().setID(userIdEdit.getText());
-            userTable.getSelectionModel().getSelectedItem().setEmail(emailEdit.getText());
-            userTable.getSelectionModel().getSelectedItem().setPassword(passwordEdit.getText());
-            userTable.getSelectionModel().getSelectedItem().setDOB(dobEdit.getValue());
+            userController.editUser(userTable.getSelectionModel().getSelectedItem().getID(),
+                    userIdEdit.getText(), fNameEdit.getText(),lNameEdit.getText(),
+                    parseBoolean(ownerEdit.getText()),emailEdit.getText(),
+                    passwordEdit.getText(), dobEdit.getValue());
             System.out.println(userTable.getSelectionModel().getSelectedItem());
             stage.setScene(userScene);
             userTable.refresh();
@@ -262,65 +273,69 @@ public class UITest extends Application {
             dobEdit.setValue(userTable.getSelectionModel().getSelectedItem().getDOB());
 
             stage.setScene(actualUserEditScene);
+            System.out.println(userController.allEmployees);
         });
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Todo 3: promote user (done - revisit changes to employee hierarchy)
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Button promoteUser = new Button("Promote User");
         promoteUser.setOnMouseClicked(e-> {
             // not sure if any additional work is needed here within the class itself
             //userTable.getSelectionModel().getSelectedItem().
-            userTable.getSelectionModel().getSelectedItem().setOwner(true);
+            userController.promoteUser(userTable.getSelectionModel().getSelectedItem().getID());
+            //userTable.getSelectionModel().getSelectedItem().setOwner(true);
             userTable.refresh();
+            System.out.println(userController.allEmployees);
         });
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Todo 3: task addition and removal.
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Button userTaskAssigner = new Button("Assign Task");
 
 
 
 
-// TODO: -----------------------------------------------------------------------------------------------------------------------------
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Todo: User Table Formatting (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         HBox topUserBar= new HBox();
         topUserBar.getChildren().addAll(addUser,editUser,removeUser, promoteUser ,userBackToMain);
 
-        TableColumn userIDCol = new TableColumn("User ID");
+        TableColumn<User, String> userIDCol = new TableColumn<User, String>("User ID");
         userIDCol.setMinWidth(130);
         userIDCol.setCellValueFactory(
                 new PropertyValueFactory<User, String>("ID")
         );
 
-        TableColumn userEmailCol = new TableColumn("User Email");
+        TableColumn<User, String> userEmailCol = new TableColumn<User, String>("User Email");
         userEmailCol.setMinWidth(130);
         userEmailCol.setCellValueFactory(
                 new PropertyValueFactory<User, String>("email")
         );
-        TableColumn userPasswordCol = new TableColumn("User Password");
+        TableColumn<User, String> userPasswordCol = new TableColumn<User, String>("User Password");
         userPasswordCol.setMinWidth(130);
         userPasswordCol.setCellValueFactory(
                 new PropertyValueFactory<User, String>("password")
         );
-        TableColumn userFirstNameCol = new TableColumn("User First Name");
+        TableColumn<User, String> userFirstNameCol = new TableColumn<User, String>("User First Name");
         userFirstNameCol.setMinWidth(130);
         userFirstNameCol.setCellValueFactory(
                 new PropertyValueFactory<User, String>("firstName")
         );
-        TableColumn userLastNameCol = new TableColumn("User Last Name");
-        userLastNameCol.setMinWidth(130);
-        userLastNameCol.setCellValueFactory(
-                new PropertyValueFactory<User, String>("lastName")
-        );
+            TableColumn<User, String> userLastNameCol = new TableColumn<User, String>("User Last Name");
+            userLastNameCol.setMinWidth(130);
+            userLastNameCol.setCellValueFactory(
+                    new PropertyValueFactory<User, String>("lastName")
+            );
 
-
-        TableColumn userDOBCol = new TableColumn("User Date of Birth");
+        TableColumn<User, LocalDate> userDOBCol = new TableColumn<User, LocalDate>("User Date of Birth");
         userDOBCol.setMinWidth(130);
         userDOBCol.setCellValueFactory(
                 new PropertyValueFactory<User, LocalDate>("DOB")
         );
 
-        TableColumn userOwnership = new TableColumn("Owner (T/F)");
+        TableColumn<User, Boolean> userOwnership = new TableColumn<User, Boolean>("Owner (T/F)");
         userOwnership.setMinWidth(130);
         userOwnership.setCellValueFactory(
                 new PropertyValueFactory<User, Boolean>("owner")
@@ -330,9 +345,15 @@ public class UITest extends Application {
         userTable.setEditable(true);
         userTable.getColumns().addAll(userFirstNameCol, userLastNameCol, userOwnership,userIDCol,userEmailCol,userPasswordCol, userDOBCol);
         userPage.getChildren().addAll(topUserBar,userTable);
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //Todo: Making the add task window pop up (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //TODO: Task UI Section ( In progress)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //Todo: Making the add task window pop up (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         VBox userBox = new VBox(30);
         Scene addUserScene = new Scene(userBox,300,250);
 
@@ -345,7 +366,9 @@ public class UITest extends Application {
 
         userBox.getChildren().addAll(idInput,taskNameF,descriptionF,dueDate,submitTask);
 
-        //Todo: Finished add task pop up (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //Todo: Task Addition (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Button addTask = new Button("add Task");
         addTask.setOnMouseClicked(e ->{
            stage.setScene(addUserScene);
@@ -358,7 +381,9 @@ public class UITest extends Application {
         });
         Button editTask = new Button("edit task");
 
-        //Todo: Making edit task Popup (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //Todo: Task Editing
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         VBox userEditBox = new VBox(30);
         Scene editUserScene = new Scene(userEditBox,300,250);
 
@@ -380,8 +405,6 @@ public class UITest extends Application {
         });
 
 
-
-        //Todo: adding functionality required for editing task.
         editTask.setOnMouseClicked(e ->{
             idInputEdit.setText(taskTable.getSelectionModel().getSelectedItem().getID());
             taskNameFEdit.setText(taskTable.getSelectionModel().getSelectedItem().getTaskName());
@@ -391,7 +414,9 @@ public class UITest extends Application {
             stage.setScene(editUserScene);
         });
 
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Todo: Task Completion (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Button markComplete = new Button("Mark Complete");
 
         markComplete.setOnMouseClicked(e ->{
@@ -408,10 +433,13 @@ public class UITest extends Application {
             stage.setScene(MenuScene);
         });
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Todo: Task view formatting (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         HBox topBar= new HBox();
         topBar.getChildren().addAll(addTask,editTask,markComplete, taskBackToMain);
 
-        TableColumn taskIDCol = new TableColumn("Task ID");
+        TableColumn<Task, String> taskIDCol = new TableColumn<Task, String>("Task ID");
 
         taskIDCol.editableProperty().setValue(true);
         taskIDCol.setMinWidth(130);
@@ -419,19 +447,19 @@ public class UITest extends Application {
                 new PropertyValueFactory<Task, String>("ID")
         );
 
-        TableColumn taskName = new TableColumn("Task Name");
+        TableColumn<Task, String> taskName = new TableColumn<Task, String>("Task Name");
         taskName.setMinWidth(130);
         taskName.setCellValueFactory(
                 new PropertyValueFactory<Task, String>("taskName")
         );
 
-        TableColumn taskDescription = new TableColumn("Task description");
+        TableColumn<Task, String> taskDescription = new TableColumn<Task, String>("Task description");
         taskDescription.setMinWidth(130);
         taskDescription.setCellValueFactory(
                 new PropertyValueFactory<Task, String>("description")
         );
 
-        TableColumn taskDueDate = new TableColumn("Due date");
+        TableColumn<Task, LocalDateTime> taskDueDate = new TableColumn<Task, LocalDateTime>("Due date");
         taskDueDate.setMinWidth(130);
         taskDueDate.setCellValueFactory(
                 new PropertyValueFactory<Task, LocalDateTime>("dueDate")
@@ -442,30 +470,35 @@ public class UITest extends Application {
         taskTable.getColumns().addAll(taskIDCol,taskName,taskDescription,taskDueDate);
         taskPage.getChildren().addAll(topBar,taskTable);
 
-        //Bin page
-        
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // fields page
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // TODO: Fields UI Section (in progress)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        TableColumn fieldIDCol = new TableColumn("Field ID");
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // todo: field Table formatting
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        TableColumn<Field, String> fieldIDCol = new TableColumn<Field, String>("Field ID");
         fieldIDCol.setMinWidth(130);
         fieldIDCol.setCellValueFactory(
                 new PropertyValueFactory<Field, String>("ID")
         );
 
-        TableColumn fieldNameCol = new TableColumn("Field Name");
+        TableColumn<Field, String> fieldNameCol = new TableColumn<Field, String>("Field Name");
         fieldNameCol.setMinWidth(130);
         fieldNameCol.setCellValueFactory(
                 new PropertyValueFactory<Field, String>("name")
         );
 
-        TableColumn fieldSizeCol = new TableColumn("Field Size");
+        TableColumn<Field, Double> fieldSizeCol = new TableColumn<Field, Double>("Field Size");
         fieldSizeCol.setMinWidth(130);
         fieldSizeCol.setCellValueFactory(
                 new PropertyValueFactory<Field, Double>("size")
         );
 
-        TableColumn fieldLocationCol = new TableColumn("Field Location");
+        TableColumn<Field, String> fieldLocationCol = new TableColumn<Field, String>("Field Location");
         fieldLocationCol.setMinWidth(130);
         fieldLocationCol.setCellValueFactory(
                 new PropertyValueFactory<Field, String>("location")
@@ -474,8 +507,9 @@ public class UITest extends Application {
         fieldTable.setItems(fieldData);
         fieldTable.getColumns().addAll(fieldIDCol, fieldNameCol, fieldSizeCol, fieldLocationCol);
 
-
-        // add fields page
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Todo: field addition
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         VBox addFieldBox = new VBox(30);
         Scene addFieldScene = new Scene(addFieldBox,300,250);
 
@@ -484,9 +518,6 @@ public class UITest extends Application {
         TextField fieldSizeInput = new TextField("Field Size");
         TextField fieldLocation = new TextField("Field Location");
         Button submitFieldInfo = new Button("Submit");
-        //Making out crop page
-        /////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////
 
         Button fieldBackToMain = new Button("back");
         fieldBackToMain.setOnMouseClicked(e ->{
@@ -504,8 +535,10 @@ public class UITest extends Application {
             fieldData.add(newField);
             stage.setScene(fieldScene);
         });
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // todo: crop and record view page within field
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        // crop pop up
         VBox cropPage = new VBox(30);
         Scene cropScene = new Scene(cropPage,300,250);
 
@@ -519,18 +552,21 @@ public class UITest extends Application {
         Label recordLabel = new Label("Records");
         recordLabel.setFont(new Font("Arial", 20));
 
-        // crop table
-        TableColumn cropTypeCol = new TableColumn("Crop Type");
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // todo: crop table formatting
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        TableColumn<Crop, String> cropTypeCol = new TableColumn<Crop, String>("Crop Type");
         cropTypeCol.setMinWidth(130);
         cropTypeCol.setCellValueFactory(
                 new PropertyValueFactory<Crop, String>("cropType"));
 
-        TableColumn cropVarietyCol = new TableColumn("Crop Variety");
+        TableColumn<Crop, String> cropVarietyCol = new TableColumn<Crop, String>("Crop Variety");
         cropVarietyCol.setMinWidth(130);
         cropVarietyCol.setCellValueFactory(
                 new PropertyValueFactory<Crop, String>("cropVariety"));
 
-        TableColumn bushelWeightCol = new TableColumn("Bushel Weight");
+        TableColumn<Crop, Float> bushelWeightCol = new TableColumn<Crop, Float>("Bushel Weight");
         bushelWeightCol.setMinWidth(70);
         bushelWeightCol.setCellValueFactory(
                 new PropertyValueFactory<Crop, Float>("bushelWeight"));
@@ -553,38 +589,41 @@ public class UITest extends Application {
             }
         });
 
-        // record table
-        TableColumn chemCol = new TableColumn("Chemical Sprayed");
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // todo: record table formatting
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        TableColumn<Record, String> chemCol = new TableColumn<Record, String>("Chemical Sprayed");
         chemCol.setMinWidth(130);
         chemCol.setCellValueFactory(
                 new PropertyValueFactory<Record, String>("chemSprayed"));
 
-        TableColumn sprayingDateCol = new TableColumn("Spraying Date");
+        TableColumn<Record, LocalDate> sprayingDateCol = new TableColumn<Record, LocalDate>("Spraying Date");
         sprayingDateCol.setMinWidth(130);
         sprayingDateCol.setCellValueFactory(
                 new PropertyValueFactory<Record, LocalDate>("sprayingDate"));
 
-        TableColumn seedPlantedCol = new TableColumn("Seed Planted");
+        TableColumn<Record, String> seedPlantedCol = new TableColumn<Record, String>("Seed Planted");
         seedPlantedCol.setMinWidth(130);
         seedPlantedCol.setCellValueFactory(
                 new PropertyValueFactory<Record, String>("seedPlanted"));
 
-        TableColumn seedingRateCol = new TableColumn("Seeding Rate (lbs/acre)");
+        TableColumn<Record, Double> seedingRateCol = new TableColumn<Record, Double>("Seeding Rate (lbs/acre)");
         seedingRateCol.setMinWidth(150);
         seedingRateCol.setCellValueFactory(
                 new PropertyValueFactory<Record, Double>("seedingRate"));
 
-        TableColumn seedingDateCol = new TableColumn("Seeding Date");
+        TableColumn<Record, LocalDate> seedingDateCol = new TableColumn<Record, LocalDate>("Seeding Date");
         seedingDateCol.setMinWidth(130);
         seedingDateCol.setCellValueFactory(
                 new PropertyValueFactory<Record, LocalDate>("seedingDate"));
 
-        TableColumn fertilizerCol = new TableColumn("Fertilizer");
+        TableColumn<Record, String> fertilizerCol = new TableColumn<Record, String>("Fertilizer");
         fertilizerCol.setMinWidth(130);
         fertilizerCol.setCellValueFactory(
                 new PropertyValueFactory<Record, String>("fertilizer"));
 
-        TableColumn fertilizerDateCol = new TableColumn("Fertilizer Date");
+        TableColumn<Record, LocalDate> fertilizerDateCol = new TableColumn<Record, LocalDate>("Fertilizer Date");
         fertilizerDateCol.setMinWidth(130);
         fertilizerDateCol.setCellValueFactory(
                 new PropertyValueFactory<Record, LocalDate>("fertilizerDate"));
@@ -602,10 +641,11 @@ public class UITest extends Application {
         cropFunctionsBar.getChildren().addAll(cropBackToFields);
         cropPage.getChildren().addAll(cropFunctionsBar, yearLabel, cropLabel, grainTable, recordLabel, recordTable);
 
-        // delete field
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // todo: field deletion
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         VBox deleteFieldBox = new VBox(30);
         Scene deleteFieldScene = new Scene(deleteFieldBox,300,250);
-
 
         Button deleteField = new Button("Delete Field");
         deleteField.setOnMouseClicked(e ->{
@@ -646,44 +686,58 @@ public class UITest extends Application {
         fieldPage.getChildren().addAll(fieldFunctionsBar, fieldTable);
 
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //TODO: Bins UI Section
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //todo: Bin table formatting
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         final Label binlabel = new Label("Bin Table");
         binlabel.setFont(new Font("Arial", 20));
 
         binTable.setEditable(true);
 
-        TableColumn binNameCol = new TableColumn("Bin Name");
+        TableColumn<GrainBin, String> binNameCol = new TableColumn<GrainBin, String>("Bin Name");
         binNameCol.setMinWidth(130);
         binNameCol.setCellValueFactory(
-                new PropertyValueFactory<Crop, String>("binName"));
+                new PropertyValueFactory<GrainBin, String>("binName"));
 
-        TableColumn binLocationCol = new TableColumn("Bin Location");
+        TableColumn<GrainBin, String> binLocationCol = new TableColumn<GrainBin, String>("Bin Location");
         binLocationCol.setMinWidth(130);
         binLocationCol.setCellValueFactory(
-                new PropertyValueFactory<Crop, String>("binLocation"));
+                new PropertyValueFactory<GrainBin, String>("binLocation"));
 
-        TableColumn binSizeCol = new TableColumn("Bin Size");
+        TableColumn<GrainBin, Integer> binSizeCol = new TableColumn<GrainBin, Integer>("Bin Size");
         binSizeCol.setMinWidth(70);
         binSizeCol.setCellValueFactory(
-                new PropertyValueFactory<Crop, Float>("binSize"));
+                new PropertyValueFactory<GrainBin, Integer>("binSize"));
 
-        TableColumn binHopperCol = new TableColumn("Bin Hopper");
+        TableColumn<GrainBin, Boolean> binHopperCol = new TableColumn<GrainBin, Boolean>("Bin Hopper");
         binHopperCol.setMinWidth(70);
         binHopperCol.setCellValueFactory(
-                new PropertyValueFactory<Crop, Boolean>("hopper"));
+                new PropertyValueFactory<GrainBin, Boolean>("hopper"));
 
-        TableColumn binFanCol = new TableColumn("Bin Fan");
+        TableColumn<GrainBin, String> binFanCol = new TableColumn<GrainBin, String>("Bin Fan");
         binFanCol.setMinWidth(70);
         binFanCol.setCellValueFactory(
-                new PropertyValueFactory<Crop, Float>("fan"));
+                new PropertyValueFactory<GrainBin, String>("fan"));
 
         binTable.setItems(grainBinData);
         binTable.getColumns().addAll(binNameCol,binLocationCol,binSizeCol,binHopperCol,binFanCol);
 
+        Button binsBackToMain = new Button("Back");
+        binsBackToMain.setOnMouseClicked(e ->{
+            stage.setScene(MenuScene);
+        });
+
         final VBox binvbox = new VBox();
         binvbox.setSpacing(5);
         binvbox.setPadding(new Insets(10, 0, 0, 10));
-        binvbox.getChildren().addAll(binlabel, binTable);
+        binvbox.getChildren().addAll(binsBackToMain,binlabel, binTable);
         ((Group) sceneBins.getRoot()).getChildren().addAll(binvbox);
 
         stage.setScene(MenuScene);

@@ -4,6 +4,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class User {
+
+    /**
+     * whether is owner
+     */
     public Boolean isOwner;
     /**
      * user ID
@@ -40,10 +44,7 @@ public class User {
      */
     ArrayList<Task> taskList;
 
-    /**
-     * whether is owner
-     */
-    boolean owner;
+
 
 
     /**
@@ -63,7 +64,7 @@ public class User {
         lastName = last_name;
         DOB = dob;
         taskList = new ArrayList<>();
-        owner = ownership;
+        isOwner = ownership;
     }
 
     /**
@@ -71,14 +72,14 @@ public class User {
      * @return user ownership boolean
      */
     public boolean getOwner() {
-        return owner;
+        return isOwner;
     }
 
     /**
      * set user ownership
      */
     public void setOwner(boolean X) {
-        owner=X;
+        isOwner=X;
     }
 
 
