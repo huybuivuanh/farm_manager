@@ -396,7 +396,7 @@ public class UITest extends Application {
 
         markComplete.setOnMouseClicked(e ->{
             taskTable.getSelectionModel().getSelectedItem().markAsCompleted(true);
-            taskTable.getSelectionModel().getSelectedItem().setInProgress(false);
+//            taskTable.getSelectionModel().getSelectedItem().setInProgress(false);
             taskTable.getItems().remove(taskTable.getSelectionModel().getSelectedItem());
             taskTable.refresh();
         });
