@@ -1,5 +1,6 @@
 package org.entities;
 
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
@@ -9,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Task {
+public class Task implements DatabaseInterface{
     /**
      * task ID
      */
@@ -40,127 +41,18 @@ public class Task {
      */
     private LocalDateTime dueDate;
 
-    /**
-     * status of task
-     */
-    private final Status status;
 
     /**
      * list of staffs working on this task
      */
     private final ArrayList<User> staffList;
 
+    private boolean isCompleted = false;
+    private LocalDateTime completionDate;
+    private boolean isPaused = false;
+    private LocalDateTime pauseDate;
 
-    /**
-     * helper class to keep track of the status
-     */
-    private static class Status {
 
-        // status and date attributes
-        private boolean isCompleted = false;
-        private LocalDateTime completionDate;
-        private boolean inProgress = false;
-        private LocalDateTime inProgressDate;
-        private boolean isPaused = false;
-
-        private final ArrayList<LocalDateTime> pauseHistory;
-
-        private Status(){ pauseHistory = new ArrayList<>();}
-
-        public boolean isCompleted() {
-            return isCompleted;
-        }
-
-        public LocalDateTime getCompletionDate() {
-            return completionDate;
-        }
-
-        public boolean inProgress() {
-            return inProgress;
-        }
-
-        public LocalDateTime getInProgressDate() {
-            return inProgressDate;
-        }
-
-        public boolean isPaused() {
-            return isPaused;
-        }
-
-        public ArrayList<LocalDateTime> getPauseHistory() {
-            return pauseHistory;
-        }
-
-        public void setCompleted(boolean completed) {
-            isCompleted = completed;
-            inProgress = false;
-            if (completed && isPaused){
-                setPaused(false);
-            }
-            setCompletionDate(LocalDateTime.now());
-        }
-
-        public void setCompletionDate(LocalDateTime completion_date) {
-            completionDate = completion_date;
-        }
-
-        public void setInProgress(boolean in_progress) {
-            inProgress = in_progress;
-            isCompleted = false;
-            if (in_progress && isPaused) {
-                setPaused(false);
-            }
-            setInProgressDate(LocalDateTime.now());
-        }
-
-        public void setInProgressDate(LocalDateTime inProgressDate) {
-            this.inProgressDate = inProgressDate;
-        }
-
-        public void setPaused(boolean paused) {
-            isPaused = paused;
-            if (paused){
-                inProgress = false;
-                isCompleted = false;
-            }
-            pauseHistory.add(LocalDateTime.now());
-        }
-
-        public String toString(){
-            DateTimeFormatter formatter
-                    = DateTimeFormatter.ofPattern(
-                    "yyyy-MM-dd HH:mm a");
-            String status;
-            if (isCompleted()){
-                status = "Completed";
-            }
-            else if (inProgress()){
-                status = "In Progress";
-            }
-            else if (isPaused()){
-                status = "Paused";
-            }
-            else{
-                status = "Incomplete";
-            }
-            String formatProgressDate = null;
-            String formatCompletionDate = null;
-            if(getInProgressDate() != null)
-            {formatProgressDate = getInProgressDate().format(formatter);}
-            if (getCompletionDate() != null)
-            {formatCompletionDate = getCompletionDate().format(formatter);}
-            StringBuilder result = new StringBuilder("Status: " + status +
-                    "\nIn Progress Date: " + formatProgressDate +
-                    "\nCompletion Date: " + formatCompletionDate +
-                    "\nPause History: [");
-            for (LocalDateTime dateTime : getPauseHistory()){
-                String formatPauseHistory = dateTime.format(formatter);
-                result.append(formatPauseHistory).append(", ");
-            }
-            result.append("]");
-            return result.toString();
-        }
-    }
 
     /**
      * constructor
@@ -174,7 +66,6 @@ public class Task {
         taskName = task_name;
         description = descr;
         dueDate = due_date;
-        status = new Status();
         date = LocalDateTime.now();
         staffList = new ArrayList<>();
     }
@@ -227,29 +118,46 @@ public class Task {
         return staffList;
     }
 
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    public LocalDateTime getCompletionDate() {
+        return completionDate;
+    }
+
+    public LocalDateTime getPauseDate() {
+        return pauseDate;
+    }
+
 
     /**
-     * task status (completed)
-     * @return true/false
+     * set task status to completed
      */
-    public boolean isCompleted(){
-        return status.isCompleted();
+    public void markAsCompleted(boolean completed){
+        if (isPaused) {
+            isPaused = false;
+        }
+        if (completed){
+            completionDate = LocalDateTime.now();
+        }
+        isCompleted = completed;
     }
 
     /**
-     * task status (in progress)
-     * @return true/false
+     * pause task
+     * @param is_paused true/false
      */
-    public boolean inProgress(){
-        return status.inProgress();
-    }
-
-    /**
-     * task status (paused)
-     * @return true/false
-     */
-    public boolean isPaused(){
-        return status.isPaused();
+    public void pauseTask(boolean is_paused){
+        if (is_paused){
+            isCompleted = false;
+            pauseDate = LocalDateTime.now();
+        }
+        isPaused = is_paused;
     }
 
 
@@ -285,29 +193,6 @@ public class Task {
         this.dueDate = dueDate;
     }
 
-
-    /**
-     * set task status to completed
-     */
-    public void markAsCompleted(boolean completed){
-        status.setCompleted(completed);
-    }
-
-    /**
-     * set task status to in progress
-     * @param inProgress true/false
-     */
-    public void setInProgress(boolean inProgress){
-        status.setInProgress(inProgress);
-    }
-
-    /**
-     * pause task
-     * @param is_paused true/false
-     */
-    public void pauseTask(boolean is_paused){
-        status.setPaused(is_paused);
-    }
 
     /**
      * check to see if task is overdue
@@ -356,9 +241,6 @@ public class Task {
         if (isCompleted()){
             taskStatus = "Completed";
         }
-        else if (inProgress()){
-            taskStatus = "In Progress";
-        }
         else if (isPaused()){
             taskStatus = "Paused";
         }
@@ -368,20 +250,13 @@ public class Task {
         return taskStatus;
     }
 
-    public Status getStatusObject(){
-        return status;
-    }
 
-    // this method may not be necessary
     public void setStatus(String status){
         if (status.equals("Completed")){
             markAsCompleted(true);
         }
         else if (status.equals("Paused")) {
             pauseTask(true);
-        }
-        else if (status.equals("In Progress")){
-            setInProgress(true);
         }
         else if (status.equals("Incomplete")){
             markAsCompleted(false);
@@ -396,12 +271,13 @@ public class Task {
      * @return string representation of task
      */
     public String toString(){
-        StringBuilder result = new StringBuilder("Task ID: " + ID +
-                "\nTask name: " + taskName +
-                "\nTask Description: " + description +
-                "\nCreated: " + date +
-                "\nDue: " + dueDate +
+        StringBuilder result = new StringBuilder("Task ID: " + getID() +
+                "\nTask name: " + getTaskName() +
+                "\nTask Description: " + getDescription() +
+                "\nCreated: " + getDate() +
                 "\nStatus: " + getStatus() +
+                "\nCompletion Date: " + getCompletionDate() +
+                "\nPause Date: " + getPauseDate() +
                 "\nStaffs: [");
         if (!staffList.isEmpty()) {
             for (User staff : staffList) {
@@ -412,6 +288,37 @@ public class Task {
             result.append(" empty ");
         result.append( "]");
         return result.toString();
+    }
+
+
+    @Override
+    public Document classToDoc(Object inter) {
+        return null;
+    }
+
+    @Override
+    public Document docToClass() {
+        return null;
+    }
+
+    @Override
+    public void save() {
+
+    }
+
+    @Override
+    public void sync() {
+
+    }
+
+    @Override
+    public ObjectId getDbId() {
+        return null;
+    }
+
+    @Override
+    public boolean isDatabase() {
+        return false;
     }
 
     /**
@@ -427,6 +334,7 @@ public class Task {
         task.addStaff(staff2);
 
         // testing getters
+        System.out.println("Testing getters\n");
         System.out.println("Task ID: " + task.getID());
         System.out.println("Task name :" + task.getTaskName());
         System.out.println("Task Description: " + task.getDescription());
@@ -435,19 +343,19 @@ public class Task {
         System.out.println("Is overdue: " + task.isOverDue());
         System.out.println("Completed: " + task.isCompleted());
         System.out.println("Paused: " + task.isPaused());
-        System.out.println("In Progress: " + task.inProgress());
 
 
-        StringBuilder result = new StringBuilder("[");
+        StringBuilder result = new StringBuilder();
         for (User staff : task.getStaffList()) {
             result.append(staff.getFirstName()).append(", ");
         }
-        System.out.println("Staff List: " + result + "]\n");
-        System.out.println("Detailed Status:\n" + task.getStatusObject());
+        System.out.println("Staff List: [" + result + "]\n");
+
 
 
 
         // testing setters
+        System.out.println("Testing setters\n");
         User staff3 = new User("ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob, false);
         LocalDateTime specificDate = LocalDateTime.of(2012, Month.JANUARY, 2, 0, 32, 43);
 
@@ -456,14 +364,12 @@ public class Task {
         task.setDescription("task 2 description");
         task.setDueDate(specificDate);
 
-        task.setInProgress(true);
         task.pauseTask(true);
         task.markAsCompleted(true);
         task.addStaff(staff3);
         task.removeStaff(staff2.getID());
 //        task.removeAllStaffs();
 
-        System.out.println("\n");
         System.out.println("Task ID: " + task.getID());
         System.out.println("Task name: " + task.getTaskName());
         System.out.println("Task Description: " + task.getDescription());
@@ -472,16 +378,18 @@ public class Task {
         System.out.println("Is overdue: " + task.isOverDue());
         System.out.println("Completed: " + task.isCompleted());
         System.out.println("Paused: " + task.isPaused());
-        System.out.println("In Progress: " + task.inProgress());
 
-        result = new StringBuilder();
+
+        StringBuilder result2 = new StringBuilder();
         for (User staff : task.getStaffList()) {
-            result.append(staff.getFirstName()).append(", ");
+            result2.append(staff.getFirstName()).append(", ");
         }
-        System.out.println("Staff List: [" + result + "]\n");
-        System.out.println("Detailed Status:\n" + task.getStatusObject().toString());
+        System.out.println("Staff List: [" + result2 + "]\n");
+
 
         task.removeAllStaff();
-        System.out.println("Staff List: [" + result + "]\n");
+        System.out.println("Staff List: " + task.getStaffList());
+        System.out.println(task);
+
     }
 }

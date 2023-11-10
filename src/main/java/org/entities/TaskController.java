@@ -13,11 +13,13 @@ public class TaskController {
      */
     private ArrayList<Task> taskList;
 
+    private ArrayList<Task> finishedTasks;
     /**
      * constructor
      */
     public TaskController(){
         taskList = new ArrayList<>();
+        finishedTasks = new ArrayList<>();
     }
 
     /**
@@ -30,6 +32,10 @@ public class TaskController {
     public void createTask(String id, String taskName, String description, LocalDateTime due_date) {
         Task newTask = new Task(id, taskName, description, due_date);
         taskList.add(newTask);
+    }
+
+    public ArrayList<Task> getFinishedTasks() {
+        return finishedTasks;
     }
 
     /**
@@ -56,26 +62,13 @@ public class TaskController {
         Task task = getTaskByID(taskId);
         if (task != null) {
             task.markAsCompleted(completed);
+            finishedTasks.add(task);
         }
         else {
             System.out.println("Task with ID \"" + taskId + "\" not found!");
         }
     }
 
-    /**
-     * set status of task (in progress)
-     * @param taskId task id
-     * @param inProgress true/false
-     */
-    public void setTaskInProgress(String taskId, boolean inProgress) {
-        Task task = getTaskByID(taskId);
-        if (task != null) {
-            task.setInProgress(inProgress);
-        }
-        else {
-            System.out.println("Task with ID \"" + taskId + "\" not found!");
-        }
-    }
 
     /**
      * pause task
@@ -159,10 +152,15 @@ public class TaskController {
      */
     public ArrayList<Task> getTaskByStatus(String status){
         ArrayList<Task> tasks = new ArrayList<>();
-        for (Task task : taskList){
-            if (task.getStatus().equals(status)){
-                tasks.add(task);
+        if (status.equals("Completed") || status.equals("Incomplete") || status.equals("Paused")){
+            for (Task task : taskList){
+                if (task.getStatus().equals(status)){
+                    tasks.add(task);
+                }
             }
+        }
+        else {
+            System.out.println("Status must be Completed/Incomplete/Paused");
         }
         return tasks;
     }
@@ -199,11 +197,16 @@ public class TaskController {
      * @param status new task status (completed/incomplete/pause/inprogress/
      */
     public void editTaskDetails(String taskId, String new_name, String new_description, LocalDateTime new_due_date, String status){
-        Task task = this.getTaskByID(taskId);
-        task.setTaskName(new_name);
-        task.setDescription(new_description);
-        task.setDueDate(new_due_date);
-        task.setStatus(status);
+        if (!taskList.isEmpty()){
+            Task task = this.getTaskByID(taskId);
+            task.setTaskName(new_name);
+            task.setDescription(new_description);
+            task.setDueDate(new_due_date);
+            task.setStatus(status);
+        }
+        else{
+            System.out.println("Task list is empty");
+        }
     }
 
     /**
@@ -234,12 +237,14 @@ public class TaskController {
     // modify after testing
     @Override
     public String toString() {
+        StringBuilder result = new StringBuilder();
         if (taskList.isEmpty()){
             return "0 tasks found in task list";
         }
-        StringBuilder result = new StringBuilder();
-        for (Task task : taskList){
-            result.append(task.toString()).append("\n\n");
+        else {
+            for (Task task : taskList) {
+                result.append(task.toString()).append("\n\n");
+            }
         }
         return result.toString();
     }
@@ -272,18 +277,17 @@ public class TaskController {
 
         // status check
 //        System.out.println(controller.getTaskByID("1"));
-//        System.out.println();
+//        System.out.println(controller);
         controller.pauseTask("1", true);
         controller.markTaskAsCompleted("1", true);
-        controller.setTaskInProgress("1", true);
-        controller.setTaskInProgress("1", true);
 //        System.out.println(controller.getTaskByID("1"));
 
         controller.removeFromTaskList("0");
+//       System.out.println(controller.getTaskByID("1"));
         controller.removeStaffFromTask("1", "ID_1");
 //        controller.clearTaskList();
-        controller.setTaskInProgress("2", true);
-        controller.setTaskInProgress("3", true);
+
+//        System.out.println(controller);
 //        System.out.println(controller.getTaskByStatus("In Progress"));
 
 //        System.out.println(controller.getTaskDetails("1"));
@@ -291,8 +295,10 @@ public class TaskController {
         controller.editTaskDetails("1", "new", "new", localDate, "Completed");
 //        System.out.println(controller.getTaskDetails("1"));
 
+//        System.out.println(controller.getFinishedTasks());
 //        System.out.println(controller.getAssignedStaffs("2"));
-        System.out.println(controller.getTotalTaskNum());
+//        System.out.println(controller.getTotalTaskNum());
         System.out.println(controller);
+
     }
 }
