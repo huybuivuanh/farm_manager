@@ -43,7 +43,7 @@ public class User {
     /**
      * whether is owner
      */
-    boolean owner;
+    private boolean owner;
 
 
     /**
