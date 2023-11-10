@@ -1,5 +1,8 @@
 package org.entities;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -42,7 +45,7 @@ public class User {
     /**
      * list of all the task user is doing
      */
-    ArrayList<Task> taskList;
+    ObservableList<Task> taskList;
 
 
 
@@ -63,7 +66,7 @@ public class User {
         firstName = first_name;
         lastName = last_name;
         DOB = dob;
-        taskList = new ArrayList<>();
+        taskList = FXCollections.observableArrayList();;
         isOwner = ownership;
     }
 
@@ -135,7 +138,7 @@ public class User {
      * get task list
      * @return task list
      */
-    public ArrayList<Task> getTaskList() {
+    public ObservableList<Task> getTaskList() {
         return taskList;
     }
 
