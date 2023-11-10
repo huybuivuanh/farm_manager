@@ -78,6 +78,8 @@ public class UITest extends Application {
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Todo: Task tables and data (done)
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private TableView<Task> taskTable = new TableView<Task>();
     private TableView<Task> CompletedTaskTable = new TableView<Task>();
     TaskControl taskController = new TaskControl();
@@ -91,13 +93,21 @@ public class UITest extends Application {
 
     private TableView<TaskBar> bars = new TableView<TaskBar>();
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Todo: User tables and data (Need to implement user tasks view)
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private TableView<User> userTable = new TableView<User>();
+    private TableView<Task> userTasksTable = new TableView<Task>();
+    // for the selected user, will:
+    // 1) pull out the arrayList (to be changed to observable)
+    // 2) set the data of the userTasks TableView above to the contents of that list.
+    // 3) need to implement functionality adding and removing tasks to user array ( could use ones already in user class)
     UserControl userController = new UserControl();
     /**
      * new User ...
      */
     private ObservableList<User> userData = userController.allEmployees;
-
+    private ObservableList<Task> userTaskData= FXCollections.observableArrayList();
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private TableView<TaskBar> bars2= new TableView<TaskBar>();
 
@@ -286,17 +296,79 @@ public class UITest extends Application {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Todo 3: task addition and removal.
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // for the selected user, will:
+        // 1) pull out the arrayList (to be changed to observable)
+        // 2) set the data of the userTasks TableView above to the contents of that list.
+        // 3) need to implement functionality adding and removing tasks to user array ( could use ones already in user class)
+        // todo: first, create bogus tasks for bogus use just to test out view, then add functionality.
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Button userTaskAssigner = new Button("Assign Task");
+        // this assign task should show a list of tasks from which we can choose one to be assigned to the selected user
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //Todo 3: Employee Tasks view.
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        VBox employeeTasksBox = new VBox(30);
+        Scene employeeTasksScene = new Scene(employeeTasksBox,300,250);
+        Label employeeTasksLabel = new Label("Employee Tasks Popup view");
+        Label employeeNameLabel = new Label();
 
+        Button employeeTasks = new Button("View Tasks");
+        employeeTasks.setOnMouseClicked(e->{
+            userTaskData= userTable.getSelectionModel().getSelectedItem().getTaskList();
+            String firstName = userTable.getSelectionModel().getSelectedItem().getFirstName();
+            String lastName =  userTable.getSelectionModel().getSelectedItem().getLastName();
+            employeeNameLabel.setText("Employee: " + firstName +" " + lastName);
+            stage.setScene(employeeTasksScene);
+        });
+
+        Button employeeTasksBackToMain = new Button("back");
+        employeeTasksBackToMain.setOnMouseClicked(e ->{
+            stage.setScene(userScene);
+        });
+
+        TableColumn<Task, String> userTaskIDCol = new TableColumn<Task, String>("Task ID");
+        userTaskIDCol.editableProperty().setValue(true);
+        userTaskIDCol.setMinWidth(130);
+        userTaskIDCol.setCellValueFactory(
+                new PropertyValueFactory<Task, String>("ID")
+        );
+
+        TableColumn<Task, String> userTaskName = new TableColumn<Task, String>("Task Name");
+        userTaskName.setMinWidth(130);
+        userTaskName.setCellValueFactory(
+                new PropertyValueFactory<Task, String>("taskName")
+        );
+
+        TableColumn<Task, String> userTaskDescription = new TableColumn<Task, String>("Task description");
+        userTaskDescription.setMinWidth(130);
+        userTaskDescription.setCellValueFactory(
+                new PropertyValueFactory<Task, String>("description")
+        );
+
+        TableColumn<Task, LocalDateTime> userTaskDueDate = new TableColumn<Task, LocalDateTime>("Due date");
+        userTaskDueDate.setMinWidth(130);
+        userTaskDueDate.setCellValueFactory(
+                new PropertyValueFactory<Task, LocalDateTime>("dueDate")
+        );
+
+        // I could group the buttons into the hbox and then add that and the table to the thing 6 lines later
+        //        HBox completedTaskTopBar= new HBox();
+        //        completedTaskTopBar.getChildren().addAll(completedTaskBackToMain);
+
+        userTasksTable.setItems(userTaskData);
+        userTasksTable.setEditable(true);
+        userTasksTable.getColumns().addAll(userTaskIDCol, userTaskName, userTaskDescription,userTaskDueDate);
+
+        employeeTasksBox.getChildren().addAll(employeeTasksLabel, employeeNameLabel, employeeTasksBackToMain, userTasksTable);
 
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Todo: User Table Formatting (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         HBox topUserBar= new HBox();
-        topUserBar.getChildren().addAll(addUser,editUser,removeUser, promoteUser ,userBackToMain);
+        topUserBar.getChildren().addAll(addUser,editUser,removeUser, promoteUser ,employeeTasks ,userBackToMain);
 
         TableColumn<User, String> userIDCol = new TableColumn<User, String>("User ID");
         userIDCol.setMinWidth(130);
@@ -436,8 +508,6 @@ public class UITest extends Application {
         VBox completedTaskBox = new VBox(30);
         Scene completedTaskScene = new Scene(completedTaskBox,300,250);
 
-
-
         Button viewCompleted = new Button("Completed Tasks");
         viewCompleted.setOnMouseClicked(e->{
             stage.setScene(completedTaskScene);
@@ -448,7 +518,7 @@ public class UITest extends Application {
             stage.setScene(taskScene);
         });
 
-        Label completedTaskLabel = new Label("Popup");
+        Label completedTaskLabel = new Label("Completed Task Popup");
 
         TableColumn<Task, String> completedTaskIDCol = new TableColumn<Task, String>("Task ID");
         completedTaskIDCol.editableProperty().setValue(true);
