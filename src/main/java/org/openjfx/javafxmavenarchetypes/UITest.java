@@ -79,6 +79,7 @@ public class UITest extends Application {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private TableView<Task> taskTable = new TableView<Task>();
+    private TableView<Task> CompletedTaskTable = new TableView<Task>();
     TaskControl taskController = new TaskControl();
 
     /**
@@ -86,7 +87,7 @@ public class UITest extends Application {
      *                     new Task("1243263456", "Do the tasky2", "My second description", LocalDateTime.now())
      */
     private ObservableList<Task> taskData = taskController.taskList;
-
+    private ObservableList<Task> CompletedTaskData = taskController.finishedTaskList;
 
     private TableView<TaskBar> bars = new TableView<TaskBar>();
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -448,10 +449,43 @@ public class UITest extends Application {
         });
 
         Label completedTaskLabel = new Label("Popup");
-        completedTaskBox.getChildren().addAll(completedTaskLabel, completedTaskBackToMain);
 
-//        HBox completedTaskTopBar= new HBox();
-//        completedTaskTopBar.getChildren().addAll(completedTaskBackToMain);
+        TableColumn<Task, String> completedTaskIDCol = new TableColumn<Task, String>("Task ID");
+        completedTaskIDCol.editableProperty().setValue(true);
+        completedTaskIDCol.setMinWidth(130);
+        completedTaskIDCol.setCellValueFactory(
+                new PropertyValueFactory<Task, String>("ID")
+        );
+
+        TableColumn<Task, String> completedTaskName = new TableColumn<Task, String>("Task Name");
+        completedTaskName.setMinWidth(130);
+        completedTaskName.setCellValueFactory(
+                new PropertyValueFactory<Task, String>("taskName")
+        );
+
+        TableColumn<Task, String> completedTaskDescription = new TableColumn<Task, String>("Task description");
+        completedTaskDescription.setMinWidth(130);
+        completedTaskDescription.setCellValueFactory(
+                new PropertyValueFactory<Task, String>("description")
+        );
+
+        TableColumn<Task, LocalDateTime> completedTaskDueDate = new TableColumn<Task, LocalDateTime>("Due date");
+        completedTaskDueDate.setMinWidth(130);
+        completedTaskDueDate.setCellValueFactory(
+                new PropertyValueFactory<Task, LocalDateTime>("dueDate")
+        );
+
+        // I could group the buttons into the hbox and then add that and the table to the thing 6 lines later
+        //        HBox completedTaskTopBar= new HBox();
+        //        completedTaskTopBar.getChildren().addAll(completedTaskBackToMain);
+
+        CompletedTaskTable.setItems(CompletedTaskData);
+        CompletedTaskTable.setEditable(true);
+        CompletedTaskTable.getColumns().addAll(completedTaskIDCol, completedTaskName, completedTaskDescription,completedTaskDueDate);
+        completedTaskBox.getChildren().addAll(completedTaskLabel, completedTaskBackToMain, CompletedTaskTable);
+
+
+
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Todo: Task view formatting (done)
