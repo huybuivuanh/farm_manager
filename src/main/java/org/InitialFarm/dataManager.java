@@ -123,10 +123,11 @@ public class dataManager {
     public  <T extends DatabaseInterface<T>> T fetchObject(String classType, Document objectDoc) throws NoSuchFieldException {
 
         Object newObj = null;
+        System.out.println("inside fetch test" + objectDoc.getObjectId("_id"));
 
         if (classType.equals("Employee"))
         {
-            newObj =  new Employee(objectDoc.getString("employeeId"), objectDoc.getString("email"),
+            newObj =  new Employee(objectDoc.getObjectId("_id"),objectDoc.getString("employeeId"), objectDoc.getString("email"),
                     objectDoc.getString("password"), objectDoc.getString("firstname"),
                     objectDoc.getString("lastname"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), objectDoc.getBoolean("isOwner"));
         }
@@ -197,11 +198,12 @@ public class dataManager {
         System.out.println(grab("FarmData","farm_list","fieldName","FieldGerald"));
 
         //create employee and data manager
-        Employee tester = new Employee("1133", "ziy271", "strong", "kim", "zrein", LocalDate.of(2002, Calendar.FEBRUARY,2), false);
+        Employee tester = new Employee(null,"1133", "ziy271", "strong", "kim", "zrein", LocalDate.of(2002, Calendar.FEBRUARY,2), false);
         dataManager manager = new dataManager();
 
         // save employee to the database
-        manager.saveClass(tester);
+        Employee outputEmployee = (Employee) manager.saveClass(tester);
+        System.out.println("output test: \n" + outputEmployee.toString());
 
         // find the employee data from the database
         Document testDoc = grab("FarmData", "employee_list", "firstname", "kim");
@@ -213,7 +215,6 @@ public class dataManager {
         // add tasks to employee
         Task task1 = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
         Task databaseTask = manager.saveClass(task1);
-        System.out.println(databaseTask.toString());
         Task task2 = new Task(null,"2", "task 2", "task 2 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
 
         tester.addTask(task1);

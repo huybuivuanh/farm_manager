@@ -64,7 +64,8 @@ public class User implements DatabaseInterface<User>{
      * @param last_name user last name
      * @param dob user date of birth
      */
-    public User(String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob, boolean ownership){
+    public User(ObjectId iddb, String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob, boolean ownership){
+        dbID = iddb;
         ID = id;
         email = user_email;
         password = user_password;
@@ -258,6 +259,7 @@ public class User implements DatabaseInterface<User>{
         String lname = this.getLastName();
         LocalDate dob= this.getDOB();
         Boolean owner= this.getOwner();
+
 
         newDoc.append("employeeId",employeeId);
         newDoc.append("email",email);

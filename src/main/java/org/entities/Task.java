@@ -276,6 +276,7 @@ public class Task implements DatabaseInterface<Task>{
     public String toString(){
         StringBuilder result = new StringBuilder("Task ID: " + getID() +
                 "\nTask name: " + getTaskName() +
+                "\nTask dbID: " + getDbId() +
                 "\nTask Description: " + getDescription() +
                 "\nCreated: " + getDate() +
                 "\nStatus: " + getStatus() +
@@ -315,7 +316,8 @@ public class Task implements DatabaseInterface<Task>{
             staffList.add(staff.getDbId());
         }
 
-        newDoc.append("TaskID",this.getDbId());
+
+        newDoc.append("taskID",this.getID());
         newDoc.append("task_name",this.getTaskName());
         newDoc.append("task_description",this.getDescription());
         newDoc.append("task_dueDate",this.getDueDate());
@@ -356,14 +358,15 @@ public class Task implements DatabaseInterface<Task>{
     public static void main(String[] args){
         Task task = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.now());
         LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY, 2);
-        User staff1 = new User("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob, true);
-        User staff2 = new User("ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob, true);
+        User staff1 = new User(null,"ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob, true);
+        User staff2 = new User(null,"ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob, true);
         task.addStaff(staff1);
         task.addStaff(staff2);
 
         // testing getters
         System.out.println("Testing getters\n");
         System.out.println("Task ID: " + task.getID());
+        System.out.println("Task DBID: " + task.getDbId());
         System.out.println("Task name :" + task.getTaskName());
         System.out.println("Task Description: " + task.getDescription());
         System.out.println("Created: " + task.getDate());
@@ -384,7 +387,7 @@ public class Task implements DatabaseInterface<Task>{
 
         // testing setters
         System.out.println("Testing setters\n");
-        User staff3 = new User("ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob, false);
+        User staff3 = new User(null,"ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob, false);
         LocalDateTime specificDate = LocalDateTime.of(2012, Month.JANUARY, 2, 0, 32, 43);
 
         task.setID("2");

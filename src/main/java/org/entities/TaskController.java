@@ -262,9 +262,9 @@ public class TaskController {
         Task task3 = new Task(null,"3", "task 3", "task 3 description", localDate);
 
         LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY,2);
-        User staff1 = new User("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob,true);
-        User staff2 = new User("ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob,true);
-        User staff3 = new User("ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob,true);
+        User staff1 = new User(null,"ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob,true);
+        User staff2 = new User(null,"ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob,true);
+        User staff3 = new User(null,"ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob,true);
 
         // createTask and add staff
         controller.createTask(null,"0", "task 0", "task 0 description", localDate);

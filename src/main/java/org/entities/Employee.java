@@ -1,5 +1,7 @@
 package org.entities;
 
+import org.bson.types.ObjectId;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -7,8 +9,8 @@ import java.util.Calendar;
 
 public class Employee extends User{
 
-    public Employee(String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob, boolean owner){
-        super(id, user_email, user_password, first_name, last_name, dob, owner);
+    public Employee(ObjectId iddb, String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob, boolean owner){
+        super(iddb,id, user_email, user_password, first_name, last_name, dob, owner);
     }
 
     @Override
@@ -23,7 +25,7 @@ public class Employee extends User{
     public static void main(String[] args){
         LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY,2);
         boolean owner = Boolean.parseBoolean(null);
-        Employee staff = new Employee("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob, owner);
+        Employee staff = new Employee(null,"ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob, owner);
         Task task1 = new Task(null ,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
         Task task2 = new Task(null,"2", "task 2", "task 2 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
         Task task3 = new Task(null,"3", "task 3", "task 3 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));

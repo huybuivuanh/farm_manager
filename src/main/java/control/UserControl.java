@@ -2,6 +2,7 @@ package control;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.bson.types.ObjectId;
 import org.entities.Employee;
 import org.entities.User;
 
@@ -38,7 +39,10 @@ public class UserControl {
         }
         if (!exists)
         {
-            Employee employee = new Employee(  id, user_email , user_password, first_name, last_name, dob, owner);
+            //TODO WE NEED TO ADD MANAGER HERE TO SAVE IT ALLLLLL
+            Employee employee = new Employee(  null,id, user_email , user_password, first_name, last_name, dob, owner);
+
+
             allEmployees.add(employee);
             if (owner){
                 owners.add(employee);
