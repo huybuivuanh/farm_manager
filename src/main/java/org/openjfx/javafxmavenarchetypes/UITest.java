@@ -12,7 +12,10 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -135,12 +138,17 @@ public class UITest extends Application {
         //Making our farm view scene
 //        Group fieldPageGroup = new Group();
 //        Scene sceneFields = new Scene(fieldPageGroup,300,250);
-        stage.setTitle("Table View Sample");
+        stage.setTitle("Farm Manager");
         stage.setWidth(925);
         stage.setHeight(500);
 
         VBox taskSelector = new VBox(30);
-        Scene MenuScene = new Scene(taskSelector,300,250);
+        Image image = new Image("farm image.jpeg");
+        ImageView imageView = new ImageView(image);
+        StackPane menuStackPane = new StackPane();
+        Scene MenuScene = new Scene(menuStackPane,300,250);
+        MenuScene.getStylesheets().add(getClass().getClassLoader().getResource("styles.css").toExternalForm());
+
 
 
 
@@ -193,6 +201,10 @@ public class UITest extends Application {
         });
         taskSelector.getChildren().addAll(btasks,bfield,bbins,busers);
         taskSelector.setAlignment(Pos.CENTER);
+
+        imageView.fitWidthProperty().bind(menuStackPane.widthProperty());
+        imageView.fitHeightProperty().bind(menuStackPane.heightProperty());
+        menuStackPane.getChildren().addAll(imageView,taskSelector);
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // TODO: adding functionality to the user tab (connecting to tasks)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
