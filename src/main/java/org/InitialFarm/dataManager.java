@@ -46,7 +46,7 @@ public class dataManager {
 
         // if the object isn't already in the database
         if (test.getDbId() == null){
-            Document doc=  test.classToDoc(test);
+            Document doc=  test.classToDoc();
 
 
             if ( test instanceof Employee){
@@ -68,9 +68,12 @@ public class dataManager {
                 classType = "Field";}
 
             else if ( test instanceof Task){
+
+
                 newID=  insertDoc(doc, "FarmData","task_list");
                 newDoc= grabByID("FarmData", "task_list", newID);
-                classType = "Task";}
+                classType = "Task";
+            }
 
             else {
                 System.out.println("not of type Employee, owner, field, or task");
@@ -84,7 +87,7 @@ public class dataManager {
     public static <T extends DatabaseInterface<T>> Boolean adderMethod(T test){
 
         if (test instanceof Employee){
-            Document toDatabase = test.classToDoc(test);
+            Document toDatabase = test.classToDoc();
         }
         return null;
 
@@ -145,7 +148,7 @@ public class dataManager {
             // below is another property that we saved into db, but isn't part of constructor ?? idk
             // "task_date"
 
-            newObj =  new Task(objectDoc.getString("_id"), objectDoc.getString("task_name"),
+            newObj =  new Task(objectDoc.getObjectId("_id"),objectDoc.getString("taskID"), objectDoc.getString("task_name"),
                     objectDoc.getString("task_description"), objectDoc.getDate("task_dueDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         }
         return (T)newObj;
@@ -208,8 +211,10 @@ public class dataManager {
         System.out.println(String.valueOf(manager.fetchObject("Employee",testDoc )));
 
         // add tasks to employee
-        Task task1 = new Task("1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
-        Task task2 = new Task("2", "task 2", "task 2 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        Task task1 = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        Task databaseTask = (Task) manager.saveClass(task1);
+        System.out.println(databaseTask.toString());
+        Task task2 = new Task(null,"2", "task 2", "task 2 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
 
         tester.addTask(task1);
         tester.addTask(task2);

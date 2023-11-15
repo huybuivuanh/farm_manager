@@ -295,14 +295,14 @@ public class Field implements DatabaseInterface<Field>
      * @return : a document representation of the field object being passed.
      */
     @Override
-    public Document classToDoc(Field field) {
+    public Document classToDoc() {
         Document newDoc = new Document();
 
         //  ObjectId fieldId= field.fieldId; => this is for the database
-        String field_id = field.getID();
-        String field_name= field.getName();
-        Double field_size= field.getSize() ;
-        String field_location = field.getLocation();
+        String field_id = this.getID();
+        String field_name= this.getName();
+        Double field_size= this.getSize() ;
+        String field_location = this.getLocation();
         // not sure how to include year below
 
 
@@ -312,13 +312,14 @@ public class Field implements DatabaseInterface<Field>
         newDoc.append("field_size", field_size);
         newDoc.append("field_location", field_location);
         //not sure how to include years below
-        newDoc.append("field_years", field.years);
+        newDoc.append("field_years", this.years);
 
         Date added = new Date();
         newDoc.append("Date Added:",added.getTime());
 
         return newDoc;
         }
+
 
     /**
      * @return

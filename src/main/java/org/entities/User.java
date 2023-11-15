@@ -20,6 +20,8 @@ public class User implements DatabaseInterface<User>{
      */
     String ID;
 
+    ObjectId dbID = null;
+
     /**
      * user email
      */
@@ -242,20 +244,20 @@ public class User implements DatabaseInterface<User>{
 
 
     /**
-     * @param user
+     * @param
      * @return
      */
     @Override
-    public Document classToDoc(User user) {
+    public Document classToDoc() {
         Document newDoc= new Document();
 
-        String employeeId = user.getID();
-        String email = user.getEmail();
-        String password = user.getPassword();
-        String fname = user.getFirstName();
-        String lname = user.getLastName();
-        LocalDate dob= user.getDOB();
-        Boolean owner= user.getOwner();
+        String employeeId = this.getID();
+        String email = this.getEmail();
+        String password = this.getPassword();
+        String fname = this.getFirstName();
+        String lname = this.getLastName();
+        LocalDate dob= this.getDOB();
+        Boolean owner= this.getOwner();
 
         newDoc.append("employeeId",employeeId);
         newDoc.append("email",email);
@@ -306,7 +308,7 @@ public class User implements DatabaseInterface<User>{
      */
     @Override
     public ObjectId getDbId() {
-        return null;
+        return dbID;
     }
 
     /**

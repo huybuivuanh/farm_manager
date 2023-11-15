@@ -9,6 +9,7 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class Task implements DatabaseInterface<Task>{
     /**
@@ -19,7 +20,7 @@ public class Task implements DatabaseInterface<Task>{
     /**
      * The unique ID of the Task for the DataBase
      */
-    private final ObjectId dbID = null;
+    private ObjectId dbID = null;
 
     /**
      * task name
@@ -61,7 +62,8 @@ public class Task implements DatabaseInterface<Task>{
      * @param descr task description
      * @param due_date task due date
      */
-    public Task(String id, String task_name, String descr, LocalDateTime due_date){
+    public Task(ObjectId iddb,String id, String task_name, String descr, LocalDateTime due_date){
+        dbID = iddb;
         ID = id;
         taskName = task_name;
         description = descr;
@@ -292,12 +294,33 @@ public class Task implements DatabaseInterface<Task>{
 
 
     /**
-     * @param task
      * @return
+     *
+     *  newObj =  new Task(objectDoc.getObjectId("_id"),objectDoc.getString("taskID"), objectDoc.getString("task_name"),
+     *                     objectDoc.getString("task_description"), objectDoc.getDate("task_dueDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+     *         }
      */
     @Override
-    public Document classToDoc(Task task) {
-        return null;
+    public Document classToDoc() {
+
+
+        String taskID = this.getID();
+
+
+
+        Document newDoc = new Document();
+        ArrayList<ObjectId> staffList = new ArrayList<ObjectId>();
+        for (User staff : this.getStaffList()) {
+            staffList.add(staff.getDbId());
+        }
+
+        newDoc.append("TaskID",this.getDbId());
+        newDoc.append("task_name",this.getTaskName());
+        newDoc.append("task_description",this.getDescription());
+        newDoc.append("task_dueDate",this.getDueDate());
+        newDoc.append("task_date",this.getDate());
+        newDoc.append("stafflist",staffList);
+        return newDoc;
     }
 
     @Override
@@ -317,7 +340,7 @@ public class Task implements DatabaseInterface<Task>{
 
     @Override
     public ObjectId getDbId() {
-        return null;
+        return dbID;
     }
 
     @Override
@@ -330,7 +353,7 @@ public class Task implements DatabaseInterface<Task>{
      * @param args args
      */
     public static void main(String[] args){
-        Task task = new Task("1", "task 1", "task 1 description", LocalDateTime.now());
+        Task task = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.now());
         LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY, 2);
         User staff1 = new User("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob, true);
         User staff2 = new User("ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob, true);

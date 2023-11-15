@@ -44,7 +44,7 @@ public class TaskControl {
         }
         // if it doesn't, add it. If it does, report it.
         if (!taskExists){
-            Task task = new Task(  id, taskName , description, dueDate);
+            Task task = new Task( null, id, taskName , description, dueDate);
             taskList.add(task);
         }
         else {
