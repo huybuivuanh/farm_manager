@@ -66,11 +66,11 @@ public class UITest extends Application {
     private TableView<Crop> grainTable = new TableView<Crop>();
     private final ObservableList<Crop> cropData =
             FXCollections.observableArrayList(
-                    new Crop("Canola", "LibertyLink", 55),
-                    new Crop("Canola", "RoundupReady", 54),
-                    new Crop("Durum", "Navigator", 60),
-                    new Crop("Red Lentil", "Clearfield", 58),
-                    new Crop("Wheat & Barley", "All the other Grains", 45)
+                    new Crop(null,"Canola", "LibertyLink", 55),
+                    new Crop(null,"Canola", "RoundupReady", 54),
+                    new Crop(null,"Durum", "Navigator", 60),
+                    new Crop(null,"Red Lentil", "Clearfield", 58),
+                    new Crop(null,"Wheat & Barley", "All the other Grains", 45)
 
             );
 
@@ -114,9 +114,9 @@ public class UITest extends Application {
     private TableView<Field> fieldTable = new TableView<Field>();
 
     private ObservableList<Field> fieldData =
-            FXCollections.observableArrayList(new Field("1", "field 1", 69, "Mars"),
-                    new Field("2", "field 2", 69, "Venus"),
-                    new Field("3", "field 3", 69, "Mercury"));
+            FXCollections.observableArrayList(new Field(null,"1", "field 1", 69, "Mars"),
+                    new Field(null,"2", "field 2", 69, "Venus"),
+                    new Field(null,"3", "field 3", 69, "Mercury"));
 
     private TableView<Record> recordTable = new TableView<>();
     private ObservableList<Record> recordData =
@@ -655,7 +655,7 @@ public class UITest extends Application {
             stage.setScene(addFieldScene);
         });
         submitFieldInfo.setOnMouseClicked(e ->{
-            Field newField = new Field(fieldIDInput.getText(),fieldNameInput.getText(), Double.parseDouble(fieldSizeInput.getText()), fieldLocation.getText());
+            Field newField = new Field(null,fieldIDInput.getText(),fieldNameInput.getText(), Double.parseDouble(fieldSizeInput.getText()), fieldLocation.getText());
             fieldData.add(newField);
             stage.setScene(fieldScene);
         });

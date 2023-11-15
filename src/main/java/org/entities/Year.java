@@ -7,17 +7,22 @@ A field has a list of multiples years
  */
 
 import org.InitialFarm.Chemical;
+import org.entities.*;
 import org.InitialFarm.Crop;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.LinkedList;
 
-public class Year{
+public class Year implements DatabaseInterface<Year>{
 
     /**
      * The current year e.g. 2013
      */
+
+    private ObjectId dbid = null;
     private final int year;
 
     /**
@@ -50,20 +55,56 @@ public class Year{
      */
     private LocalDate spraying_date;
 
+    @Override
+    public Document classToDoc() {
+        Document newDoc = new Document();
+
+
+        newDoc.append("year", this.year);
+        newDoc.append("new_year", this.new_year);
+        newDoc.append("crop", this.crop);
+        newDoc.append("seeding_date", this.seeding_date);
+        newDoc.append("seeding_rate", this.seeding_rate);
+        newDoc.append("fertilizer_rate", this.fertilizer_rate);
+        newDoc.append("chemical_sprayed", this.chemical_sprayed);
+        newDoc.append("spraying_date", this.spraying_date);
+        newDoc.append("harvest_date", this.harvest_date);
+        newDoc.append("end_of_year", this.end_of_year);
+        newDoc.append("chemical_records", this.chemical_records);
+        newDoc.append("task_records", this.task_records);
+
+        return newDoc;
+    }
+
+    @Override
+    public Document docToClass() {
+
+        return null;
+    }
+
+    @Override
+    public void save() {
+
+    }
+
+    @Override
+    public void sync() {
+
+    }
+
+    @Override
+    public ObjectId getDbId() {
+        return dbid;
+    }
+
+    @Override
+    public boolean isDatabase() {
+        return false;
+    }
+
     /**
      * The class to hold a chemical and date record
      */
-    private static class ChemicalRecord{
-        Chemical chemical;
-        LocalDate date;
-
-        private ChemicalRecord(Chemical _chemical, LocalDate _date){
-            chemical = _chemical;
-            date = _date;
-        }
-        private Chemical getChemical(){ return this.chemical; }
-        private LocalDate getDate(){ return this.date; }
-    }
 
     /**
      * The list of chemicals that have been sprayed on the
