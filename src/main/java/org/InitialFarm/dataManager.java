@@ -73,6 +73,8 @@ public class dataManager {
                 newID=  insertDoc(doc, "FarmData","task_list");
                 newDoc= grabByID("FarmData", "task_list", newID);
                 classType = "Task";
+                System.out.println("task id: " + newID);
+                System.out.println("task id in newDoc" + newDoc.getObjectId("_id") );
             }
 
             else {
