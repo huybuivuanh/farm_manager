@@ -2,11 +2,14 @@ package org.entities;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class User {
+public class User implements DatabaseInterface<User>{
 
     /**
      * whether is owner
@@ -238,4 +241,79 @@ public class User {
     }
 
 
+    /**
+     * @param user
+     * @return
+     */
+    @Override
+    public Document classToDoc(User user) {
+        Document newDoc= new Document();
+
+        String employeeId = user.getID();
+        String email = user.getEmail();
+        String password = user.getPassword();
+        String fname = user.getFirstName();
+        String lname = user.getLastName();
+        LocalDate dob= user.getDOB();
+        Boolean owner= user.getOwner();
+
+        newDoc.append("employeeId",employeeId);
+        newDoc.append("email",email);
+        newDoc.append("password",password);
+        newDoc.append("firstname",fname);
+        newDoc.append("lastname",lname);
+        newDoc.append("dob",dob);
+        newDoc.append("isOwner",owner);
+
+//        if (user.getTaskList().size()>0) {
+//            for (int i = 0; i < user.getTaskList().size(); i++) {
+//                Task task = user.getTaskList().get(i);
+//
+//
+//            }
+//        }
+
+
+        return newDoc;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public Document docToClass() {
+        return null;
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void save() {
+
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void sync() {
+
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public ObjectId getDbId() {
+        return null;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isDatabase() {
+        return false;
+    }
 }

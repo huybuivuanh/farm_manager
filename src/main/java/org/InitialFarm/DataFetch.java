@@ -58,7 +58,6 @@ public class DataFetch {
             query.put("_id", newdata);
             return database.getCollection(collectionFind).find(query).first();
 
-
         }
     }
     /**

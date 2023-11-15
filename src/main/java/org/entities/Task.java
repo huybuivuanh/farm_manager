@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Task implements DatabaseInterface{
+public class Task implements DatabaseInterface<Task>{
     /**
      * task ID
      */
@@ -291,8 +291,12 @@ public class Task implements DatabaseInterface{
     }
 
 
+    /**
+     * @param task
+     * @return
+     */
     @Override
-    public Document classToDoc(Object inter) {
+    public Document classToDoc(Task task) {
         return null;
     }
 

@@ -5,7 +5,11 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.entities.DatabaseInterface;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 
 import static org.InitialFarm.DataFetch.*;
@@ -29,7 +33,7 @@ public class dataManager {
 
 
     // Initialize a class  Does this have an ID yes or no?
-    // No it doesnt. Okay re-initalize this class inside the database. Pull out what the database Makes as a new class
+    // No it doesn't. Okay re-initalize this class inside the database. Pull out what the database Makes as a new class
     // construct of same and return back to the developer. They should set their class as this new class.
     // IF it does exist (ID is not null). THen we need update that ID position with whatever information it has.
     //
@@ -40,7 +44,7 @@ public class dataManager {
         //1 is employee, 2 is owner,3 is field, 4 is task
         String classType = null;
 
-
+        // if the object isn't already in the database
         if (test.getDbId() == null){
             Document doc=  test.classToDoc(test);
 
@@ -73,7 +77,7 @@ public class dataManager {
             }
         }
         assert classType != null;
-        return fetchObject(classType, newDoc,newID);
+        return fetchObject(classType, newDoc);
 
     }
     // didnt get to work on this
@@ -108,17 +112,20 @@ public class dataManager {
         }
         return null;
     }
-    // new fetch object
-    public  <T extends DatabaseInterface<T>> T fetchObject(String classType, Document objectDoc, ObjectId id) throws NoSuchFieldException {
+
+
+    /**
+     * Given the type of class, the object document, and its id, return the object itself.
+     */
+    public  <T extends DatabaseInterface<T>> T fetchObject(String classType, Document objectDoc) throws NoSuchFieldException {
 
         Object newObj = null;
 
         if (classType.equals("Employee"))
         {
-            Boolean owner = null;
-            newObj =  new Employee(objectDoc.getString("_id"), objectDoc.getString("user_email"),
-                    objectDoc.getString("user_password"), objectDoc.getString("first_name"),
-                    objectDoc.getString("last_name"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), owner);
+            newObj =  new Employee(objectDoc.getString("employeeId"), objectDoc.getString("email"),
+                    objectDoc.getString("password"), objectDoc.getString("firstname"),
+                    objectDoc.getString("lastname"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), objectDoc.getBoolean("isOwner"));
         }
 
         else if (classType.equals("Owner"))
@@ -135,7 +142,7 @@ public class dataManager {
 
         else if (classType.equals("Task")){
 
-            // below is another property that we saved into db, but isnt part of constructor ?? idk
+            // below is another property that we saved into db, but isn't part of constructor ?? idk
             // "task_date"
 
             newObj =  new Task(objectDoc.getString("_id"), objectDoc.getString("task_name"),
@@ -185,6 +192,32 @@ public class dataManager {
 
     public static void main(String[] args) throws NoSuchFieldException {
         System.out.println(grab("FarmData","farm_list","fieldName","FieldGerald"));
+
+        //create employee and data manager
+        Employee tester = new Employee("1133", "ziy271", "strong", "kim", "zrein", LocalDate.of(2002, Calendar.FEBRUARY,2), false);
+        dataManager manager = new dataManager();
+
+        // save employee to the database
+        manager.saveClass(tester);
+
+        // find the employee data from the database
+        Document testDoc = grab("FarmData", "employee_list", "firstname", "kim");
+        System.out.println(testDoc);
+
+        //translate the data into an employee object
+        System.out.println(String.valueOf(manager.fetchObject("Employee",testDoc )));
+
+        // add tasks to employee
+        Task task1 = new Task("1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        Task task2 = new Task("2", "task 2", "task 2 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+
+        tester.addTask(task1);
+        tester.addTask(task2);
+
+
+
+
+        // check if tasks are reflected in document.
 
         // old version of fetch object run only once
          //  dummy test =  fetchObject("fieldName", "FieldGerald", "randominfo");
