@@ -73,8 +73,6 @@ public class dataManager {
                 newID=  insertDoc(doc, "FarmData","task_list");
                 newDoc= grabByID("FarmData", "task_list", newID);
                 classType = "Task";
-                System.out.println("task id: " + newID);
-                System.out.println("task id in newDoc" + newDoc.getObjectId("_id") );
             }
 
             else {
@@ -214,7 +212,7 @@ public class dataManager {
 
         // add tasks to employee
         Task task1 = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
-        Task databaseTask = (Task) manager.saveClass(task1);
+        Task databaseTask = manager.saveClass(task1);
         System.out.println(databaseTask.toString());
         Task task2 = new Task(null,"2", "task 2", "task 2 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
 

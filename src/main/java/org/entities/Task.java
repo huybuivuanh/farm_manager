@@ -20,7 +20,7 @@ public class Task implements DatabaseInterface<Task>{
     /**
      * The unique ID of the Task for the DataBase
      */
-    private ObjectId dbID = null;
+    private ObjectId dbID;
 
     /**
      * task name
@@ -63,6 +63,7 @@ public class Task implements DatabaseInterface<Task>{
      * @param due_date task due date
      */
     public Task(ObjectId iddb,String id, String task_name, String descr, LocalDateTime due_date){
+        System.out.println("object id null" + iddb);
         dbID = iddb;
         ID = id;
         taskName = task_name;
