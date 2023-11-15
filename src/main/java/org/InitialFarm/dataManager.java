@@ -123,6 +123,27 @@ public class dataManager {
                     newDoc.getString("lastname"), newDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), newDoc.getBoolean("isOwner"));
             return (T) newEmployee;
         }
+        if (classType.equals("Task")){
+            Document newDoc = grabByID("FarmData", "task_list", id);
+            Task newTask= new Task(newDoc.getObjectId("_id"), newDoc.getString("taskID"),
+                    newDoc.getString("task_name"), newDoc.getString("task_description"),
+                    newDoc.getDate("task_dueDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+            return (T)newTask;
+        }
+
+
+
+//        newDoc.append("taskID",this.getID());
+//        newDoc.append("task_name",this.getTaskName());
+//        newDoc.append("task_description",this.getDescription());
+//        newDoc.append("task_dueDate",this.getDueDate());
+//        newDoc.append("task_date",this.getDate());
+//        newDoc.append("stafflist",staffList);
+//        return newDoc;
+//    }
+
+
+
         return null;
     }
 
@@ -137,9 +158,19 @@ public class dataManager {
 
         if (classType.equals("Employee"))
         {
-            newObj =  new Employee(objectDoc.getObjectId("_id"),objectDoc.getString("employeeId"), objectDoc.getString("email"),
+            Employee newEmployee =  new Employee(objectDoc.getObjectId("_id"),objectDoc.getString("employeeId"), objectDoc.getString("email"),
                     objectDoc.getString("password"), objectDoc.getString("firstname"),
                     objectDoc.getString("lastname"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), objectDoc.getBoolean("isOwner"));
+
+            BsonArray test = objectDoc.toBsonDocument().getArray("tasklist");
+            for (int i = 0; i < test.size();i++){
+                ObjectId output = test.get(0).asObjectId().getValue();
+                Task newTask = (Task) fetchObjectById("Task",output);
+                System.out.println(newTask);
+                newEmployee.addTask(newTask);
+            }
+            newObj = newEmployee;
+
         }
 
         else if (classType.equals("Owner"))
@@ -216,30 +247,53 @@ public class dataManager {
 
 
     public static void main(String[] args) throws NoSuchFieldException {
+
+
         System.out.println(grab("FarmData","farm_list","fieldName","FieldGerald"));
 
+        //TODO: test adding employees to a task's list of employees
+        // todo note: for this to work, the task to be added has to be the fetched version after being saved so that its DBID isnt null !!!
         //create employee and data manager
-        Employee tester = new Employee(null,"1133", "ziy271", "strong", "kim", "zrein", LocalDate.of(2002, Calendar.FEBRUARY,2), false);
-        dataManager manager = new dataManager();
+        Employee tester1 = new Employee(null,"1133", "ziy271", "strong", "kim", "zrein", LocalDate.of(2002, Calendar.FEBRUARY,2), false);
+        dataManager manager1 = new dataManager();
 
         // save employee to the database
-        Employee outputEmployee = (Employee) manager.saveClass(tester);
+        Employee outputEmployee1 = (Employee) manager1.saveClass(tester1);
 
         // find the employee data from the database
         Document testDoc = grab("FarmData", "employee_list", "firstname", "kim");
         System.out.println(testDoc);
 
         //translate the data into an employee object
-        System.out.println(String.valueOf(manager.fetchObject("Employee",testDoc )));
+        System.out.println(String.valueOf(manager1.fetchObject("Employee",testDoc )));
 
         // add tasks to employee
-        Task task1 = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
-        task1.addStaff(outputEmployee);
-        Task databaseTask = manager.saveClass(task1);
-        Task task2 = new Task(null,"2", "task 2", "task 2 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        Task task1a = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        task1a.addStaff(outputEmployee1);
+        Task databaseTask1 = manager1.saveClass(task1a);
+        Task task1b = new Task(null,"2", "task 2", "task 2 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
 
-        tester.addTask(task1);
-        tester.addTask(task2);
+        tester1.addTask(task1a);
+        tester1.addTask(task1b);
+
+        //TODO: test adding tasks to an employee's list of tasks
+        // todo note: for this to work, the task to be added has to be the fetched version after being saved so that its DBID isnt null !!!
+        //create employee and data manager
+        dataManager manager2 = new dataManager();
+
+        Employee tester2 = new Employee(null,"1133", "ziy271", "strong", "kim", "zrein", LocalDate.of(2002, Calendar.FEBRUARY,2), false);
+        //Employee outputEmployee = (Employee) manager.saveClass(tester);
+
+        Task task2a = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        Task outputTask2a = manager2.saveClass(task2a);
+
+        Task task2b = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        Task outputTask2b = manager2.saveClass(task2a);
+
+
+        tester2.addTask(outputTask2a);
+        tester2.addTask(outputTask2b);
+        Employee dataBaseEmployee2= (Employee) manager2.saveClass(tester2);
 
 
 

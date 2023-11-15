@@ -262,6 +262,11 @@ public class User implements DatabaseInterface<User>{
         Boolean owner= this.getOwner();
 
 
+        ArrayList<ObjectId> taskList = new ArrayList<ObjectId>();
+        for (Task task : this.getTaskList()) {
+            taskList.add(task.getDbId());
+        }
+
         newDoc.append("employeeId",employeeId);
         newDoc.append("email",email);
         newDoc.append("password",password);
@@ -269,15 +274,7 @@ public class User implements DatabaseInterface<User>{
         newDoc.append("lastname",lname);
         newDoc.append("dob",dob);
         newDoc.append("isOwner",owner);
-
-//        if (user.getTaskList().size()>0) {
-//            for (int i = 0; i < user.getTaskList().size(); i++) {
-//                Task task = user.getTaskList().get(i);
-//
-//
-//            }
-//        }
-
+        newDoc.append("tasklist", taskList);
 
         return newDoc;
     }
