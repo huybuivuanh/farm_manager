@@ -9,6 +9,7 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -291,20 +292,23 @@ public class Field implements DatabaseInterface<Field>
 
     /**
      * Translates an object into a JSON Document representation of itself.
-     * @param field : a field object that is going to be translated into a doc.
      * @return : a document representation of the field object being passed.
      */
     @Override
     public Document classToDoc() {
         Document newDoc = new Document();
 
-        //  ObjectId fieldId= field.fieldId; => this is for the database
         String field_id = this.getID();
         String field_name= this.getName();
         Double field_size= this.getSize() ;
         String field_location = this.getLocation();
         // not sure how to include year below
 
+
+        ArrayList<ObjectId> yearList = new ArrayList<ObjectId>();
+        for (Year year : this.getYears()) {
+          //   yearList.add(year.getDbId()); => need to implement the years DbId
+        }
 
         // might need to add the objectID here still
         newDoc.append("_id", field_id);

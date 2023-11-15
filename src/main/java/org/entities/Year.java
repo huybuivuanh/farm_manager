@@ -8,17 +8,21 @@ A field has a list of multiples years
 
 import org.InitialFarm.Chemical;
 import org.InitialFarm.Crop;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 
-public class Year{
+public class Year implements DatabaseInterface<Year>{
+
 
     /**
      * The current year e.g. 2013
      */
-    private final int year;
+    private int year;
 
     /**
      * The current crop on the field
@@ -276,6 +280,72 @@ public class Year{
      * @param endOfYearDate the date the year ends
      */
     public void endOfYear( LocalDate endOfYearDate){ this.end_of_year = endOfYearDate; }
+
+
+    /**
+     * @return
+     */
+    @Override
+    public Document classToDoc() {
+        Document newDoc = new Document();
+
+        int year = this.getYear();
+//        Double field_size= this.getSize() ;
+//        String field_location = this.getLocation();
+//        // not sure how to include year below
+
+
+//        ArrayList<ObjectId> yearList = new ArrayList<ObjectId>();
+//        for (Year year : this.getYears()) {
+//            //   yearList.add(year.getDbId()); => need to implement the years DbId
+//        }
+
+        // might need to add the objectID here still
+       // newDoc.append("_id", year_id); => doesnt have id
+        newDoc.append("year", year);
+
+        return null;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public Document docToClass() {
+        return null;
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void save() {
+
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void sync() {
+
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public ObjectId getDbId() {
+        return null;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isDatabase() {
+        return false;
+    }
 
     /**
      * Displays all the information on a field for a given year
