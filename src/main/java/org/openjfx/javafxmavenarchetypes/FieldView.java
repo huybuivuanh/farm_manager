@@ -22,7 +22,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
     Scene cropScene;
 
-    VBox container = new VBox();
+    VBox fieldPage = new VBox();
 
     // field functions bar
     HBox fieldFunctionsBar = new HBox();
@@ -121,8 +121,8 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
 
         fieldFunctionsBar.getChildren().addAll(addField, deleteField, fieldsBackToMain);
-        container.getChildren().addAll(fieldFunctionsBar, fieldTable);
-        this.getChildren().addAll(container);
+        fieldPage.getChildren().addAll(fieldFunctionsBar, fieldTable);
+        this.getChildren().addAll(fieldPage);
     }
 
 

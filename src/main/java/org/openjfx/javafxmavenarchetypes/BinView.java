@@ -18,7 +18,7 @@ import org.InitialFarm.GrainBin;
 
 public class BinView extends StackPane implements ModelSubscriber {
 
-    private VBox container = new VBox();
+    private VBox binPage = new VBox();
     private Scene MenuScene ;
     private Stage stage;
 
@@ -83,8 +83,8 @@ public class BinView extends StackPane implements ModelSubscriber {
         VBox binvbox = new VBox();
         binvbox.setSpacing(5);
         binvbox.setPadding(new Insets(10, 0, 0, 10));
-        container.getChildren().addAll(binsBackToMain,binlabel, binTable);
-        this.getChildren().addAll(container);
+        binPage.getChildren().addAll(binsBackToMain,binlabel, binTable);
+        this.getChildren().addAll(binPage);
     }
 
     public void setStageMenu(Stage stage, Scene MenuScene){
