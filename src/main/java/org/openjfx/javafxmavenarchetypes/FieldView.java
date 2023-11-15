@@ -17,7 +17,7 @@ import org.entities.Field;
 public class FieldView extends StackPane implements ModelSubscriber {
 
     Stage stage;
-    Scene mainScene ;
+    Scene MenuScene ;
     Scene fieldScene;
 
     Scene cropScene;
@@ -99,12 +99,8 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
         Button fieldsBackToMain = new Button("Back To Main");
         fieldsBackToMain.setOnMouseClicked(e -> {
-            stage.setScene(mainScene);
+            stage.setScene(MenuScene);
         });
-
-
-        VBox deleteFieldBox = new VBox(30);
-        Scene deleteFieldScene = new Scene(deleteFieldBox,300,250);
 
         Button deleteField = new Button("Delete Field");
         deleteField.setOnAction(event -> {
@@ -134,7 +130,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
     public void setStageMainField(Stage stage, Scene main, Scene field){
         this.stage = stage;
-        this.mainScene = main;
+        this.MenuScene = main;
         this.fieldScene = field;
         CropView cropPage = new CropView();
         cropPage.setStageField(stage, fieldScene);
