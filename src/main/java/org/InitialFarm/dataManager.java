@@ -1,14 +1,17 @@
 package org.InitialFarm;
 
+import org.bson.BsonArray;
 import org.entities.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.entities.DatabaseInterface;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -113,6 +116,13 @@ public class dataManager {
             Field newfield = new Field(id.toString(),test.getString("fieldName"),Double.parseDouble(test.getString("acres")),test.getString("location"));
             return (T) newfield;
         }
+        if (classType.equals("Employee")){
+            Document newDoc = grabByID("FarmData","employee_list",id);
+            Employee newEmployee =  new Employee(newDoc.getObjectId("_id"),newDoc.getString("employeeId"), newDoc.getString("email"),
+                    newDoc.getString("password"), newDoc.getString("firstname"),
+                    newDoc.getString("lastname"), newDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), newDoc.getBoolean("isOwner"));
+            return (T) newEmployee;
+        }
         return null;
     }
 
@@ -134,9 +144,10 @@ public class dataManager {
 
         else if (classType.equals("Owner"))
         {
-            newObj =  new Owner(objectDoc.getString("_id"), objectDoc.getString("user_email"),
-                    objectDoc.getString("user_password"), objectDoc.getString("first_name"),
-                    objectDoc.getString("last_name"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate() );
+            //TODO get rid of this garbage
+          //  newObj =  new Owner(objectDoc.getString("_id"), objectDoc.getString("user_email"),
+          //          objectDoc.getString("user_password"), objectDoc.getString("first_name"),
+          //  objectDoc.getString("last_name"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate() );
         }
 
 //        else if (classType.equals("Field"))
@@ -149,8 +160,19 @@ public class dataManager {
             // below is another property that we saved into db, but isn't part of constructor ?? idk
             // "task_date"
 
-            newObj =  new Task(objectDoc.getObjectId("_id"),objectDoc.getString("taskID"), objectDoc.getString("task_name"),
+           Task newTask =   new Task(objectDoc.getObjectId("_id"),objectDoc.getString("taskID"), objectDoc.getString("task_name"),
                     objectDoc.getString("task_description"), objectDoc.getDate("task_dueDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+
+            BsonArray test = objectDoc.toBsonDocument().getArray("stafflist");
+            for (int i = 0; i < test.size();i++){
+                ObjectId output = test.get(0).asObjectId().getValue();
+                Employee newEmployee = (Employee) fetchObjectById("Employee",output);
+                System.out.println(newEmployee);
+                newTask.addStaff(newEmployee);
+            }
+            newObj = newTask;
+
+            System.out.println("array of staff: " + test);
         }
         return (T)newObj;
     }
@@ -193,7 +215,6 @@ public class dataManager {
     }
 
 
-
     public static void main(String[] args) throws NoSuchFieldException {
         System.out.println(grab("FarmData","farm_list","fieldName","FieldGerald"));
 
@@ -203,7 +224,6 @@ public class dataManager {
 
         // save employee to the database
         Employee outputEmployee = (Employee) manager.saveClass(tester);
-        System.out.println("output test: \n" + outputEmployee.toString());
 
         // find the employee data from the database
         Document testDoc = grab("FarmData", "employee_list", "firstname", "kim");
@@ -214,6 +234,7 @@ public class dataManager {
 
         // add tasks to employee
         Task task1 = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        task1.addStaff(outputEmployee);
         Task databaseTask = manager.saveClass(task1);
         Task task2 = new Task(null,"2", "task 2", "task 2 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
 

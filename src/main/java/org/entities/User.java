@@ -20,7 +20,7 @@ public class User implements DatabaseInterface<User>{
      */
     String ID;
 
-    ObjectId dbID = null;
+    ObjectId dbID;
 
     /**
      * user email
@@ -230,6 +230,7 @@ public class User implements DatabaseInterface<User>{
      */
     public String toString(){
         StringBuilder result = new StringBuilder("User ID: " + getID() +
+                "\nDatabase ID: " + getDbId() +
                 "\nEmail: " + getEmail() +
                 "\nPassword: " + getPassword() +
                 "\nFirst Name: " + getFirstName() +
