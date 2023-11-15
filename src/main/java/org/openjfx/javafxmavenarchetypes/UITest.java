@@ -147,8 +147,11 @@ public class UITest extends Application {
         TableColumn taskID = new TableColumn("Task ID");
         taskID.setMinWidth(130);
 
-        VBox fieldPage = new VBox(30);
+        // bookmark
+//        VBox fieldPage = new VBox(30);
+        FieldView fieldPage = new FieldView();
         Scene fieldScene = new Scene(fieldPage,300,250);
+        fieldPage.setStageMainField(stage, MenuScene, fieldScene);
 
         Button bfield = new Button();
         bfield.setText("Fields");
@@ -600,214 +603,207 @@ public class UITest extends Application {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+//bookmark
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // todo: field Table formatting
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        TableColumn<Field, String> fieldIDCol = new TableColumn<Field, String>("Field ID");
-        fieldIDCol.setMinWidth(130);
-        fieldIDCol.setCellValueFactory(
-                new PropertyValueFactory<Field, String>("ID")
-        );
-
-        TableColumn<Field, String> fieldNameCol = new TableColumn<Field, String>("Field Name");
-        fieldNameCol.setMinWidth(130);
-        fieldNameCol.setCellValueFactory(
-                new PropertyValueFactory<Field, String>("name")
-        );
-
-        TableColumn<Field, Double> fieldSizeCol = new TableColumn<Field, Double>("Field Size");
-        fieldSizeCol.setMinWidth(130);
-        fieldSizeCol.setCellValueFactory(
-                new PropertyValueFactory<Field, Double>("size")
-        );
-
-        TableColumn<Field, String> fieldLocationCol = new TableColumn<Field, String>("Field Location");
-        fieldLocationCol.setMinWidth(130);
-        fieldLocationCol.setCellValueFactory(
-                new PropertyValueFactory<Field, String>("location")
-        );
-
-        fieldTable.setItems(fieldData);
-        fieldTable.getColumns().addAll(fieldIDCol, fieldNameCol, fieldSizeCol, fieldLocationCol);
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Todo: field addition
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        VBox addFieldBox = new VBox(30);
-        Scene addFieldScene = new Scene(addFieldBox,300,250);
-
-        TextField fieldIDInput = new TextField("Field ID");
-        TextField fieldNameInput = new TextField("Field Name");
-        TextField fieldSizeInput = new TextField("Field Size");
-        TextField fieldLocation = new TextField("Field Location");
-        Button submitFieldInfo = new Button("Submit");
-
-        Button fieldBackToMain = new Button("back");
-        fieldBackToMain.setOnMouseClicked(e ->{
-            stage.setScene(MenuScene);
-        });
-
-        addFieldBox.getChildren().addAll(fieldIDInput, fieldNameInput, fieldSizeInput, fieldLocation, submitFieldInfo);
-
-        Button addField = new Button("Add Field");
-        addField.setOnMouseClicked(e ->{
-            stage.setScene(addFieldScene);
-        });
-        submitFieldInfo.setOnMouseClicked(e ->{
-            Field newField = new Field(fieldIDInput.getText(),fieldNameInput.getText(), Double.parseDouble(fieldSizeInput.getText()), fieldLocation.getText());
-            fieldData.add(newField);
-            stage.setScene(fieldScene);
-        });
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // todo: crop and record view page within field
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        VBox cropPage = new VBox(30);
-        Scene cropScene = new Scene(cropPage,300,250);
-
-        Label yearLabel = new Label("Year: 2023");
-        yearLabel.setFont(new Font("Arial", 20));
-        yearLabel.setStyle("-fx-font-weight: bold;");
-
-        Label cropLabel = new Label("Crop Table");
-        cropLabel.setFont(new Font("Arial", 20));
-
-        Label recordLabel = new Label("Records");
-        recordLabel.setFont(new Font("Arial", 20));
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // todo: crop table formatting
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        TableColumn<Crop, String> cropTypeCol = new TableColumn<Crop, String>("Crop Type");
-        cropTypeCol.setMinWidth(130);
-        cropTypeCol.setCellValueFactory(
-                new PropertyValueFactory<Crop, String>("cropType"));
-
-        TableColumn<Crop, String> cropVarietyCol = new TableColumn<Crop, String>("Crop Variety");
-        cropVarietyCol.setMinWidth(130);
-        cropVarietyCol.setCellValueFactory(
-                new PropertyValueFactory<Crop, String>("cropVariety"));
-
-        TableColumn<Crop, Float> bushelWeightCol = new TableColumn<Crop, Float>("Bushel Weight");
-        bushelWeightCol.setMinWidth(70);
-        bushelWeightCol.setCellValueFactory(
-                new PropertyValueFactory<Crop, Float>("bushelWeight"));
-
-        grainTable.setItems(cropData);
-        grainTable.getColumns().addAll(cropTypeCol, cropVarietyCol, bushelWeightCol);
-
-
-        final VBox vbox = new VBox();
-        vbox.setSpacing(5);
-        vbox.setPadding(new Insets(10, 0, 0, 10));
-        Label test = new Label("Field");
-        vbox.getChildren().addAll(test,fieldBackToMain, grainTable);
-        fieldTable.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
-                if (selectedData != null) {
-                    stage.setScene(cropScene);
-                }
-            }
-        });
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // todo: record table formatting
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        TableColumn<Record, String> chemCol = new TableColumn<Record, String>("Chemical Sprayed");
-        chemCol.setMinWidth(130);
-        chemCol.setCellValueFactory(
-                new PropertyValueFactory<Record, String>("chemSprayed"));
-
-        TableColumn<Record, LocalDate> sprayingDateCol = new TableColumn<Record, LocalDate>("Spraying Date");
-        sprayingDateCol.setMinWidth(130);
-        sprayingDateCol.setCellValueFactory(
-                new PropertyValueFactory<Record, LocalDate>("sprayingDate"));
-
-        TableColumn<Record, String> seedPlantedCol = new TableColumn<Record, String>("Seed Planted");
-        seedPlantedCol.setMinWidth(130);
-        seedPlantedCol.setCellValueFactory(
-                new PropertyValueFactory<Record, String>("seedPlanted"));
-
-        TableColumn<Record, Double> seedingRateCol = new TableColumn<Record, Double>("Seeding Rate (lbs/acre)");
-        seedingRateCol.setMinWidth(150);
-        seedingRateCol.setCellValueFactory(
-                new PropertyValueFactory<Record, Double>("seedingRate"));
-
-        TableColumn<Record, LocalDate> seedingDateCol = new TableColumn<Record, LocalDate>("Seeding Date");
-        seedingDateCol.setMinWidth(130);
-        seedingDateCol.setCellValueFactory(
-                new PropertyValueFactory<Record, LocalDate>("seedingDate"));
-
-        TableColumn<Record, String> fertilizerCol = new TableColumn<Record, String>("Fertilizer");
-        fertilizerCol.setMinWidth(130);
-        fertilizerCol.setCellValueFactory(
-                new PropertyValueFactory<Record, String>("fertilizer"));
-
-        TableColumn<Record, LocalDate> fertilizerDateCol = new TableColumn<Record, LocalDate>("Fertilizer Date");
-        fertilizerDateCol.setMinWidth(130);
-        fertilizerDateCol.setCellValueFactory(
-                new PropertyValueFactory<Record, LocalDate>("fertilizerDate"));
-
-
-        recordTable.setItems(recordData);
-        recordTable.getColumns().addAll(chemCol, sprayingDateCol, seedPlantedCol, seedingRateCol, seedingDateCol, fertilizerCol, fertilizerDateCol);
-
-        Button cropBackToFields = new Button("Back");
-        cropBackToFields.setOnMouseClicked(e ->{
-            stage.setScene(fieldScene);
-        });
-
-        HBox cropFunctionsBar = new HBox();
-        cropFunctionsBar.getChildren().addAll(cropBackToFields);
-        cropPage.getChildren().addAll(cropFunctionsBar, yearLabel, cropLabel, grainTable, recordLabel, recordTable);
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // todo: field deletion
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        VBox deleteFieldBox = new VBox(30);
-        Scene deleteFieldScene = new Scene(deleteFieldBox,300,250);
-
-        Button deleteField = new Button("Delete Field");
-        deleteField.setOnMouseClicked(e ->{
-            stage.setScene(deleteFieldScene);
-        });
-
-        Label deleteLabel = new Label("Enter Field ID");
-        deleteLabel.setFont(new Font("Arial", 20));
-        TextField IDInput = new TextField();
-        Button submitID = new Button("Submit");
-
-        submitID.setOnMousePressed(e -> {
-            String deleteID = IDInput.getText();
-            Iterator<Field> iterator = fieldData.iterator();
-            while (iterator.hasNext()) {
-                Field field = iterator.next();
-                if (deleteID.equals(field.getID())) {
-                    iterator.remove();
-                    stage.setScene(fieldScene);
-                    return;
-                }
-            }
-            stage.setScene(fieldScene);
-        });
-
-        deleteFieldBox.getChildren().addAll(deleteLabel, IDInput, submitID);
-
-        // fields back to menu button
-        Button fieldsBackToMain = new Button("Back");
-        fieldsBackToMain.setOnMouseClicked(e ->{
-            stage.setScene(MenuScene);
-        });
-
-
-        // field functions bar
-        HBox fieldFunctionsBar = new HBox();
-        fieldFunctionsBar.getChildren().addAll(addField, deleteField, fieldsBackToMain);
-        fieldPage.getChildren().addAll(fieldFunctionsBar, fieldTable);
+//        TableColumn<Field, String> fieldIDCol = new TableColumn<Field, String>("Field ID");
+//        fieldIDCol.setMinWidth(130);
+//        fieldIDCol.setCellValueFactory(
+//                new PropertyValueFactory<Field, String>("ID")
+//        );
+//
+//        TableColumn<Field, String> fieldNameCol = new TableColumn<Field, String>("Field Name");
+//        fieldNameCol.setMinWidth(130);
+//        fieldNameCol.setCellValueFactory(
+//                new PropertyValueFactory<Field, String>("name")
+//        );
+//
+//        TableColumn<Field, Double> fieldSizeCol = new TableColumn<Field, Double>("Field Size");
+//        fieldSizeCol.setMinWidth(130);
+//        fieldSizeCol.setCellValueFactory(
+//                new PropertyValueFactory<Field, Double>("size")
+//        );
+//
+//        TableColumn<Field, String> fieldLocationCol = new TableColumn<Field, String>("Field Location");
+//        fieldLocationCol.setMinWidth(130);
+//        fieldLocationCol.setCellValueFactory(
+//                new PropertyValueFactory<Field, String>("location")
+//        );
+//
+//        fieldTable.setItems(fieldData);
+//        fieldTable.getColumns().addAll(fieldIDCol, fieldNameCol, fieldSizeCol, fieldLocationCol);
+//
+//        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        // Todo: field addition
+//        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        VBox addFieldBox = new VBox(30);
+//        Scene addFieldScene = new Scene(addFieldBox,300,250);
+//
+//        TextField fieldIDInput = new TextField("Field ID");
+//        TextField fieldNameInput = new TextField("Field Name");
+//        TextField fieldSizeInput = new TextField("Field Size");
+//        TextField fieldLocation = new TextField("Field Location");
+//        Button submitFieldInfo = new Button("Submit");
+//
+//        Button fieldBackToMain = new Button("back");
+//        fieldBackToMain.setOnMouseClicked(e ->{
+//            stage.setScene(MenuScene);
+//        });
+//
+//        addFieldBox.getChildren().addAll(fieldIDInput, fieldNameInput, fieldSizeInput, fieldLocation, submitFieldInfo);
+//
+//        Button addField = new Button("Add Field");
+//        addField.setOnMouseClicked(e ->{
+//            stage.setScene(addFieldScene);
+//        });
+//        submitFieldInfo.setOnMouseClicked(e ->{
+//            Field newField = new Field(fieldIDInput.getText(),fieldNameInput.getText(), Double.parseDouble(fieldSizeInput.getText()), fieldLocation.getText());
+//            fieldData.add(newField);
+//            stage.setScene(fieldScene);
+//        });
+//        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        // todo: crop and record view page within field
+//        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//        VBox cropPage = new VBox(30);
+//        Scene cropScene = new Scene(cropPage,300,250);
+//
+//        Label yearLabel = new Label("Year: 2023");
+//        yearLabel.setFont(new Font("Arial", 20));
+//        yearLabel.setStyle("-fx-font-weight: bold;");
+//
+//        Label cropLabel = new Label("Crop Table");
+//        cropLabel.setFont(new Font("Arial", 20));
+//
+//        Label recordLabel = new Label("Records");
+//        recordLabel.setFont(new Font("Arial", 20));
+//
+//        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        // todo: crop table formatting
+//        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//        TableColumn<Crop, String> cropTypeCol = new TableColumn<Crop, String>("Crop Type");
+//        cropTypeCol.setMinWidth(130);
+//        cropTypeCol.setCellValueFactory(
+//                new PropertyValueFactory<Crop, String>("cropType"));
+//
+//        TableColumn<Crop, String> cropVarietyCol = new TableColumn<Crop, String>("Crop Variety");
+//        cropVarietyCol.setMinWidth(130);
+//        cropVarietyCol.setCellValueFactory(
+//                new PropertyValueFactory<Crop, String>("cropVariety"));
+//
+//        TableColumn<Crop, Float> bushelWeightCol = new TableColumn<Crop, Float>("Bushel Weight");
+//        bushelWeightCol.setMinWidth(70);
+//        bushelWeightCol.setCellValueFactory(
+//                new PropertyValueFactory<Crop, Float>("bushelWeight"));
+//
+//        grainTable.setItems(cropData);
+//        grainTable.getColumns().addAll(cropTypeCol, cropVarietyCol, bushelWeightCol);
+//        fieldTable.setOnMouseClicked(event -> {
+//            if (event.getClickCount() == 2) {
+//                Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
+//                if (selectedData != null) {
+//                    stage.setScene(cropScene);
+//                }
+//            }
+//        });
+//
+//        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        // todo: record table formatting
+//        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//        TableColumn<Record, String> chemCol = new TableColumn<Record, String>("Chemical Sprayed");
+//        chemCol.setMinWidth(130);
+//        chemCol.setCellValueFactory(
+//                new PropertyValueFactory<Record, String>("chemSprayed"));
+//
+//        TableColumn<Record, LocalDate> sprayingDateCol = new TableColumn<Record, LocalDate>("Spraying Date");
+//        sprayingDateCol.setMinWidth(130);
+//        sprayingDateCol.setCellValueFactory(
+//                new PropertyValueFactory<Record, LocalDate>("sprayingDate"));
+//
+//        TableColumn<Record, String> seedPlantedCol = new TableColumn<Record, String>("Seed Planted");
+//        seedPlantedCol.setMinWidth(130);
+//        seedPlantedCol.setCellValueFactory(
+//                new PropertyValueFactory<Record, String>("seedPlanted"));
+//
+//        TableColumn<Record, Double> seedingRateCol = new TableColumn<Record, Double>("Seeding Rate (lbs/acre)");
+//        seedingRateCol.setMinWidth(150);
+//        seedingRateCol.setCellValueFactory(
+//                new PropertyValueFactory<Record, Double>("seedingRate"));
+//
+//        TableColumn<Record, LocalDate> seedingDateCol = new TableColumn<Record, LocalDate>("Seeding Date");
+//        seedingDateCol.setMinWidth(130);
+//        seedingDateCol.setCellValueFactory(
+//                new PropertyValueFactory<Record, LocalDate>("seedingDate"));
+//
+//        TableColumn<Record, String> fertilizerCol = new TableColumn<Record, String>("Fertilizer");
+//        fertilizerCol.setMinWidth(130);
+//        fertilizerCol.setCellValueFactory(
+//                new PropertyValueFactory<Record, String>("fertilizer"));
+//
+//        TableColumn<Record, LocalDate> fertilizerDateCol = new TableColumn<Record, LocalDate>("Fertilizer Date");
+//        fertilizerDateCol.setMinWidth(130);
+//        fertilizerDateCol.setCellValueFactory(
+//                new PropertyValueFactory<Record, LocalDate>("fertilizerDate"));
+//
+//
+//        recordTable.setItems(recordData);
+//        recordTable.getColumns().addAll(chemCol, sprayingDateCol, seedPlantedCol, seedingRateCol, seedingDateCol, fertilizerCol, fertilizerDateCol);
+//
+//        Button cropBackToFields = new Button("Back");
+//        cropBackToFields.setOnMouseClicked(e ->{
+//            stage.setScene(fieldScene);
+//        });
+//
+//        HBox cropFunctionsBar = new HBox();
+//        cropFunctionsBar.getChildren().addAll(cropBackToFields);
+//        cropPage.getChildren().addAll(cropFunctionsBar, yearLabel, cropLabel, grainTable, recordLabel, recordTable);
+//
+//        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        // todo: field deletion
+//        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        VBox deleteFieldBox = new VBox(30);
+//        Scene deleteFieldScene = new Scene(deleteFieldBox,300,250);
+//
+//        Button deleteField = new Button("Delete Field");
+//        deleteField.setOnMouseClicked(e ->{
+//            stage.setScene(deleteFieldScene);
+//        });
+//
+//        Label deleteLabel = new Label("Enter Field ID");
+//        deleteLabel.setFont(new Font("Arial", 20));
+//        TextField IDInput = new TextField();
+//        Button submitID = new Button("Submit");
+//
+//        submitID.setOnMousePressed(e -> {
+//            String deleteID = IDInput.getText();
+//            Iterator<Field> iterator = fieldData.iterator();
+//            while (iterator.hasNext()) {
+//                Field field = iterator.next();
+//                if (deleteID.equals(field.getID())) {
+//                    iterator.remove();
+//                    stage.setScene(fieldScene);
+//                    return;
+//                }
+//            }
+//            stage.setScene(fieldScene);
+//        });
+//
+//        deleteFieldBox.getChildren().addAll(deleteLabel, IDInput, submitID);
+//
+//        // fields back to menu button
+//        Button fieldsBackToMain = new Button("Back");
+//        fieldsBackToMain.setOnMouseClicked(e ->{
+//            stage.setScene(MenuScene);
+//        });
+//
+//
+//        // field functions bar
+//        HBox fieldFunctionsBar = new HBox();
+//        fieldFunctionsBar.getChildren().addAll(addField, deleteField, fieldsBackToMain);
+//        fieldPage.getChildren().addAll(fieldFunctionsBar, fieldTable);
 
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
