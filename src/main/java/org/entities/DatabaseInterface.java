@@ -6,7 +6,7 @@ import org.bson.types.ObjectId;
 import java.util.ArrayList;
 
 public interface DatabaseInterface<T> {
-    public Document classToDoc(T inter);
+    public Document classToDoc();
 
     public Document docToClass();
 

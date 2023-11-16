@@ -58,7 +58,6 @@ public class DataFetch {
             query.put("_id", newdata);
             return database.getCollection(collectionFind).find(query).first();
 
-
         }
     }
     /**
@@ -77,6 +76,22 @@ public class DataFetch {
             ObjectId output = input.getObjectId("_id");
             mongoClient.close();
             System.out.println("Document inserted to database successfully!");
+            return output;
+
+        }
+    }
+
+    public static  ObjectId replaceDoc(ObjectId id, Document input, String databaseName, String collection) {
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            MongoDatabase database = mongoClient.getDatabase(databaseName);
+            BasicDBObject query = new BasicDBObject();
+            query.put("_id", id);
+            database.getCollection(collection).replaceOne(query,input);
+            database.getCollection(collection);
+            database.getCollection(collection).find(input);
+            ObjectId output = input.getObjectId("_id");
+            mongoClient.close();
+            System.out.println("Document replaced to database successfully!");
             return output;
 
         }
@@ -227,25 +242,33 @@ public class DataFetch {
 
     public static void main( String[] args ) throws NoSuchFieldException, FileAlreadyExistsException {
         // Replace the placeholder with your MongoDB deployment's connection string
-        System.out.println(grab("FarmData","farm_list","fieldName","FieldGerald"));
 
-        Document newDoc = new Document();
-        newDoc.append("fieldName", "Theo's Field");
-        newDoc.append("acres",57);
-        Date added = new Date();
-        newDoc.append("Date Added:",added.getTime());
+          Document newDoc = new Document();
+            newDoc.append("fieldName", "Theo's Field");
+            newDoc.append("acres",57);
+            newDoc.append("_id",new ObjectId("655586df80a5eb1421432f0f"));
 
-        Document newdocky = new Document();
-        newdocky.append("big test","It is quite testy");
-        ObjectId test5 = insertDoc(newDoc,"FarmData","farm_list");
-        System.out.println(test5);
-        System.out.println(exists(newdocky,"FarmData","farm_list"));
+            replaceDoc(newDoc.getObjectId("_id"),newDoc,"FarmData","year_list");
 
-
-        ObjectId test = new ObjectId("652c0dfc5dfa02f36944c6c6");
-
-        System.out.println("testing exist: " + existsID(test,"FarmData","farm_list"));
-        addID("fieldyNameyboi","This is a test for adding",test,"FarmData","farm_list");
+//        System.out.println(grab("FarmData","farm_list","fieldName","FieldGerald"));
+//
+//        Document newDoc = new Document();
+//        newDoc.append("fieldName", "Theo's Field");
+//        newDoc.append("acres",57);
+//        Date added = new Date();
+//        newDoc.append("Date Added:",added.getTime());
+//
+//        Document newdocky = new Document();
+//        newdocky.append("big test","It is quite testy");
+//        ObjectId test5 = insertDoc(newDoc,"FarmData","farm_list");
+//        System.out.println(test5);
+//        System.out.println(exists(newdocky,"FarmData","farm_list"));
+//
+//
+//        ObjectId test = new ObjectId("652c0dfc5dfa02f36944c6c6");
+//
+//        System.out.println("testing exist: " + existsID(test,"FarmData","farm_list"));
+//        addID("fieldyNameyboi","This is a test for adding",test,"FarmData","farm_list");
         // remove(test,"FarmData","farm_list");
 
 

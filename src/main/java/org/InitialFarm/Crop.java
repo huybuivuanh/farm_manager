@@ -1,18 +1,19 @@
 package org.InitialFarm;
 
+import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.entities.DatabaseInterface;
 
-public class Crop {
+public class Crop implements DatabaseInterface<Crop> {
     private String cropType;
     private String cropVariety;
-    private float bushelWeight;
+    private Double bushelWeight;
     private ObjectId dbID;
-    private String ID;
 
 
 
-    public Crop(String id, String cropType, String cropVariety, float bushelWeight){
-        this.ID = id;
+    public Crop(ObjectId dbid,String cropType, String cropVariety, double bushelWeight){
+        dbID = dbid;
         this.cropType = cropType;
         this.cropVariety = cropVariety;
         this.bushelWeight = bushelWeight;
@@ -29,14 +30,43 @@ public class Crop {
         this.cropVariety = newCropVariety;
     }
 
-    public float getBushelWeight(){ return this.bushelWeight;}
-    public void  setBushelWeight(float newBushelWeight){
+    public double getBushelWeight(){ return this.bushelWeight;}
+    public void  setBushelWeight(double newBushelWeight){
         this.bushelWeight = newBushelWeight;
     }
 
-    public ObjectId getDbID(){
-        return this.dbID;
-    }
-    public String getID(){return this.ID;}
 
+    @Override
+    public Document classToDoc() {
+        Document newDoc = new Document();
+        newDoc.append("cropType", this.cropType);
+        newDoc.append("cropVariety", this.cropVariety);
+        newDoc.append("bushelWeight", this.bushelWeight);
+        return newDoc;
+    }
+
+    @Override
+    public Document docToClass() {
+        return null;
+    }
+
+    @Override
+    public void save() {
+
+    }
+
+    @Override
+    public void sync() {
+
+    }
+
+    @Override
+    public ObjectId getDbId() {
+        return dbID;
+    }
+
+    @Override
+    public boolean isDatabase() {
+        return false;
+    }
 }

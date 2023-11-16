@@ -7,17 +7,24 @@ A field has a list of multiples years
  */
 
 import org.InitialFarm.Chemical;
+import org.entities.*;
 import org.InitialFarm.Crop;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 
-public class Year{
+public class Year implements DatabaseInterface<Year>{
 
     /**
      * The current year e.g. 2013
      */
+
+    private ObjectId dbID = null;
     private final int year;
 
     /**
@@ -48,22 +55,82 @@ public class Year{
     /**
      * The date the field was last sprayed
      */
-    private LocalDate spraying_date;
+    private LocalDateTime spraying_date;
+
+    @Override
+    public Document classToDoc() {
+
+        Document newDoc = new Document();
+        newDoc.append("year", this.year);
+        newDoc.append("new_year", this.new_year);
+        if (this.crop != null) {
+            newDoc.append("crop", this.crop.getDbId());
+        }
+        else{
+            newDoc.append("crop", null);
+        }
+        newDoc.append("seeding_date", this.seeding_date);
+        newDoc.append("seeding_rate", this.seeding_rate);
+        newDoc.append("fertilizer_rate", this.fertilizer_rate);
+        if (this.chemical_sprayed != null) {
+            newDoc.append("chemical_sprayed", this.chemical_sprayed.getDbId());
+        }
+        else{
+            newDoc.append("chemical_sprayed", null);
+        }
+        newDoc.append("spraying_date", this.spraying_date);
+        newDoc.append("harvest_date", this.harvest_date);
+        newDoc.append("end_of_year", this.end_of_year);
+
+        ArrayList<ObjectId> chemical_records = new ArrayList<>();
+        for (int i = 0;i<this.chemical_records.size();i++){
+            chemical_records.add(this.chemical_records.get(i).getDbId());
+        }
+
+        newDoc.append("chemical_records", chemical_records);
+
+        ArrayList<ObjectId> task_records = new ArrayList<>();
+        for (int i =0;i < this.task_records.size();i++){
+            task_records.add(this.task_records.get(i).getDbId());
+        }
+        newDoc.append("task_records", task_records);
+
+        return newDoc;
+    }
+
+    @Override
+    public Document docToClass() {
+
+
+        return null;
+    }
+
+    @Override
+    public void save() {
+
+    }
+
+    @Override
+    public void sync() {
+
+    }
+
+    public void setChemical_sprayed(Chemical chemical_sprayed) {
+        this.chemical_sprayed = chemical_sprayed;
+    }
+    @Override
+    public ObjectId getDbId() {
+        return dbID;
+    }
+
+    @Override
+    public boolean isDatabase() {
+        return false;
+    }
 
     /**
      * The class to hold a chemical and date record
      */
-    private static class ChemicalRecord{
-        Chemical chemical;
-        LocalDate date;
-
-        private ChemicalRecord(Chemical _chemical, LocalDate _date){
-            chemical = _chemical;
-            date = _date;
-        }
-        private Chemical getChemical(){ return this.chemical; }
-        private LocalDate getDate(){ return this.date; }
-    }
 
     /**
      * The list of chemicals that have been sprayed on the
@@ -74,17 +141,6 @@ public class Year{
     /**
      * The class to hold a chemical and date record
      */
-    private static class TaskRecord{
-        Task task;
-        LocalDate date;
-
-        private TaskRecord(Task _task, LocalDate _date){
-            task = _task;
-            date = _date;
-        }
-        private Task getTask(){ return this.task; }
-        private LocalDate getDate(){ return this.date; }
-    }
 
     /**
      * The list of tasks that have been done over the year and
@@ -113,7 +169,8 @@ public class Year{
      * @param _year the current year
      * @param new_year_date  the date the new year begins
      */
-    public Year( int _year, LocalDate new_year_date){
+    public Year(ObjectId dbid, int _year, LocalDate new_year_date){
+        dbID = dbid;
         year = _year;
         this.new_year = new_year_date;
         this.chemical_records = new LinkedList<>();
@@ -158,10 +215,13 @@ public class Year{
         return this.seeding_date;
     }
 
-    /**
-     * Sets the seeding date
-     * @param newSeedingDate the date the crop was/will be seeded
-     */
+    public void setHarvest_date(LocalDate harvest_date) {
+        this.harvest_date = harvest_date;
+    }
+
+    public void setSpraying_date(LocalDateTime spraying_date) {
+        this.spraying_date = spraying_date;
+    }
     public void setSeeding_date( LocalDate newSeedingDate){
         this.seeding_date = newSeedingDate;
     }
@@ -202,7 +262,7 @@ public class Year{
      * Returns the date of the most recent chemical application
      * @return the date of the most recent chemical application
      */
-    public LocalDate getSprayingDate(){
+    public LocalDateTime getSprayingDate(){
         return this.spraying_date;
     }
 
@@ -217,14 +277,11 @@ public class Year{
     /**
      * Performs a spraying task by updating the chemical sprayed and updating
      * the list of chemical sprayed
-     * @param newChemical The chemical to be added to the field
-     * @param newSprayingDate the date the chemical was/will be added to the field
+     * @param chemRecord the chemical to be sprayed
      */
-    public void sprayChemical(Chemical newChemical, LocalDate newSprayingDate){
-        this.chemical_sprayed = newChemical;
-        this.spraying_date = newSprayingDate;
-        ChemicalRecord newRecord = new ChemicalRecord(newChemical, newSprayingDate);
-        this.chemical_records.add(newRecord);
+    public void addChemicalRecord(ChemicalRecord chemRecord){
+
+        this.chemical_records.add(chemRecord);
     }
 
     /**
@@ -235,12 +292,11 @@ public class Year{
 
     /**
      * Add a task to the list of field tasks that have been done
-     * @param newTask The task to be added to the list after it's done
-     * @param newTaskDate the date the new task was completed
+     *
      */
-    public void doTask(Task newTask, LocalDate newTaskDate){
-        TaskRecord newRecord = new TaskRecord(newTask, newTaskDate);
-        this.task_records.add(newRecord);
+    public void addTaskRecord(TaskRecord newTaskRec){
+
+        this.task_records.add(newTaskRec);
     }
 
     /**
@@ -316,7 +372,7 @@ public class Year{
         LocalDate new_date = LocalDate.of(2013, Calendar.AUGUST, 23);
 
         // test all methods with this instance
-        Year Y1 = new Year(year, new_date);
+        Year Y1 = new Year(null,year, new_date);
         int result = Y1.getYear();
         double result2, expected2;
         int expected = 2013;
@@ -405,7 +461,8 @@ public class Year{
         Chemical Chem = null;
         new_date = LocalDate.of(2013, Calendar.OCTOBER, 23);
 
-        Y1.sprayChemical(Chem, new_date);
+        ChemicalRecord newchemRec = new ChemicalRecord(null, Chem, new_date);
+        Y1.addChemicalRecord(newchemRec);
         Chemical chemResult = Y1.getChemical_sprayed();
         if (chemResult != Chem)
         {
@@ -422,7 +479,7 @@ public class Year{
         }
 
         reason = "Testing getSprayingDate()";
-        dResult = Y1.getSprayingDate();
+        dResult = LocalDate.from(LocalDateTime.from(Y1.getSprayingDate()));
         if (dResult != new_date)
         {
             System.out.println("Error: Expected: " + new_date + " Obtained: " + dResult
@@ -440,7 +497,8 @@ public class Year{
         reason = " Testing task list after doTask()";
         Task Task1 = null;
         new_date = LocalDate.of(2013, Calendar.OCTOBER, 23);
-        Y1.doTask(Task1, new_date);
+        TaskRecord taskrecTest = new TaskRecord(null, Task1, new_date);
+        Y1.addTaskRecord(taskrecTest);
 
         sizeResult = Y1.getTaskRecords().size();
         if (sizeResult != 1)
@@ -496,5 +554,9 @@ public class Year{
 
         System.out.println("*** Testing Complete ***");
 
+    }
+
+    public void setEnd_of_year(LocalDate endOfYear) {
+        this.end_of_year = endOfYear;
     }
 }

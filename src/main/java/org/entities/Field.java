@@ -9,6 +9,7 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -24,7 +25,7 @@ public class Field implements DatabaseInterface<Field>
     /**
      * The unique ID of the field to link to the DataBase
      */
-    private final ObjectId dbID = null;
+    private ObjectId dbID = null;
 
     /**
      * The name of the field
@@ -59,8 +60,9 @@ public class Field implements DatabaseInterface<Field>
      * @param size     the alphanumeric ID of the animal being created
      * @param location the type of animal as a string
      */
-    public Field(String ID, String fName, double size, String location)
+    public Field(ObjectId dbid,String ID, String fName, double size, String location)
     {
+        this.dbID = dbid;
         this.ID = ID;
         this.name = fName;
         this.size = size;
@@ -75,7 +77,7 @@ public class Field implements DatabaseInterface<Field>
      */
     public void newYear(int newYear, LocalDate newYearDate){
         if ( this.current_Year != null ) {this.years.add(this.current_Year);}
-        this.current_Year = new Year(newYear, newYearDate);
+        this.current_Year = new Year(null,newYear, newYearDate);
         this.years.add(this.current_Year);
     }
 
@@ -134,6 +136,9 @@ public class Field implements DatabaseInterface<Field>
         this.size = size;
     }
 
+    public void addYear(Year year) {
+        this.years.add(year);
+    }
     /**
      * Returns the list of years under a field
      * @return the list of years
@@ -167,7 +172,7 @@ public class Field implements DatabaseInterface<Field>
         double size = 123;
 
         // test all methods with this instance
-        Field Field1 = new Field(ID ,fName, size, location);
+        Field Field1 = new Field(null,ID ,fName, size, location);
         String result = Field1.getName();
         double result2, expected2;
         String expected = "Field1";
@@ -300,34 +305,44 @@ public class Field implements DatabaseInterface<Field>
 
     /**
      * Translates an object into a JSON Document representation of itself.
-     * @param field : a field object that is going to be translated into a doc.
      * @return : a document representation of the field object being passed.
      */
     @Override
-    public Document classToDoc(Field field) {
+    public Document classToDoc() {
         Document newDoc = new Document();
 
-        //  ObjectId fieldId= field.fieldId; => this is for the database
-        String field_id = field.getID();
-        String field_name= field.getName();
-        Double field_size= field.getSize() ;
-        String field_location = field.getLocation();
+        String field_id = this.getID();
+        String field_name= this.getName();
+        Double field_size= this.getSize() ;
+        String field_location = this.getLocation();
         // not sure how to include year below
 
 
-        // might need to add the objectID here still
-        newDoc.append("_id", field_id);
-        newDoc.append("field_name", field_name);
-        newDoc.append("field_size", field_size);
-        newDoc.append("field_location", field_location);
+        ArrayList<ObjectId> yearList = new ArrayList<ObjectId>();
+        for (Year year : this.getYears()) {
+            yearList.add(year.getDbId());
+        }
+
+        if (this.getCurrent_Year() != null) {
+
+            newDoc.append("currentYear", this.getCurrent_Year().getDbId());
+        }
+        else{
+            newDoc.append("currentYear", null);
+        }
+        newDoc.append("fieldId", field_id);
+        newDoc.append("fieldName", field_name);
+        newDoc.append("fieldSize", field_size);
+        newDoc.append("fieldLocation", field_location);
         //not sure how to include years below
-        newDoc.append("field_years", field.years);
+        newDoc.append("field_years", yearList);
 
         Date added = new Date();
         newDoc.append("Date Added:",added.getTime());
 
         return newDoc;
         }
+
 
     /**
      * @return
@@ -358,7 +373,7 @@ public class Field implements DatabaseInterface<Field>
      */
     @Override
     public ObjectId getDbId() {
-        return null;
+        return dbID;
     }
 
     /**
@@ -367,5 +382,9 @@ public class Field implements DatabaseInterface<Field>
     @Override
     public boolean isDatabase() {
         return false;
+    }
+
+    public void setCurrentYear(Year input) {
+        current_Year = input;
     }
 }

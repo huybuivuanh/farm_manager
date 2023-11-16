@@ -2,11 +2,14 @@ package org.entities;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class User {
+public class User implements DatabaseInterface<User>{
 
     /**
      * whether is owner
@@ -16,6 +19,8 @@ public class User {
      * user ID
      */
     String ID;
+
+    ObjectId dbID;
 
     /**
      * user email
@@ -59,7 +64,8 @@ public class User {
      * @param last_name user last name
      * @param dob user date of birth
      */
-    public User(String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob, boolean ownership){
+    public User(ObjectId iddb, String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob, boolean ownership){
+        dbID = iddb;
         ID = id;
         email = user_email;
         password = user_password;
@@ -224,6 +230,7 @@ public class User {
      */
     public String toString(){
         StringBuilder result = new StringBuilder("User ID: " + getID() +
+                "\nDatabase ID: " + getDbId() +
                 "\nEmail: " + getEmail() +
                 "\nPassword: " + getPassword() +
                 "\nFirst Name: " + getFirstName() +
@@ -238,4 +245,77 @@ public class User {
     }
 
 
+    /**
+     * @param
+     * @return
+     */
+    @Override
+    public Document classToDoc() {
+        Document newDoc= new Document();
+
+        String employeeId = this.getID();
+        String email = this.getEmail();
+        String password = this.getPassword();
+        String fname = this.getFirstName();
+        String lname = this.getLastName();
+        LocalDate dob= this.getDOB();
+        Boolean owner= this.getOwner();
+
+
+        ArrayList<ObjectId> taskList = new ArrayList<ObjectId>();
+        for (Task task : this.getTaskList()) {
+            taskList.add(task.getDbId());
+        }
+
+        newDoc.append("employeeId",employeeId);
+        newDoc.append("email",email);
+        newDoc.append("password",password);
+        newDoc.append("firstname",fname);
+        newDoc.append("lastname",lname);
+        newDoc.append("dob",dob);
+        newDoc.append("isOwner",owner);
+        newDoc.append("tasklist", taskList);
+
+        return newDoc;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public Document docToClass() {
+        return null;
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void save() {
+
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void sync() {
+
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public ObjectId getDbId() {
+        return dbID;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isDatabase() {
+        return false;
+    }
 }
