@@ -309,7 +309,7 @@ public class Year{
 
     public static void main(String[] args){
 
-        /* For testing the Field class */
+        /* For testing the Year class */
 
         String reason = "Constructor + getYear()";
         int year = 2013;
