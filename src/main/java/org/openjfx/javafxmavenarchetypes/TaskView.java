@@ -102,7 +102,6 @@ public class TaskView extends StackPane implements ModelSubscriber {
             taskNameFEdit.setText(taskTable.getSelectionModel().getSelectedItem().getTaskName());
             descriptionFEdit.setText(taskTable.getSelectionModel().getSelectedItem().getDescription());
             dueDateEdit.setValue(taskTable.getSelectionModel().getSelectedItem().getDueDate().toLocalDate());
-
             stage.setScene(editUserScene);
         });
 
