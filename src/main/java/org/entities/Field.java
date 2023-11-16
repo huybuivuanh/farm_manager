@@ -19,7 +19,7 @@ public class Field implements DatabaseInterface<Field>
     /**
      * The unique ID of the field
      */
-    private final String ID;
+    private String ID;
 
     /**
      * The unique ID of the field to link to the DataBase
@@ -34,7 +34,7 @@ public class Field implements DatabaseInterface<Field>
     /**
      * The location of the field
      */
-    private final String location;
+    private String location;
 
     /**
      * The size of the field in acres.
@@ -102,6 +102,15 @@ public class Field implements DatabaseInterface<Field>
      * @param name the new name of the field
      */
     public void setName(String name) { this.name = name; }
+
+
+    public void setID(String id){
+        this.ID = id;
+    }
+
+    public void setLocation(String location){
+        this.location = location;
+    }
 
     /**
      * Returns the location of the field
