@@ -12,7 +12,7 @@ import java.util.Iterator;
 public class User implements DatabaseInterface<User>{
 
     /**
-     * whether is owner
+     * whether is owner or not
      */
     public Boolean isOwner;
     /**
@@ -50,9 +50,6 @@ public class User implements DatabaseInterface<User>{
      */
     ObservableList<Task> taskList;
 
-
-
-
     /**
      * constructor
      * @param id user id
@@ -87,7 +84,6 @@ public class User implements DatabaseInterface<User>{
     public void setOwner(boolean X) {
         isOwner=X;
     }
-
 
     /**
      * get user id
@@ -242,8 +238,8 @@ public class User implements DatabaseInterface<User>{
 
 
     /**
-     * @param user
-     * @return
+     * @param user The User, an employee or owner
+     * @return the information of a User
      */
     @Override
     public Document classToDoc(User user) {
@@ -264,14 +260,6 @@ public class User implements DatabaseInterface<User>{
         newDoc.append("lastname",lname);
         newDoc.append("dob",dob);
         newDoc.append("isOwner",owner);
-
-//        if (user.getTaskList().size()>0) {
-//            for (int i = 0; i < user.getTaskList().size(); i++) {
-//                Task task = user.getTaskList().get(i);
-//
-//
-//            }
-//        }
 
 
         return newDoc;
