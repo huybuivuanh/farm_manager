@@ -63,6 +63,9 @@ public class dataManager {
         else if (test instanceof Year) {
             replaceDoc(test.getDbId(),test.classToDoc(), "FarmData", "year_list");
             }
+        else if (test instanceof GrainBin){
+            replaceDoc(test.getDbId(),test.classToDoc(), "FarmData", "grain_bin_list");
+        }
         else {
                 System.out.println("not of type Employee, owner, field, or task");
             }
@@ -108,6 +111,12 @@ public class dataManager {
                 newID=  insertDoc(doc, "FarmData","field_list");
                 newDoc= grabByID("FarmData", "field_list", newID);
                 classType = "Field";}
+
+            else if (test instanceof GrainBin){
+                newID = insertDoc(doc,"FarmData","grain_bin_list");
+                newDoc = grabByID("FarmData","grain_bin_list",newID);
+                classType = "GrainBin";
+            }
 
             else if ( test instanceof Task){
 
@@ -189,6 +198,12 @@ public class dataManager {
 
             return (T) newYear;
         }
+
+        if (classType.equals("GrainBin")){
+            Document newDoc = grabByID("FarmData","grain_bin_list",id);
+            GrainBin newGrainBin = fetchObject("GrainBin",newDoc);
+            return (T) newGrainBin;
+        }
         if (classType.equals("Employee")){
             Document newDoc = grabByID("FarmData","employee_list",id);
             Employee newEmployee =  new Employee(newDoc.getObjectId("_id"),newDoc.getString("employeeId"), newDoc.getString("email"),
@@ -264,6 +279,41 @@ public class dataManager {
             }
             newObj = newEmployee;
 
+        }
+        else if (classType.equals("GrainBin")){
+            GrainBin newGrainBin = new GrainBin(objectDoc.getObjectId("_id"),objectDoc.getString("binName"),objectDoc.getString("binLocation"),objectDoc.getInteger("binSize"),objectDoc.getBoolean("hopper"),objectDoc.getBoolean("fan"));
+            if (objectDoc.getObjectId("currentCrop") != null) {
+                newGrainBin.setCurrentCrop(fetchObjectById("Crop", objectDoc.getObjectId("currentCrop")));
+            }
+            else{
+                newGrainBin.setCurrentCrop(null);
+            }
+            if (objectDoc.getObjectId("lastCrop") != null) {
+                newGrainBin.setLastCrop(fetchObjectById("Crop", objectDoc.getObjectId("lastCrop")));
+            }
+            else{
+                newGrainBin.setLastCrop(null);
+            }
+
+            if (objectDoc.getDouble("cropBushels") != null) {
+                newGrainBin.setCropBushels(objectDoc.getDouble("cropBushels"));
+            }
+            else{
+                newGrainBin.setCropBushels(0.0);
+            }
+            if (objectDoc.getDouble("cropLbs") != null) {
+                newGrainBin.setCropLbs(objectDoc.getDouble("cropLbs"));
+            }
+            else{
+                newGrainBin.setCropLbs(0.0);
+            }
+            if (objectDoc.getBoolean("tough") != null) {
+                newGrainBin.setTough(objectDoc.getBoolean("tough"));
+            }
+            if (objectDoc.getBoolean("clean") != null) {
+                newGrainBin.setClean(objectDoc.getBoolean("clean"));
+            }
+            newObj = newGrainBin;
         }
         else if (classType.equals("Year")){
             Year newYear = new Year(objectDoc.getObjectId("_id"),objectDoc.getInteger("year"),objectDoc.getDate("new_year").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
@@ -493,6 +543,7 @@ public class dataManager {
 //        Employee dataBaseEmployee2= (Employee) manager2.saveClass(tester2);
 
 
+
         dataManager manager3 = new dataManager();
         ArrayList<String> test = new ArrayList<>();
         test.add("clorox");
@@ -501,6 +552,12 @@ public class dataManager {
         Chemical outputChem = manager3.saveClass(testChem);
         Crop newCrop = new Crop(null,"corn","corn", 50.0);
         Crop outputCrop = manager3.saveClass(newCrop);
+
+        GrainBin bin = new GrainBin(null,"bin1","bin1", 50, true, true);
+        bin.addCrop(outputCrop, 50, true, true, true);
+        bin.addCrop(outputCrop, 50, true, true, true);
+        manager3.saveClass(bin);
+
 
         ChemicalRecord newChemRecord = new ChemicalRecord(null,outputChem,LocalDate.of(2020,Month.JANUARY,1));
         ChemicalRecord outputChemRecord = manager3.saveClass(newChemRecord);

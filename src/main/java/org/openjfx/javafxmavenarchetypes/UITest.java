@@ -57,10 +57,10 @@ public class UITest extends Application {
     private TableView<GrainBin> binTable = new TableView<>();
     private final ObservableList<GrainBin> grainBinData =
             FXCollections.observableArrayList(
-                    new GrainBin("Tod", "the moon", 400, false, false),
-                    new GrainBin("Dave", "the moon", 4000, false, false),
-                    new GrainBin("The Big One", "the moon", 40000, false, true),
-                    new GrainBin("Nice", "the moon", 69, true, false)
+                    new GrainBin(null,"Tod", "the moon", 400, false, false),
+                    new GrainBin(null,"Dave", "the moon", 4000, false, false),
+                    new GrainBin(null,"The Big One", "the moon", 40000, false, true),
+                    new GrainBin(null,"Nice", "the moon", 69, true, false)
             );
 
     private TableView<Crop> grainTable = new TableView<Crop>();
