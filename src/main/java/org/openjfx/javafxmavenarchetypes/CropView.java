@@ -25,15 +25,14 @@ public class CropView extends StackPane implements ModelSubscriber {
     private Stage stage;
 
 
-    private TableView<Field> fieldTable = new TableView<Field>();
     private TableView<Crop> grainTable = new TableView<Crop>();
     private final ObservableList<Crop> cropData =
             FXCollections.observableArrayList(
-                    new Crop("Canola", "LibertyLink", 55),
-                    new Crop("Canola", "RoundupReady", 54),
-                    new Crop("Durum", "Navigator", 60),
-                    new Crop("Red Lentil", "Clearfield", 58),
-                    new Crop("Wheat & Barley", "All the other Grains", 45)
+                    new Crop("1", "Canola", "LibertyLink", 55),
+                    new Crop("2", "Canola", "RoundupReady", 54),
+                    new Crop("3", "Durum", "Navigator", 60),
+                    new Crop("4", "Red Lentil", "Clearfield", 58),
+                    new Crop("5", "Wheat & Barley", "All the other Grains", 45)
 
             );
 

@@ -17,10 +17,11 @@ public class GrainBin {
     private final int binSize;
     private final boolean hopper;
     private final boolean fan;
-    private ObjectId binID;
+    private  ObjectId dbID;
+    private final String ID;
 
-
-    public GrainBin(String binName, String binLocation, int binSize, boolean hopper, boolean fan){
+    public GrainBin(String id, String binName, String binLocation, int binSize, boolean hopper, boolean fan){
+        this.ID = id;
         this.binName = binName;
         this.binLocation = binLocation;
         this.binSize = binSize;
@@ -42,8 +43,8 @@ public class GrainBin {
             this.cropLbs = 0;
         }
     }
-
-    public ObjectId getBinID(){return binID;}
+    public String getID(){return ID;}
+    public ObjectId getDbID(){return dbID;}
     public Crop getLastCrop(){return lastCrop;}
     public Crop getCurrentCrop(){return currentCrop;}
     public int getCropLbs(){return  this.cropLbs;}
