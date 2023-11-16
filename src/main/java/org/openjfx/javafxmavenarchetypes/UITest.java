@@ -57,23 +57,23 @@ public class UITest extends Application {
             );
 
 
-    private TableView<GrainBin> binTable = new TableView<>();
-    private final ObservableList<GrainBin> grainBinData =
-            FXCollections.observableArrayList(
-                    new GrainBin("Tod", "the moon", 400, false, false),
-                    new GrainBin("Dave", "the moon", 4000, false, false),
-                    new GrainBin("The Big One", "the moon", 40000, false, true),
-                    new GrainBin("Nice", "the moon", 69, true, false)
-            );
+//    private TableView<GrainBin> binTable = new TableView<>();
+//    private final ObservableList<GrainBin> grainBinData =
+//            FXCollections.observableArrayList(
+//                    new GrainBin("Tod", "the moon", 400, false, false),
+//                    new GrainBin("Dave", "the moon", 4000, false, false),
+//                    new GrainBin("The Big One", "the moon", 40000, false, true),
+//                    new GrainBin("Nice", "the moon", 69, true, false)
+//            );
 
     private TableView<Crop> grainTable = new TableView<Crop>();
     private final ObservableList<Crop> cropData =
             FXCollections.observableArrayList(
-                    new Crop("Canola", "LibertyLink", 55),
-                    new Crop("Canola", "RoundupReady", 54),
-                    new Crop("Durum", "Navigator", 60),
-                    new Crop("Red Lentil", "Clearfield", 58),
-                    new Crop("Wheat & Barley", "All the other Grains", 45)
+                    new Crop("1","Canola", "LibertyLink", 55),
+                    new Crop("2","Canola", "RoundupReady", 54),
+                    new Crop("3","Durum", "Navigator", 60),
+                    new Crop("4","Red Lentil", "Clearfield", 58),
+                    new Crop("5","Wheat & Barley", "All the other Grains", 45)
 
             );
 
@@ -139,8 +139,8 @@ public class UITest extends Application {
 //        Group fieldPageGroup = new Group();
 //        Scene sceneFields = new Scene(fieldPageGroup,300,250);
         stage.setTitle("Farm Manager");
-        stage.setWidth(925);
-        stage.setHeight(500);
+        stage.setWidth(1200);
+        stage.setHeight(700);
 
         VBox taskSelector = new VBox(30);
         Image image = new Image("farm image.jpeg");
@@ -170,7 +170,7 @@ public class UITest extends Application {
 //        Group binPage = new Group();
         BinView binPage = new BinView();
         Scene sceneBins = new Scene(binPage,300,250);
-        binPage.setStageMenu(stage, MenuScene);
+        binPage.setStageMenu(stage, MenuScene, sceneBins);
 
         Button bbins = new Button();
         bbins.setText("Bins");
