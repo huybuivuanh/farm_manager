@@ -35,6 +35,41 @@ public class dataManager {
      */
 
 
+    public  <T extends DatabaseInterface<T>> T updateClass(T test){
+
+        if ( test instanceof Employee) {
+
+            replaceDoc(test.getDbId(),test.classToDoc(), "FarmData", "employee_list");
+        }
+        else if (test instanceof Field) {
+
+            replaceDoc(test.getDbId(),test.classToDoc(), "FarmData", "field_list");
+            }
+        else if (test instanceof Task) {
+            replaceDoc(test.getDbId(),test.classToDoc(), "FarmData", "task_list");
+            }
+        else if (test instanceof Chemical) {
+            replaceDoc(test.getDbId(),test.classToDoc(), "FarmData", "chemical_list");
+            }
+        else if (test instanceof ChemicalRecord) {
+            replaceDoc(test.getDbId(),test.classToDoc(), "FarmData", "chemical_record_list");
+            }
+        else if (test instanceof TaskRecord) {
+            replaceDoc(test.getDbId(),test.classToDoc(), "FarmData", "task_record_list");
+            }
+        else if (test instanceof Crop) {
+            replaceDoc(test.getDbId(),test.classToDoc(), "FarmData", "crop_list");
+            }
+        else if (test instanceof Year) {
+            replaceDoc(test.getDbId(),test.classToDoc(), "FarmData", "year_list");
+            }
+        else {
+                System.out.println("not of type Employee, owner, field, or task");
+            }
+        return null;
+    }
+
+
     // Initialize a class  Does this have an ID yes or no?
     // No it doesn't. Okay re-initalize this class inside the database. Pull out what the database Makes as a new class
     // construct of same and return back to the developer. They should set their class as this new class.
@@ -53,9 +88,13 @@ public class dataManager {
 
 
             if ( test instanceof Employee){
+                if (test.getDbId() == null){
+
+                }
                 newID= insertDoc(doc, "FarmData", "employee_list");
                 newDoc= grabByID("FarmData", "employee_list", newID);
                 classType= "Employee";}
+
 
             // Was getting an error that this ill always be wrong, that's because owner inherits from employee,
             // so if it is an owner, it will never get here. Left comment. not sure how you want to handle this
@@ -66,8 +105,8 @@ public class dataManager {
 //              classType= "Owner";}
 
             else if ( test instanceof Field){
-                newID=  insertDoc(doc, "FarmData","farm_list");
-                newDoc= grabByID("FarmData", "farm_list", newID);
+                newID=  insertDoc(doc, "FarmData","field_list");
+                newDoc= grabByID("FarmData", "field_list", newID);
                 classType = "Field";}
 
             else if ( test instanceof Task){
@@ -82,15 +121,33 @@ public class dataManager {
                 newDoc = grabByID("FarmData","chemical_list",newID);
                 classType = "Chemical";
             }
+            else if (test instanceof ChemicalRecord){
+                newID = insertDoc(doc,"FarmData","chemical_record_list");
+                newDoc = grabByID("FarmData","chemical_record_list",newID);
+                classType = "ChemicalRecord";
+            }
+            else if (test instanceof TaskRecord){
+                newID = insertDoc(doc,"FarmData","task_record_list");
+                newDoc = grabByID("FarmData","task_record_list",newID);
+                classType = "TaskRecord";
+            }
             else if (test instanceof Crop){
                 newID = insertDoc(doc,"FarmData","crop_list");
                 newDoc = grabByID("FarmData","crop_list",newID);
                 classType = "Crop";
             }
+            else if (test instanceof Year){
+                newID = insertDoc(doc,"FarmData","year_list");
+                newDoc = grabByID("FarmData","year_list",newID);
+                classType = "Year";
+            }
 
             else {
                 System.out.println("not of type Employee, owner, field, or task");
             }
+        }
+        else{
+
         }
         assert classType != null;
         return fetchObject(classType, newDoc);
@@ -122,9 +179,15 @@ public class dataManager {
         Object newObj = null;
 
         if (classType.equals("Field")){
-            Document test = grabByID("FarmData","farm_list",id);
-            Field newfield = new Field(test.getObjectId("_id"),test.getString("fieldId"),test.getString("fieldName"),Double.parseDouble(test.getString("acres")),test.getString("location"));
+            Document test = grabByID("FarmData","field_list",id);
+            Field newfield = fetchObject("Field",test);
             return (T) newfield;
+        }
+        if (classType.equals("Year")){
+            Document newDoc = grabByID("FarmData","year_list",id);
+            Year newYear = fetchObject("Year",newDoc);
+
+            return (T) newYear;
         }
         if (classType.equals("Employee")){
             Document newDoc = grabByID("FarmData","employee_list",id);
@@ -140,6 +203,16 @@ public class dataManager {
                     newDoc.getDate("task_dueDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
             return (T)newTask;
         }
+        if (classType.equals("TaskRecord")){
+            Document newDoc = grabByID("FarmData","task_record_list",id);
+            TaskRecord newTaskRecord = new TaskRecord(newDoc.getObjectId("_id"),fetchObjectById("Task",newDoc.getObjectId("task")),newDoc.getDate("date").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            return (T)newTaskRecord;
+        }
+        if (classType.equals("ChemicalRecord")){
+            Document newDoc = grabByID("FarmData","chemical_record_list",id);
+            ChemicalRecord newChemRecord = new ChemicalRecord(newDoc.getObjectId("_id"),fetchObjectById("Chemical",newDoc.getObjectId("chemical")),newDoc.getDate("date").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            return (T)newChemRecord;
+        }
         if (classType.equals("Chemical")){
             Document newDoc = grabByID("FarmData","chemical_list",id);
             Chemical newChemical = new Chemical(newDoc.getObjectId("_id"),newDoc.getString("chemicalName"),newDoc.getList("chemicalGroup",String.class));
@@ -147,7 +220,7 @@ public class dataManager {
         }
         if (classType.equals("Crop")){
             Document newDoc = grabByID("FarmData","crop_list",id);
-            Crop newCrop = new Crop(newDoc.getObjectId("_id"),newDoc.getString("cropType"),newDoc.getString("cropVariety"),newDoc.getDouble("BushelWeight"));
+            Crop newCrop = new Crop(newDoc.getObjectId("_id"),newDoc.getString("cropType"),newDoc.getString("cropVariety"),newDoc.getDouble("bushelWeight"));
             return (T)newCrop;
         }
 
@@ -192,6 +265,75 @@ public class dataManager {
             newObj = newEmployee;
 
         }
+        else if (classType.equals("Year")){
+            Year newYear = new Year(objectDoc.getObjectId("_id"),objectDoc.getInteger("year"),objectDoc.getDate("new_year").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            BsonArray test = objectDoc.toBsonDocument().getArray("chemical_records");
+            for (int i = 0; i < test.size();i++){
+                ObjectId output = test.get(0).asObjectId().getValue();
+                ChemicalRecord newChemRecord =  fetchObjectById("ChemicalRecord",output);
+                System.out.println(newChemRecord);
+                newYear.addChemicalRecord(newChemRecord);
+            }
+            BsonArray test2 = objectDoc.toBsonDocument().getArray("task_records");
+            for (int i = 0; i < test2.size();i++){
+                ObjectId outputTask = test2.get(0).asObjectId().getValue();
+                TaskRecord newTaskRecord =  fetchObjectById("TaskRecord",outputTask);
+                System.out.println(newTaskRecord);
+                newYear.addTaskRecord(newTaskRecord);
+            }
+            if (objectDoc.getObjectId("crop") != null) {
+                newYear.setCrop(fetchObjectById("Crop", objectDoc.getObjectId("crop")));
+            }
+            else{
+                newYear.setCrop(null);
+            }
+            if (objectDoc.getDate("seedDate") != null) {
+                newYear.setSeeding_date(objectDoc.getDate("seedDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            }
+            else{
+                newYear.setSeeding_date(null);
+            }
+
+            if (objectDoc.getDouble("seedRate") != null) {
+                newYear.setSeeding_rate(objectDoc.getDouble("seedRate"));
+            }
+           else{
+                newYear.setSeeding_rate(0);
+            }
+            if (objectDoc.getDouble("fertilizerRate") != null) {
+                newYear.setFertilizer_rate(objectDoc.getDouble("fertilizerRate"));
+            }
+            else{
+                newYear.setFertilizer_rate(0);
+            }
+            if (objectDoc.getObjectId("ChemicalSprayed")!= null){
+                newYear.setChemical_sprayed(fetchObjectById("Chemical",objectDoc.getObjectId("chemicalSprayed")));
+            }
+            else{
+                newYear.setChemical_sprayed(null);
+            }
+            if (objectDoc.getDate("sprayDate") != null) {
+                newYear.setSpraying_date(objectDoc.getDate("sprayDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay());
+            }
+            else{
+                newYear.setSpraying_date(null);
+            }
+            if (objectDoc.getDate("harvestDate") != null){
+                newYear.setHarvest_date(objectDoc.getDate("harvestDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            }
+            else{
+                newYear.setHarvest_date(null);
+            }
+            if (objectDoc.getDate("endOfYear") != null){
+                newYear.setEnd_of_year(objectDoc.getDate("endOfYear").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            }
+            else{
+                newYear.setEnd_of_year(null);
+            }
+
+            //TODO ADD MORE OF THE YEAR STUFF HERE
+            newObj = newYear;
+        }
 
         else if (classType.equals("Owner"))
         {
@@ -211,14 +353,30 @@ public class dataManager {
          */
         else if (classType.equals("Field"))
         {
-            Field newField = new Field(objectDoc.getObjectId("_id"),objectDoc.getString("fieldId"),objectDoc.getString("fieldName"),objectDoc.getDouble("fieldSize"),objectDoc.getString("fieldLocation"));
-
+            Field newField = new Field(objectDoc.getObjectId("_id"),objectDoc.getString("fieldId"),objectDoc.getString("fieldName"),objectDoc.getDouble("fieldSize"),objectDoc.getString("location"));
+            BsonArray test = objectDoc.toBsonDocument().getArray("field_years");
+            newField.setCurrentYear(fetchObjectById("Year",objectDoc.getObjectId("currentYear")));
+            for (int i = 0; i < test.size();i++){
+                ObjectId output = test.get(0).asObjectId().getValue();
+                Year newYear = fetchObjectById("Year",output);
+                System.out.println(newYear);
+                newField.addYear(newYear);
+            }
             newObj = newField;
         }
         else if (classType.equals("Chemical"))
         {
             Chemical newchem = new Chemical(objectDoc.getObjectId("_id"),objectDoc.getString("chemicalName"),objectDoc.getList("chemicalGroup",String.class));
             newObj = newchem;
+        }
+        else if (classType.equals("ChemicalRecord"))
+        {
+            ChemicalRecord newChemRecord = new ChemicalRecord(objectDoc.getObjectId("_id"),fetchObjectById("Chemical",objectDoc.getObjectId("chemical")),objectDoc.getDate("date").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            newObj = newChemRecord;
+        }
+        else if (classType.equals("TaskRecord")){
+            TaskRecord newTaskRecord = new TaskRecord(objectDoc.getObjectId("_id"),fetchObjectById("Task",objectDoc.getObjectId("task")),objectDoc.getDate("date").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            newObj = newTaskRecord;
         }
         else if (classType.equals("Crop")){
             Crop newCrop = new Crop(objectDoc.getObjectId("_id"),objectDoc.getString("cropType"),objectDoc.getString("cropVariety"),objectDoc.getDouble("bushelWeight"));
@@ -336,8 +494,6 @@ public class dataManager {
 
 
         dataManager manager3 = new dataManager();
-        Field testField = new Field(null,"field5","FieldGerald", 51, "location");
-        Field outputField = manager3.saveClass(testField);
         ArrayList<String> test = new ArrayList<>();
         test.add("clorox");
         test.add("bath salts");
@@ -346,8 +502,30 @@ public class dataManager {
         Crop newCrop = new Crop(null,"corn","corn", 50.0);
         Crop outputCrop = manager3.saveClass(newCrop);
 
+        ChemicalRecord newChemRecord = new ChemicalRecord(null,outputChem,LocalDate.of(2020,Month.JANUARY,1));
+        ChemicalRecord outputChemRecord = manager3.saveClass(newChemRecord);
+        Task newTask = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        Task outputTask = manager3.saveClass(newTask);
+        TaskRecord newTaskRecord = new TaskRecord(null,outputTask,LocalDate.of(2020,Month.JANUARY,1));
+        TaskRecord outputTaskRecord = manager3.saveClass(newTaskRecord);
+
+        Year newYear = new Year(null,2020,LocalDate.of(2020,Month.JANUARY,1));
+        Year newYear2 = new Year(null,2024,LocalDate.of(2024,Month.JANUARY,1));
+        newYear.addChemicalRecord(outputChemRecord);
+        newYear.addTaskRecord(outputTaskRecord);
+        Year outputYear = manager3.saveClass(newYear);
+        Year outputYear2 = manager3.saveClass(newYear2);
+        Field newField = new Field(null,"field5","FieldGerald", 51, "location");
+        outputYear.setCrop(outputCrop);
+        outputYear2.setCrop(outputCrop);
+        manager3.updateClass(outputYear2);
+        newField.addYear(outputYear);
+        newField.setCurrentYear(outputYear2);
+
+        Field outputField2 = manager3.saveClass(newField);
+        Field getFieldTest = manager3.fetchObjectById("Field",outputField2.getDbId());
+
         System.out.println("output chem:" + outputChem);
-        System.out.println("output field:" + outputField);
 
 
         // check if tasks are reflected in document.

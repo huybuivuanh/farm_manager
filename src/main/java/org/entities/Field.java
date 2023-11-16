@@ -77,7 +77,7 @@ public class Field implements DatabaseInterface<Field>
      */
     public void newYear(int newYear, LocalDate newYearDate){
         if ( this.current_Year != null ) {this.years.add(this.current_Year);}
-        this.current_Year = new Year(newYear, newYearDate);
+        this.current_Year = new Year(null,newYear, newYearDate);
         this.years.add(this.current_Year);
     }
 
@@ -127,6 +127,9 @@ public class Field implements DatabaseInterface<Field>
         this.size = size;
     }
 
+    public void addYear(Year year) {
+        this.years.add(year);
+    }
     /**
      * Returns the list of years under a field
      * @return the list of years
@@ -308,16 +311,22 @@ public class Field implements DatabaseInterface<Field>
 
         ArrayList<ObjectId> yearList = new ArrayList<ObjectId>();
         for (Year year : this.getYears()) {
-          //   yearList.add(year.getDbId()); => need to implement the years DbId
+            yearList.add(year.getDbId());
         }
 
-        // might need to add the objectID here still
+        if (this.getCurrent_Year() != null) {
+
+            newDoc.append("currentYear", this.getCurrent_Year().getDbId());
+        }
+        else{
+            newDoc.append("currentYear", null);
+        }
         newDoc.append("fieldId", field_id);
         newDoc.append("fieldName", field_name);
         newDoc.append("fieldSize", field_size);
         newDoc.append("fieldLocation", field_location);
         //not sure how to include years below
-        newDoc.append("field_years", this.years);
+        newDoc.append("field_years", yearList);
 
         Date added = new Date();
         newDoc.append("Date Added:",added.getTime());
@@ -355,7 +364,7 @@ public class Field implements DatabaseInterface<Field>
      */
     @Override
     public ObjectId getDbId() {
-        return null;
+        return dbID;
     }
 
     /**
@@ -364,5 +373,9 @@ public class Field implements DatabaseInterface<Field>
     @Override
     public boolean isDatabase() {
         return false;
+    }
+
+    public void setCurrentYear(Year input) {
+        current_Year = input;
     }
 }

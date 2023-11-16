@@ -1,30 +1,30 @@
 package org.entities;
 
-import org.InitialFarm.Chemical;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 
-public class ChemicalRecord implements DatabaseInterface<ChemicalRecord> {
-    Chemical chemical;
+public class TaskRecord implements DatabaseInterface<TaskRecord>{
+    Task task;
     LocalDate date;
 
-    ObjectId dbID = null;
+    ObjectId dbId = null;
 
-    public ChemicalRecord(ObjectId dbid, Chemical _chemical, LocalDate _date){
-        dbID = dbid;
-        chemical = _chemical;
+    public TaskRecord(ObjectId dbid,Task _task, LocalDate _date){
+        dbId = dbid;
+        task = _task;
         date = _date;
     }
-    Chemical getChemical(){ return this.chemical; }
+    public Task getTask(){ return this.task; }
     public LocalDate getDate(){ return this.date; }
 
     @Override
     public Document classToDoc() {
         Document newDoc = new Document();
-        newDoc.append("chemical", this.chemical.getDbId());
+        newDoc.append("task", this.task.getDbId());
         newDoc.append("date", this.date);
+
         return newDoc;
     }
 
@@ -45,7 +45,7 @@ public class ChemicalRecord implements DatabaseInterface<ChemicalRecord> {
 
     @Override
     public ObjectId getDbId() {
-        return dbID;
+        return dbId;
     }
 
     @Override
