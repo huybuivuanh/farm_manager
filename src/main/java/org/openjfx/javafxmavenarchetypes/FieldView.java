@@ -1,17 +1,17 @@
 package org.openjfx.javafxmavenarchetypes;
+import control.FieldControl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.entities.Field;
+
+import java.time.LocalTime;
 
 
 public class FieldView extends StackPane implements ModelSubscriber {
@@ -28,20 +28,14 @@ public class FieldView extends StackPane implements ModelSubscriber {
     HBox fieldFunctionsBar = new HBox();
 
 
-
+    private FieldControl fieldController = new FieldControl();
     private TableView<Field> fieldTable = new TableView<Field>();
 
-    private ObservableList<Field> fieldData;
+    private ObservableList<Field> fieldData = fieldController.fieldList;
 
 
 
     public FieldView(){
-
-
-        fieldData =
-                FXCollections.observableArrayList(new Field("1", "field 1", 69, "Mars"),
-                        new Field("2", "field 2", 69, "Venus"),
-                        new Field("3", "field 3", 69, "Mercury"));
 
         TableColumn<Field, String> fieldIDCol = new TableColumn<Field, String>("Field ID");
         fieldIDCol.setMinWidth(130);
@@ -90,12 +84,42 @@ public class FieldView extends StackPane implements ModelSubscriber {
         });
 
         submitFieldInfo.setOnMouseClicked(e ->{
-            Field newField = new Field(fieldIDInput.getText(),fieldNameInput.getText(), Double.parseDouble(fieldSizeInput.getText()), fieldLocation.getText());
-            fieldData.add(newField);
+            fieldController.addField(fieldIDInput.getText(),fieldNameInput.getText(), Double.parseDouble(fieldSizeInput.getText()), fieldLocation.getText());
             stage.setScene(fieldScene);
         });
 
+        VBox fieldEditBox = new VBox(30);
+        Scene editFieldScene = new Scene(fieldEditBox,300,250);
 
+        Button editField = new Button("Edit Field");
+        editField.setOnMouseClicked(e -> {
+            stage.setScene(editFieldScene);
+        });
+
+
+        TextField idInputEdit = new TextField();
+        TextField fieldNameFEdit = new TextField();
+        TextField fieldSizeEdit = new TextField();
+        TextField locationEdit = new TextField();
+        Button submitTaskEdit = new Button("Submit");
+
+        fieldEditBox.getChildren().addAll(idInputEdit, fieldNameFEdit, fieldSizeEdit, locationEdit,submitTaskEdit);
+        submitTaskEdit.setOnMouseClicked(e ->{
+            fieldController.editField(fieldTable.getSelectionModel().getSelectedItem().getID(),
+                    idInputEdit.getText(), fieldNameFEdit.getText(), Double.parseDouble(fieldSizeEdit.getText()),
+                    locationEdit.getText());
+            System.out.println(fieldTable.getSelectionModel().getSelectedItem());
+            stage.setScene(fieldScene);
+            fieldTable.refresh();
+        });
+
+        editField.setOnMouseClicked(e ->{
+            idInputEdit.setText(fieldTable.getSelectionModel().getSelectedItem().getID());
+            fieldNameFEdit.setText(fieldTable.getSelectionModel().getSelectedItem().getName());
+            fieldSizeEdit.setText(Double.toString(fieldTable.getSelectionModel().getSelectedItem().getSize()));
+            locationEdit.setText(fieldTable.getSelectionModel().getSelectedItem().getLocation());
+            stage.setScene(editFieldScene);
+        });
 
         Button fieldsBackToMain = new Button("Back To Main");
         fieldsBackToMain.setOnMouseClicked(e -> {
@@ -104,10 +128,8 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
         Button deleteField = new Button("Delete Field");
         deleteField.setOnAction(event -> {
-            Field selectedItem = fieldTable.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                fieldData.remove(selectedItem);
-            }
+            fieldController.deleteField(fieldTable.getSelectionModel().getSelectedItem().getID());
+            fieldTable.refresh();
         });
 
         fieldTable.setOnMouseClicked(event -> {
@@ -120,7 +142,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
         });
 
 
-        fieldFunctionsBar.getChildren().addAll(addField, deleteField, fieldsBackToMain);
+        fieldFunctionsBar.getChildren().addAll(addField, editField, deleteField, fieldsBackToMain);
         fieldPage.getChildren().addAll(fieldFunctionsBar, fieldTable);
         this.getChildren().addAll(fieldPage);
     }
