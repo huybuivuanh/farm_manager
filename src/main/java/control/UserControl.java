@@ -2,6 +2,7 @@ package control;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.InitialFarm.dataManager;
 import org.bson.types.ObjectId;
 import org.entities.Employee;
 import org.entities.User;
@@ -17,6 +18,7 @@ public class UserControl {
      */
     public ObservableList<User> allEmployees;
     public  ObservableList<User>owners;
+    private dataManager dataManager;
 
     /**
      * constructor
@@ -27,8 +29,7 @@ public class UserControl {
     }
 
     // (String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob)
-    public void addUser (String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob, Boolean owner)
-    {
+    public void addUser (String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob, Boolean owner){
         boolean exists= false;
         for (User employee: allEmployees)
         {
@@ -41,7 +42,9 @@ public class UserControl {
         {
             //TODO WE NEED TO ADD MANAGER HERE TO SAVE IT ALLLLLL
             Employee employee = new Employee(  null,id, user_email , user_password, first_name, last_name, dob, owner);
-
+            Employee employeeDB = (Employee)dataManager.saveClass(employee);
+            dataManager.updateClass(employeeDB);
+            dataManager.fetchObjectById("Employee", employeeDB.getDbId());
 
             allEmployees.add(employee);
             if (owner){

@@ -75,7 +75,7 @@ public class dataManager {
     // construct of same and return back to the developer. They should set their class as this new class.
     // IF it does exist (ID is not null). THen we need update that ID position with whatever information it has.
     //
-    public <T extends DatabaseInterface<T>> T saveClass(T test) throws NoSuchFieldException {
+    public <T extends DatabaseInterface<T>> T saveClass(T test){
         ObjectId newID = null;
         Document newDoc= null;
         // Option below represents type.
@@ -174,7 +174,7 @@ public class dataManager {
 //        return new dummy( 31, doc.getString("fieldName"),  id);
 //    }
 
-    public <T extends DatabaseInterface<T>> T fetchObjectById(String classType, ObjectId id)throws NoSuchFieldException{
+    public <T extends DatabaseInterface<T>> T fetchObjectById(String classType, ObjectId id){
 
         Object newObj = null;
 
@@ -244,7 +244,7 @@ public class dataManager {
     /**
      * Given the type of class, the object document, and its id, return the object itself.
      */
-    public  <T extends DatabaseInterface<T>> T fetchObject(String classType, Document objectDoc) throws NoSuchFieldException {
+    public  <T extends DatabaseInterface<T>> T fetchObject(String classType, Document objectDoc){
 
         Object newObj = null;
         System.out.println("inside fetch test" + objectDoc.getObjectId("_id"));
