@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 
 import org.InitialFarm.Chemical;
 import org.InitialFarm.Crop;
+import org.InitialFarm.dataManager;
 import org.bson.types.ObjectId;
 import org.entities.ChemicalRecord;
 import org.entities.Field;
@@ -23,6 +24,8 @@ public class FieldControl {
 
 
     public ObservableList<Field> fieldList;
+
+    private dataManager dataManager = new dataManager();
 
 
 
@@ -44,7 +47,8 @@ public class FieldControl {
         // if it doesn't, add it. If it does, report it.
         if (!fieldExists){
             Field field = new Field(null, field_id, field_name, field_size, field_location);
-            fieldList.add(field);
+            Field dbField = dataManager.saveClass(field);
+            fieldList.add(dbField);
         }
         else {
             System.out.println("There already is a field with the desired ID");
@@ -115,11 +119,12 @@ public class FieldControl {
         if (fieldSearched != null){
             if (fieldSearched.getCurrent_Year() == null){
                 Year cropYear = new Year(null, LocalDate.now().getYear(), LocalDate.now());
+                Year dbYear = new dataManager().saveClass(cropYear);
                 cropYear.setCrop(crop);
                 cropYear.setSeeding_rate(seedingRate);
                 cropYear.setSeeding_date(seedingDate);
-                fieldSearched.setCurrentYear(cropYear);
-                fieldSearched.addYear(cropYear);
+                fieldSearched.setCurrentYear(dbYear);
+                fieldSearched.addYear(dbYear);
             }
             else {
                 System.out.println("Farm is currently full of crop");
@@ -146,7 +151,12 @@ public class FieldControl {
             }
         }
     }
+    public Crop makeCrop(ObjectId dbid,String cropType, String cropVariety, double bushelWeight){
+        Crop baseCrop = new Crop(dbid, cropType, cropVariety, bushelWeight);
+        Crop dbCrop = dataManager.saveClass(baseCrop);
+        return dbCrop;
 
+    }
     public void addChemical(String fieldID, double fertilizerRate, String chemicalSprayed, String chemicalGroup, LocalDate sprayingDate){
         for (Field field : fieldList){
             if (field.getID().equals(fieldID)){
@@ -154,10 +164,12 @@ public class FieldControl {
                     List<String> chemGroup = new ArrayList<>();
                     chemGroup.add(chemicalGroup);
                     Chemical chemical = new Chemical(null, chemicalSprayed, chemGroup);
-                    ChemicalRecord chemicalRecord = new ChemicalRecord(null, chemical, sprayingDate);
+                    Chemical dbChemical = dataManager.saveClass(chemical);
+                    ChemicalRecord chemicalRecord = new ChemicalRecord(null, dbChemical, sprayingDate);
+                    ChemicalRecord dbChemRec = dataManager.saveClass(chemicalRecord);
 
                     field.getCurrent_Year().setFertilizer_rate(fertilizerRate);
-                    field.getCurrent_Year().addChemicalRecord(chemicalRecord);
+                    field.getCurrent_Year().addChemicalRecord(dbChemRec);
                 }
                 else {
                     System.out.println("Field with ID (" + fieldID + ") is already harvested or no crop is planted.");
@@ -168,5 +180,6 @@ public class FieldControl {
             }
         }
     }
+
 
 }

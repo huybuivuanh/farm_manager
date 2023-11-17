@@ -223,10 +223,10 @@ public class BinView extends StackPane implements ModelSubscriber {
                 binController.addCropType(newCropTypeInput.getText());
             }
             if (cropTypeInput.getValue() == null){
-                crop = new Crop(null, newCropTypeInput.getText(), cropVarietyInput.getValue(), Double.parseDouble(bushelWeight.getText()));
+                crop = binController.makeCrop(null, newCropTypeInput.getText(), cropVarietyInput.getValue(), Double.parseDouble(bushelWeight.getText()));
             }
             else {
-                crop = new Crop(null, cropTypeInput.getValue(), cropVarietyInput.getValue(), Double.parseDouble(bushelWeight.getText()));
+                crop = binController.makeCrop(null, cropTypeInput.getValue(), cropVarietyInput.getValue(), Double.parseDouble(bushelWeight.getText()));
             }
             binController.addCrop(new ObjectId(addCropBinID.getText()), crop, Integer.parseInt(grainInput.getText()), inputBushels.isSelected(), cleanCrop.isSelected(), toughCrop.isSelected());
 
