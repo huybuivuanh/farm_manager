@@ -42,9 +42,11 @@ public class UserControl {
         {
             //TODO WE NEED TO ADD MANAGER HERE TO SAVE IT ALLLLLL
             Employee employee = new Employee(  null,id, user_email , user_password, first_name, last_name, dob, owner);
-            Employee employeeDB = (Employee)dataManager.saveClass(employee);
-            dataManager.updateClass(employeeDB);
-            dataManager.fetchObjectById("Employee", employeeDB.getDbId());
+
+            // how to connect to database
+//            Employee employeeDB = (Employee)dataManager.saveClass(employee);
+//            dataManager.updateClass(employeeDB);
+//            dataManager.fetchObjectById("Employee", employeeDB.getDbId());
 
             allEmployees.add(employee);
             if (owner){

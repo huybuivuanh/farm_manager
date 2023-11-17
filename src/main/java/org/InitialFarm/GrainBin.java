@@ -6,21 +6,21 @@ public class GrainBin {
     //dynamic
     private Crop currentCrop;
     private Crop lastCrop;
-    private int cropBushels;
-    private int cropLbs;
+    private double cropBushels;
+    private double cropLbs;
     private boolean tough;// moisture
     private boolean clean;
 
     //Static
     private final String binName;
     private final String binLocation;
-    private final int binSize;
+    private final double binSize;
     private final boolean hopper;
     private final boolean fan;
     private  ObjectId dbID;
     private final String ID;
 
-    public GrainBin(String id, String binName, String binLocation, int binSize, boolean hopper, boolean fan){
+    public GrainBin(String id, String binName, String binLocation, double binSize, boolean hopper, boolean fan){
         this.ID = id;
         this.binName = binName;
         this.binLocation = binLocation;
@@ -30,7 +30,7 @@ public class GrainBin {
         //TODO binID
     }
 
-    public void unloadBin(int grain, boolean isBushels){
+    public void unloadBin(double grain, boolean isBushels){
         if(isBushels){
             this.cropBushels -= grain;
             this.cropLbs = bushelsToLbs(this.cropBushels);
@@ -47,9 +47,9 @@ public class GrainBin {
     public ObjectId getDbID(){return dbID;}
     public Crop getLastCrop(){return lastCrop;}
     public Crop getCurrentCrop(){return currentCrop;}
-    public int getCropLbs(){return  this.cropLbs;}
-    public int getCropBushels(){return this.cropBushels;}
-    public int getBinSize(){return binSize;}
+    public double getCropLbs(){return  this.cropLbs;}
+    public double getCropBushels(){return this.cropBushels;}
+    public double getBinSize(){return binSize;}
     public String getBinLocation(){return binLocation;}
     public String getBinName(){ return binName;}
     public boolean isTough(){return this.tough;}
@@ -65,7 +65,7 @@ public class GrainBin {
         }
     }
 
-    public void addCrop(Crop cropType, int grain, boolean inputBushels, boolean clean, boolean tough){
+    public void addCrop(Crop cropType, double grain, boolean inputBushels, boolean clean, boolean tough){
         if (isEmpty() && cropType != currentCrop){
             if (this.currentCrop != null) {
                 this.lastCrop = this.currentCrop;
@@ -84,7 +84,7 @@ public class GrainBin {
         this.tough = tough;
     }
 
-    private void fillLbs( int lbs){
+    private void fillLbs( double lbs){
         if (cropBushels + lbsToBushels(lbs) > binSize){
             //TODO throw exception
         }
@@ -92,7 +92,7 @@ public class GrainBin {
         this.cropBushels += lbsToBushels(lbs);
     }
 
-    private void fillBushels(int bushels){
+    private void fillBushels(double bushels){
         if (cropBushels + bushels > binSize){
             //TODO throw exception
         }
@@ -100,11 +100,18 @@ public class GrainBin {
         this.cropLbs += bushelsToLbs(bushels);
     }
 
-    private int lbsToBushels(int lbs){
-        return (int)(lbs*currentCrop.getBushelWeight());
+    private double bushelsToLbs(double lbs){
+        return lbs*currentCrop.getBushelWeight();
     }
 
-    private int bushelsToLbs(int bushels){
-        return (int)(bushels/currentCrop.getBushelWeight());
+    private double lbsToBushels(double bushels){
+        return bushels/currentCrop.getBushelWeight();
+    }
+
+    public void clearBin(){
+        lastCrop = currentCrop;
+        currentCrop = null;
+        cropBushels = 0;
+        cropLbs = 0;
     }
 }
