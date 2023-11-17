@@ -20,7 +20,7 @@ public class ChemicalRecord implements DatabaseInterface<ChemicalRecord> {
 
     public String toString(){
         return "Chemical Sprayed: " + chemical.getChemicalName() +
-                "\t\tChemical Group: " + chemical.getChemicalGroup().get(0) +  "\t\tSpraying Date: " + date;
+                "\nChemical Group: " + chemical.getChemicalGroup().get(0) +  "\nSpraying Date: " + date;
     }
 
     public Chemical getChemical(){ return this.chemical; }

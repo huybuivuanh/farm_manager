@@ -16,9 +16,6 @@ import org.InitialFarm.Crop;
 import org.entities.ChemicalRecord;
 import org.entities.Field;
 import org.entities.Year;
-
-import java.time.LocalTime;
-
 import java.util.*;
 
 
@@ -323,7 +320,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
                     if (!selectedData.getYears().isEmpty()){
                         for (Year year : selectedData.getYears()){
                             Crop crop = year.getCrop();
-                            String cropHistory = "Crop Type: " + crop.getCropType() + "\nCrop Variety: " +
+                            String cropHistory = "Crop ID: "+ crop.getDbId() + "\nCrop Type: " + crop.getCropType() + "\nCrop Variety: " +
                                     crop.getCropVariety() + "\nBushel Weight: " + crop.getBushelWeight() +
                                     "\nHarvested: " + (year.getHarvestDate() != null) + "\nHarvest Date: " + year.getHarvestDate() +
                                     "\nSeeding Rate: " + year.getSeeding_rate() +
@@ -334,11 +331,11 @@ public class FieldView extends StackPane implements ModelSubscriber {
                             if (!year.getChemical_records().isEmpty()){
                                 chemHistory.append("Fertilizer Rate: ").append(year.getFertilizer_rate()).append("\n");
                                 for (ChemicalRecord record : year.getChemical_records()){
-                                    chemHistory.append(record.toString()).append("\n");
+                                    chemHistory.append(record.toString()).append("\n\n");
                                 }
 
                             } else {
-                                chemHistory.append("Fertilizer Rate:\nChemical Sprayed:\nSpraying Date:");
+                                chemHistory.append("Fertilizer Rate: None\nChemical Sprayed: None\nSpraying Date: None");
                             }
                             chemicalData.add(chemHistory.toString());
                         }
