@@ -2,19 +2,23 @@ package control;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import org.InitialFarm.Crop;
 import org.entities.Field;
+import org.entities.Year;
+
+import java.time.LocalDate;
 
 
+// need to see history of crop planted
+// need to record what crop planted when finished planting
 public class FieldControl {
 
-    /**
-     * list of Fields
-     */
+
     public ObservableList<Field> fieldList;
 
-    /**
-     * constructor
-     */
+
+
     public FieldControl(){
         fieldList = FXCollections.observableArrayList();
     }
@@ -32,7 +36,7 @@ public class FieldControl {
         }
         // if it doesn't, add it. If it does, report it.
         if (!fieldExists){
-            Field field = new Field(field_id, field_name, field_size, field_location);
+            Field field = new Field(null, field_id, field_name, field_size, field_location);
             fieldList.add(field);
         }
         else {
@@ -93,27 +97,22 @@ public class FieldControl {
         }
     }
 
-    public String viewField (String id)
-    {
-        Field viewed = null;
-        String returned = null;
-
-        for (Field field : fieldList) {
-            if (field.getID().equals(id)) {
-                viewed = field;
+    public void addCrop(String field_id, Crop crop){
+        Field fieldSearched = null;
+        for (Field field : fieldList){
+            if (field.getID().equals(field_id)){
+                fieldSearched = field;
+                break;
             }
         }
-
-        if (viewed == null)
-        {
-            System.out.println("Field to be viewed could not be found!");
-
+        if (fieldSearched != null){
+            Year cropYear = new Year(null, 2023, LocalDate.now());
+            cropYear.setCrop(crop);
+            fieldSearched.setCurrentYear(cropYear);
+            fieldSearched.addYear(cropYear);
         }
-        else
-        {
-            returned = viewed.toString();
+        else {
+            System.out.println("Can't find field with ID (" + field_id + ")");
         }
-        return returned;
     }
-
 }

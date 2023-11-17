@@ -1,6 +1,8 @@
 package org.openjfx.javafxmavenarchetypes;
+import control.CropControl;
 import control.FieldControl;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -9,9 +11,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.InitialFarm.Crop;
 import org.entities.Field;
 
 import java.time.LocalTime;
+import java.time.Year;
+import java.util.Date;
 
 
 public class FieldView extends StackPane implements ModelSubscriber {
@@ -21,6 +26,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
     Scene fieldScene;
 
     Scene cropScene;
+    CropView cropPage = new CropView();
 
     VBox fieldPage = new VBox();
 
@@ -34,6 +40,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
     private ObservableList<Field> fieldData = fieldController.fieldList;
 
 
+    private CropControl cropController = new CropControl();
 
     public FieldView(){
 
@@ -136,13 +143,73 @@ public class FieldView extends StackPane implements ModelSubscriber {
             if (event.getClickCount() == 2) {
                 Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
                 if (selectedData != null) {
+                    if (selectedData.getYears().isEmpty()){
+                        cropPage.sendYear(Year.now().getValue());
+                    }else {
+                        cropPage.sendYear(selectedData.getCurrent_Year().getYear());
+                    }
                     stage.setScene(cropScene);
                 }
             }
         });
 
+        VBox addCropBox = new VBox(30);
+        Scene addCropScene = new Scene(addCropBox,300,250);
 
-        fieldFunctionsBar.getChildren().addAll(addField, editField, deleteField, fieldsBackToMain);
+        TextField fieldId = new TextField("Field ID");
+        Label newCropTypeLabel = new Label("Add New Crop Type");
+        TextField newCropTypeInput = new TextField();
+
+        Label cropTypeLabel = new Label("Select Crop Type");
+        ComboBox<String> cropTypeInput = new ComboBox<>();
+        cropTypeInput.getItems().addAll(cropController.cropType);
+
+        ComboBox<String> cropVarietyInput = new ComboBox<>();
+        cropVarietyInput.getItems().addAll("LibertyLink", "RoundupReady", "Navigator", "ClearField", "All Other Grains");
+
+
+
+        cropController.cropType.addListener((ListChangeListener<String>) change -> {
+            cropTypeInput.setItems(cropController.cropType);
+        });
+
+        TextField bushelWeight = new TextField("Bushel Weight");
+        TextField seedingRateInput = new TextField("Seeding Rate (lbs/acre)");
+        Label seedingDateLabel = new Label("Seeding Date");
+        DatePicker seedingDateInput = new DatePicker();
+        Button submitCropInfo = new Button("Submit");
+
+        addCropBox.getChildren().addAll(fieldId, cropTypeLabel, cropTypeInput, newCropTypeLabel, newCropTypeInput,
+                cropVarietyInput, bushelWeight, seedingRateInput, seedingDateLabel, seedingDateInput, submitCropInfo);
+        Button addCrop = new Button("Add Crop");
+        addCrop.setOnMouseClicked(e ->{
+            stage.setScene(addCropScene);
+        });
+
+        submitCropInfo.setOnMouseClicked(e ->{
+            Crop crop;
+            if (!newCropTypeInput.getText().isEmpty()){
+                cropController.addCropType(newCropTypeInput.getText());
+            }
+            if (cropTypeInput.getValue() == null){
+                crop = new Crop(null, newCropTypeInput.getText(), cropVarietyInput.getValue(), Float.parseFloat(bushelWeight.getText()));
+            }
+            else {
+                crop = new Crop(null, cropTypeInput.getValue(), cropVarietyInput.getValue(), Float.parseFloat(bushelWeight.getText()));
+            }
+            fieldController.addCrop(fieldId.getText(), crop);
+            cropController.addCrop(crop);
+
+            // clear the form
+            cropTypeInput.setValue(null);
+            cropVarietyInput.setValue(null);
+            newCropTypeInput.clear();
+
+            stage.setScene(fieldScene);
+        });
+
+
+        fieldFunctionsBar.getChildren().addAll(addField, editField, deleteField, addCrop, fieldsBackToMain);
         fieldPage.getChildren().addAll(fieldFunctionsBar, fieldTable);
         this.getChildren().addAll(fieldPage);
     }
@@ -154,7 +221,6 @@ public class FieldView extends StackPane implements ModelSubscriber {
         this.stage = stage;
         this.MenuScene = main;
         this.fieldScene = field;
-        CropView cropPage = new CropView();
         cropPage.setStageField(stage, fieldScene);
         cropScene = new Scene(cropPage,300,250);
     }
