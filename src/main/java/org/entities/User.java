@@ -339,6 +339,13 @@ public class User implements DatabaseInterface<User>{
     /**
      * @return
      */
+    public void setDbId(ObjectId id) {
+        this.dbID= id;
+    }
+
+    /**
+     * @return
+     */
     @Override
     public boolean isDatabase() {
         return false;

@@ -87,8 +87,6 @@ public class DataFetch {
             BasicDBObject query = new BasicDBObject();
             query.put("_id", id);
             database.getCollection(collection).replaceOne(query,input);
-            database.getCollection(collection);
-            database.getCollection(collection).find(input);
             ObjectId output = input.getObjectId("_id");
             mongoClient.close();
             System.out.println("Document replaced to database successfully!");
@@ -260,12 +258,18 @@ public class DataFetch {
     public static void main( String[] args ) throws NoSuchFieldException, FileAlreadyExistsException {
         // Replace the placeholder with your MongoDB deployment's connection string
 
-//          Document newDoc = new Document();
-//            newDoc.append("fieldName", "Theo's Field");
-//            newDoc.append("acres",57);
-//            newDoc.append("_id",new ObjectId("655586df80a5eb1421432f0f"));
-//
-//            replaceDoc(newDoc.getObjectId("_id"),newDoc,"FarmData","year_list");
+//          Document newDoc1 = new Document();
+//            newDoc1.append("fieldName", "Theo's Field not anymore");
+//            newDoc1.append("acres",84);
+//            newDoc1.append("_id",new ObjectId("655586df80a5eb1421432f0f"));
+//            insertDoc(newDoc1, "FarmData","year_list");
+
+//        Document newDoc2 = new Document();
+//        newDoc2.append("fieldName", "Kamal's Field");
+//        newDoc2.append("acres", 84);
+//        newDoc2.append("_id",new ObjectId("655586df80a5eb1421432f0e"));
+
+//           replaceDoc(newDoc1.getObjectId("_id"),newDoc1,"FarmData","year_list");
 
 
 //        System.out.println(grab("FarmData","farm_list","fieldName","FieldGerald"));
@@ -296,18 +300,18 @@ public class DataFetch {
 
         // Todo: testing removeAllInCollection item (works)
         //  Nuke everything below !
-        removeAllinCollection("FarmData", "chemical_list");
-        removeAllinCollection("FarmData", "chemical_record_list");
-        removeAllinCollection("FarmData", "crop_list");
-//        removeAllinCollection("FarmData", "employee_list");
+//        removeAllinCollection("FarmData", "chemical_list");
+//        removeAllinCollection("FarmData", "chemical_record_list");
+//        removeAllinCollection("FarmData", "crop_list");
+        removeAllinCollection("FarmData", "employee_list");
 //        removeAllinCollection("FarmData", "farm_bins");
 //        removeAllinCollection("FarmData", "farm_list");
-        removeAllinCollection("FarmData", "field_list");
-        removeAllinCollection("FarmData", "grain_bin_list");
+//        removeAllinCollection("FarmData", "field_list");
+//        removeAllinCollection("FarmData", "grain_bin_list");
 //        removeAllinCollection("FarmData", "owner_list");
         removeAllinCollection("FarmData", "task_list");
-        removeAllinCollection("FarmData", "task_record_list");
-        removeAllinCollection("FarmData", "year_list");
+//        removeAllinCollection("FarmData", "task_record_list");
+//        removeAllinCollection("FarmData", "year_list");
 
 
     }

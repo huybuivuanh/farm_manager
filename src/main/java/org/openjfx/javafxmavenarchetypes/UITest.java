@@ -226,7 +226,11 @@ public class UITest extends Application {
         submitAddUserInfo.setOnMouseClicked(e ->{
             //User newUser = new Employee(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), parseBoolean(ownerInput.getText()));
             //userData.add(newUser);
-            userController.addUser(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), parseBoolean(ownerInput.getText()));
+            try {
+                userController.addUser(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), parseBoolean(ownerInput.getText()));
+            } catch (NoSuchFieldException ex) {
+                throw new RuntimeException(ex);
+            }
             stage.setScene(userScene);
             // not sure if below line is necessary
             userTable.refresh();
@@ -332,13 +336,15 @@ public class UITest extends Application {
 
         Button employeeAddTasks = new Button("Add Task");
         employeeAddTasks.setOnMouseClicked(e->{
-            userTable.getSelectionModel().getSelectedItem().addTask(allTasksInUserViewTable.getSelectionModel().getSelectedItem());
+            //userTable.getSelectionModel().getSelectedItem().addTask(allTasksInUserViewTable.getSelectionModel().getSelectedItem());
+            userController.assignTask(userTable.getSelectionModel().getSelectedItem().getID(),allTasksInUserViewTable.getSelectionModel().getSelectedItem() );
             System.out.println( "the add task button has been clicked");
         });
 
         Button employeeRemoveTasks = new Button("Remove Task");
         employeeRemoveTasks.setOnMouseClicked(e->{
-            userTable.getSelectionModel().getSelectedItem().removeTask(userTasksTable.getSelectionModel().getSelectedItem().getID());
+            //userTable.getSelectionModel().getSelectedItem().removeTask(userTasksTable.getSelectionModel().getSelectedItem().getID());
+            userController.unAssignTask( userTable.getSelectionModel().getSelectedItem().getID(), userTasksTable.getSelectionModel().getSelectedItem());
             System.out.println( "the remove task button has been clicked");
         });
 
@@ -503,7 +509,11 @@ public class UITest extends Application {
         submitTask.setOnMouseClicked(e ->{
             //Task newTask = new Task(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
             //taskData.add(newTask);
-            taskController.addTask(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
+            try {
+                taskController.addTask(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
+            } catch (NoSuchFieldException ex) {
+                throw new RuntimeException(ex);
+            }
             stage.setScene(taskScene);
             taskTable.refresh();
             allTasksInUserViewTable.refresh();
@@ -634,13 +644,15 @@ public class UITest extends Application {
 
         Button taskAddEmployees = new Button("Assign Employee");
         taskAddEmployees.setOnMouseClicked(e->{
-            taskTable.getSelectionModel().getSelectedItem().addStaff(allUsersInTaskViewTable.getSelectionModel().getSelectedItem());
+            //taskTable.getSelectionModel().getSelectedItem().addStaff(allUsersInTaskViewTable.getSelectionModel().getSelectedItem());
+            taskController.assignEmployee(taskTable.getSelectionModel().getSelectedItem().getID(),allUsersInTaskViewTable.getSelectionModel().getSelectedItem() );
             System.out.println( "the add Employee button has been clicked");
         });
 
         Button taskRemoveEmployees = new Button("Remove Employee");
         taskRemoveEmployees.setOnMouseClicked(e->{
-            taskTable.getSelectionModel().getSelectedItem().removeStaff(taskUsersTable.getSelectionModel().getSelectedItem().getID());
+            //taskTable.getSelectionModel().getSelectedItem().removeStaff(taskUsersTable.getSelectionModel().getSelectedItem().getID());
+            taskController.unAssignEmployee(taskTable.getSelectionModel().getSelectedItem().getID(),allUsersInTaskViewTable.getSelectionModel().getSelectedItem() );
             System.out.println( "the remove Employee button has been clicked");
         });
 

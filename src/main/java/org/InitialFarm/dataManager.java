@@ -73,6 +73,41 @@ public class dataManager {
     }
 
 
+    public <T extends DatabaseInterface<T>>  void removeClass (T test){
+        if ( test instanceof Employee) {
+
+            remove(test.getDbId(), "FarmData", "employee_list");
+        }
+        else if (test instanceof Field) {
+
+            remove(test.getDbId(), "FarmData", "field_list");
+        }
+        else if (test instanceof Task) {
+            remove(test.getDbId(), "FarmData", "task_list");
+        }
+        else if (test instanceof Chemical) {
+            remove(test.getDbId(), "FarmData", "chemical_list");
+        }
+        else if (test instanceof ChemicalRecord) {
+            remove(test.getDbId(), "FarmData", "chemical_record_list");
+        }
+        else if (test instanceof TaskRecord) {
+            remove(test.getDbId(), "FarmData", "task_record_list");
+        }
+        else if (test instanceof Crop) {
+            remove(test.getDbId(), "FarmData", "crop_list");
+        }
+        else if (test instanceof Year) {
+            remove(test.getDbId(), "FarmData", "year_list");
+        }
+        else if (test instanceof GrainBin){
+            remove(test.getDbId(), "FarmData", "grain_bin_list");
+        }
+        else {
+            System.out.println("Could not be removed: not of type Employee, owner, field, or task");
+        }
+
+    }
     // Initialize a class  Does this have an ID yes or no?
     // No it doesn't. Okay re-initalize this class inside the database. Pull out what the database Makes as a new class
     // construct of same and return back to the developer. They should set their class as this new class.
