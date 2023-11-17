@@ -97,6 +97,9 @@ public class UITest extends Application {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private TableView<User> userTable = new TableView<User>();
     private TableView<Task> userTasksTable = new TableView<Task>();
+
+    private TableView<Task> allTasksInUserViewTable = new TableView<Task>();
+
     // for the selected user, will:
     // 1) pull out the arrayList (to be changed to observable)
     // 2) set the data of the userTasks TableView above to the contents of that list.
@@ -107,6 +110,8 @@ public class UITest extends Application {
      */
     private ObservableList<User> userData = userController.allEmployees;
     private ObservableList<Task> userTaskData= FXCollections.observableArrayList();
+
+    private ObservableList<Task> allTaskDataInUserViewTable = taskController.taskList;
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private TableView<TaskBar> bars2= new TableView<TaskBar>();
@@ -317,10 +322,23 @@ public class UITest extends Application {
         Button employeeTasks = new Button("View Tasks");
         employeeTasks.setOnMouseClicked(e->{
             userTaskData= userTable.getSelectionModel().getSelectedItem().getTaskList();
+            userTasksTable.setItems(userTaskData);
             String firstName = userTable.getSelectionModel().getSelectedItem().getFirstName();
             String lastName =  userTable.getSelectionModel().getSelectedItem().getLastName();
             employeeNameLabel.setText("Employee: " + firstName +" " + lastName);
             stage.setScene(employeeTasksScene);
+        });
+
+        Button employeeAddTasks = new Button("Add Task");
+        employeeAddTasks.setOnMouseClicked(e->{
+            userTable.getSelectionModel().getSelectedItem().addTask(allTasksInUserViewTable.getSelectionModel().getSelectedItem());
+            System.out.println( "the add task button has been clicked");
+        });
+
+        Button employeeRemoveTasks = new Button("Remove Task");
+        employeeRemoveTasks.setOnMouseClicked(e->{
+            userTable.getSelectionModel().getSelectedItem().removeTask(userTasksTable.getSelectionModel().getSelectedItem().getID());
+            System.out.println( "the remove task button has been clicked");
         });
 
         Button employeeTasksBackToMain = new Button("back");
@@ -328,6 +346,7 @@ public class UITest extends Application {
             stage.setScene(userScene);
         });
 
+        // Todo: Employee's tasks inside of employee task view
         TableColumn<Task, String> userTaskIDCol = new TableColumn<Task, String>("Task ID");
         userTaskIDCol.editableProperty().setValue(true);
         userTaskIDCol.setMinWidth(130);
@@ -353,17 +372,48 @@ public class UITest extends Application {
                 new PropertyValueFactory<Task, LocalDateTime>("dueDate")
         );
 
-        // I could group the buttons into the hbox and then add that and the table to the thing 6 lines later
-        //        HBox completedTaskTopBar= new HBox();
-        //        completedTaskTopBar.getChildren().addAll(completedTaskBackToMain);
-
+        // userTaskData= userTable.getSelectionModel().getSelectedItem().getTaskList();
         userTasksTable.setItems(userTaskData);
         userTasksTable.setEditable(true);
         userTasksTable.getColumns().addAll(userTaskIDCol, userTaskName, userTaskDescription,userTaskDueDate);
 
-        employeeTasksBox.getChildren().addAll(employeeTasksLabel, employeeNameLabel, employeeTasksBackToMain, userTasksTable);
+        // Todo: all tasks inside of employee task view
+
+        TableColumn<Task, String> allTaskIDColInUser = new TableColumn<Task, String>("Task ID");
+        allTaskIDColInUser.editableProperty().setValue(true);
+        allTaskIDColInUser.setMinWidth(130);
+        allTaskIDColInUser.setCellValueFactory(
+                new PropertyValueFactory<Task, String>("ID")
+        );
+
+        TableColumn<Task, String> allTaskNameColInUser = new TableColumn<Task, String>("Task Name");
+        allTaskNameColInUser.setMinWidth(130);
+        allTaskNameColInUser.setCellValueFactory(
+                new PropertyValueFactory<Task, String>("taskName")
+        );
+
+        TableColumn<Task, String> allTaskDescriptionColInUser = new TableColumn<Task, String>("Task description");
+        allTaskDescriptionColInUser.setMinWidth(130);
+        allTaskDescriptionColInUser.setCellValueFactory(
+                new PropertyValueFactory<Task, String>("description")
+        );
+
+        TableColumn<Task, LocalDateTime> allTaskDueDateColInUser = new TableColumn<Task, LocalDateTime>("Due date");
+        allTaskDueDateColInUser.setMinWidth(130);
+        allTaskDueDateColInUser.setCellValueFactory(
+                new PropertyValueFactory<Task, LocalDateTime>("dueDate")
+        );
+
+        allTasksInUserViewTable.setItems(allTaskDataInUserViewTable);
+        allTasksInUserViewTable.setEditable(true);
+        allTasksInUserViewTable.getColumns().addAll(allTaskIDColInUser,allTaskNameColInUser, allTaskDescriptionColInUser, allTaskDueDateColInUser);
+
+        Label taskLabelWithinEmployeeTasks = new Label("All tasks:");
+        HBox topUserAddTaskBar= new HBox();
+        topUserAddTaskBar.getChildren().addAll( employeeAddTasks, employeeRemoveTasks ,employeeTasksBackToMain);
 
 
+        employeeTasksBox.getChildren().addAll(employeeTasksLabel, employeeNameLabel, topUserAddTaskBar, userTasksTable, taskLabelWithinEmployeeTasks, allTasksInUserViewTable);
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Todo: User Table Formatting (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -452,6 +502,9 @@ public class UITest extends Application {
             //taskData.add(newTask);
             taskController.addTask(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
             stage.setScene(taskScene);
+            taskTable.refresh();
+            allTasksInUserViewTable.refresh();
+            userTasksTable.refresh();
         });
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -476,6 +529,8 @@ public class UITest extends Application {
             System.out.println(taskTable.getSelectionModel().getSelectedItem());
             stage.setScene(taskScene);
             taskTable.refresh();
+            allTasksInUserViewTable.refresh();
+            userTasksTable.refresh();
         });
 
         editTask.setOnMouseClicked(e ->{
@@ -495,6 +550,7 @@ public class UITest extends Application {
         markComplete.setOnMouseClicked(e ->{
             taskController.completeTask(taskTable.getSelectionModel().getSelectedItem().getID());
             taskTable.refresh();
+            allTasksInUserViewTable.refresh();
         });
 
         Button taskBackToMain = new Button("back");

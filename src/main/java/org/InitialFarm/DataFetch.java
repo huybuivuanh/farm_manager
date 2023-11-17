@@ -93,7 +93,10 @@ public class DataFetch {
             mongoClient.close();
             System.out.println("Document replaced to database successfully!");
             return output;
-
+        }
+        catch (Exception e){
+            System.out.println("something went wrong with replacing the document");
+            return null;
         }
     }
 
@@ -239,29 +242,20 @@ public class DataFetch {
     /**
      * A method that deletes all the contents of a collection in the database.
      * @param databaseName String name of the database the collection is in.
-     * @param collections String name of the collection whose elements are to be emptied.
+     * @param collection String name of the collection whose elements are to be emptied.
      */
-    public static void removeAllinCollection(String databaseName, String collections){
+    public static void removeAllinCollection(String databaseName, String collection){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database =  mongoClient.getDatabase(databaseName);
-            database.getCollection(collections).deleteMany(new Document());
+            database.getCollection(collection).deleteMany(new Document());
             mongoClient.close();
-            System.out.println("Removed all contents of the collection: "+ collections + " from the database successfully");
+            System.out.println("Removed all contents of the collection: "+ collection + " from the database successfully");
         }
         catch (Exception e){
-            System.out.println("failed to Removed all contents of the collection: "+ collections + " from the database.");
+            System.out.println("failed to Removed all contents of the collection: "+ collection + " from the database.");
         }
     }
-//    public static void remove(ObjectId newId,String databaseName,String collections){
-//        try (MongoClient mongoClient = MongoClients.create(uri)) {
-//            MongoDatabase database =c
-//            BasicDBObject query = new BasicDBObject();
-//            query.put("_id", newId);
-//            database.getCollection(collections).findOneAndDelete(query);
-//            mongoClient.close();
-//            System.out.println("Removed the database item successfully");
-//        }
-//    }
+
 
     public static void main( String[] args ) throws NoSuchFieldException, FileAlreadyExistsException {
         // Replace the placeholder with your MongoDB deployment's connection string
@@ -301,7 +295,19 @@ public class DataFetch {
 //        remove(testing, "FarmData", "employee_list");
 
         // Todo: testing removeAllInCollection item (works)
+        //  Nuke everything below !
+        removeAllinCollection("FarmData", "chemical_list");
+        removeAllinCollection("FarmData", "chemical_record_list");
+        removeAllinCollection("FarmData", "crop_list");
 //        removeAllinCollection("FarmData", "employee_list");
+//        removeAllinCollection("FarmData", "farm_bins");
+//        removeAllinCollection("FarmData", "farm_list");
+        removeAllinCollection("FarmData", "field_list");
+        removeAllinCollection("FarmData", "grain_bin_list");
+//        removeAllinCollection("FarmData", "owner_list");
+        removeAllinCollection("FarmData", "task_list");
+        removeAllinCollection("FarmData", "task_record_list");
+        removeAllinCollection("FarmData", "year_list");
 
 
     }

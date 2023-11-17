@@ -55,7 +55,7 @@ public class Year implements DatabaseInterface<Year>{
     /**
      * The date the field was last sprayed
      */
-    private LocalDateTime spraying_date;
+    private LocalDate spraying_date;
 
     @Override
     public Document classToDoc() {
@@ -219,7 +219,7 @@ public class Year implements DatabaseInterface<Year>{
         this.harvest_date = harvest_date;
     }
 
-    public void setSpraying_date(LocalDateTime spraying_date) {
+    public void setSpraying_date(LocalDate spraying_date) {
         this.spraying_date = spraying_date;
     }
     public void setSeeding_date( LocalDate newSeedingDate){
@@ -262,7 +262,7 @@ public class Year implements DatabaseInterface<Year>{
      * Returns the date of the most recent chemical application
      * @return the date of the most recent chemical application
      */
-    public LocalDateTime getSprayingDate(){
+    public LocalDate getSprayingDate(){
         return this.spraying_date;
     }
 

@@ -363,7 +363,7 @@ public class dataManager {
                 newYear.setChemical_sprayed(null);
             }
             if (objectDoc.getDate("sprayDate") != null) {
-                newYear.setSpraying_date(objectDoc.getDate("sprayDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay());
+                newYear.setSpraying_date(objectDoc.getDate("sprayDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             }
             else{
                 newYear.setSpraying_date(null);
@@ -496,94 +496,154 @@ public class dataManager {
     public static void main(String[] args) throws NoSuchFieldException {
 
 
-//        System.out.println(grab("FarmData","farm_list","fieldName","FieldGerald"));
-//
-//        //TODO: test adding employees to a task's list of employees
-//        // todo note: for this to work, the task to be added has to be the fetched version after being saved so that its DBID isnt null !!!
-//        //create employee and data manager
-//        Employee tester1 = new Employee(null,"1133", "ziy271", "strong", "kim", "zrein", LocalDate.of(2002, Calendar.FEBRUARY,2), false);
-//        dataManager manager1 = new dataManager();
-//
-//        // save employee to the database
-//        Employee outputEmployee1 = (Employee) manager1.saveClass(tester1);
-//
-//        // find the employee data from the database
-//        Document testDoc = grab("FarmData", "employee_list", "firstname", "kim");
-//        System.out.println(testDoc);
-//
-//        //translate the data into an employee object
-//        System.out.println(String.valueOf(manager1.fetchObject("Employee",testDoc )));
-//
-//        // add tasks to employee
-//        Task task1a = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
-//        task1a.addStaff(outputEmployee1);
-//        Task databaseTask1 = manager1.saveClass(task1a);
-//        Task task1b = new Task(null,"2", "task 2", "task 2 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
-//
-//        tester1.addTask(task1a);
-//        tester1.addTask(task1b);
-//
-//        //TODO: test adding tasks to an employee's list of tasks
-//        // todo note: for this to work, the task to be added has to be the fetched version after being saved so that its DBID isnt null !!!
-//        //create employee and data manager
-//        dataManager manager2 = new dataManager();
-//
-//        Employee tester2 = new Employee(null,"1133", "ziy271", "strong", "kim", "zrein", LocalDate.of(2002, Calendar.FEBRUARY,2), false);
-//        //Employee outputEmployee = (Employee) manager.saveClass(tester);
-//
-//        Task task2a = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
-//        Task outputTask2a = manager2.saveClass(task2a);
-//
-//        Task task2b = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
-//        Task outputTask2b = manager2.saveClass(task2a);
-//
-//
-//        tester2.addTask(outputTask2a);
-//        tester2.addTask(outputTask2b);
-//        Employee dataBaseEmployee2= (Employee) manager2.saveClass(tester2);
+        //System.out.println(grab("FarmData","farm_list","fieldName","FieldGerald"));
+
+        //TODO: test adding employees to a task's list of employees
+        // todo note: for this to work, the task to be added has to be the fetched version after being saved so that its DBID isnt null !!!
+        //create employee and data manager
+        Employee tester1 = new Employee(null,"1133", "ziy271", "strong", "kim", "zrein", LocalDate.of(2002, Calendar.FEBRUARY,2), false);
+        dataManager manager1 = new dataManager();
+
+        // save employee to the database
+        Employee outputEmployee1 = (Employee) manager1.saveClass(tester1);
+
+        // find the employee data from the database
+        Document testDoc = grab("FarmData", "employee_list", "firstname", "kim");
+        System.out.println(testDoc);
+
+        //translate the data into an employee object
+        System.out.println(String.valueOf(manager1.fetchObject("Employee",testDoc )));
+
+        // add tasks to employee
+        Task task1a = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        task1a.addStaff(outputEmployee1);
+        Task databaseTask1 = manager1.saveClass(task1a);
+        Task task1b = new Task(null,"2", "task 2", "task 2 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+
+        tester1.addTask(task1a);
+        tester1.addTask(task1b);
+
+        //TODO: test adding tasks to an employee's list of tasks
+        // todo note: for this to work, the task to be added has to be the fetched version after being saved so that its DBID isnt null !!!
+        //create employee and data manager
+        dataManager manager2 = new dataManager();
+
+        Employee tester2 = new Employee(null,"1133", "ziy271", "strong", "kim", "zrein", LocalDate.of(2002, Calendar.FEBRUARY,2), false);
+        //Employee outputEmployee = (Employee) manager.saveClass(tester);
+
+        Task task2a = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        Task outputTask2a = manager2.saveClass(task2a);
+
+        Task task2b = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        Task outputTask2b = manager2.saveClass(task2a);
 
 
+        tester2.addTask(outputTask2a);
+        tester2.addTask(outputTask2b);
+        Employee dataBaseEmployee2= (Employee) manager2.saveClass(tester2);
 
+        // TODO: NOTE THAT FOR ALL DB OPERATIONS,
+        //  IF YOU CREATE OBJECT(A) THAT YOU INTEND TO ADD TO ANOTHER OBJECT(B) AND SAVE BOTH IN DB
+        //  OBJECT(A) NEEDS TO BE SAVED IN DB BEFORE YOU ATTEMPT TO SAVE OBJECT(B) INTO DB
+        //  THIS IS BECAUSE SAVING OBJECT(B) IN DB REQUIRES WHATEVER IS INSIDE IT TO ALREADY EXIST IN THE DB
+
+        // Todo: create a data manager
+        //  Status: (works)
         dataManager manager3 = new dataManager();
+
+        // Todo: create a chemical
+        //  Status: (works)
         ArrayList<String> test = new ArrayList<>();
         test.add("clorox");
         test.add("bath salts");
-        Chemical testChem = new Chemical(null,"ChemicalName", test);
-        Chemical outputChem = manager3.saveClass(testChem);
-        Crop newCrop = new Crop(null,"corn","corn", 50.0);
-        Crop outputCrop = manager3.saveClass(newCrop);
+        Chemical testChem = new Chemical(null,"weird chemical", test);
 
-        GrainBin bin = new GrainBin(null,"bin1","bin1", 50, true, true);
-        bin.addCrop(outputCrop, 50, true, true, true);
-        bin.addCrop(outputCrop, 50, true, true, true);
+        // Todo: save the chemical to the database
+        //  Status: (works)
+        Chemical outputChem = manager3.saveClass(testChem);
+
+        // Todo: create a new crop and save it to database
+        //  Status: (works)
+        Crop newCrop1 = new Crop(null,"corn","beautiful corn", 50.0);
+        Crop outputCrop1 = manager3.saveClass(newCrop1);
+
+        Crop newCrop2 = new Crop(null,"wheat","beautiful wheat", 34.0);
+        Crop outputCrop2 = manager3.saveClass(newCrop2);
+
+        // Todo: create a new grain bin, add crops to it, then save the grain bin to the DB
+        //  status: mostly works, 2nd crop isnt saved in bin bcz bin doesnt have the logic for that. ( not sure if db does)
+        GrainBin bin = new GrainBin(null,"I am bin 1","Saskatoon", 150, true, true);
+        bin.addCrop(outputCrop1, 50, true, true, true);
+        //  adding a 2nd crop different to the first has not been implemented by shawn yet so right now it gets ignored.
+        bin.addCrop(outputCrop2, 50, true, true, true);
         manager3.saveClass(bin);
 
 
+        // Todo: create a chemical record and save it to the database
+        //  Status: (works)
         ChemicalRecord newChemRecord = new ChemicalRecord(null,outputChem,LocalDate.of(2020,Month.JANUARY,1));
         ChemicalRecord outputChemRecord = manager3.saveClass(newChemRecord);
+
+        // Todo: create a new task and save it to the database
+        //  Status: (works)
         Task newTask = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
         Task outputTask = manager3.saveClass(newTask);
+
+        // Todo: create a new task record and save it to the database
+        //  Status: (works)
         TaskRecord newTaskRecord = new TaskRecord(null,outputTask,LocalDate.of(2020,Month.JANUARY,1));
         TaskRecord outputTaskRecord = manager3.saveClass(newTaskRecord);
 
-        Year newYear = new Year(null,2020,LocalDate.of(2020,Month.JANUARY,1));
+        // Todo: create a year
+        //  Status: (works)
+        Year newYear1 = new Year(null,2020,LocalDate.of(2020,Month.MAY,15));
         Year newYear2 = new Year(null,2024,LocalDate.of(2024,Month.JANUARY,1));
-        newYear.addChemicalRecord(outputChemRecord);
-        newYear.addTaskRecord(outputTaskRecord);
-        Year outputYear = manager3.saveClass(newYear);
+
+        // Todo: add chemical and task records to year (both have to be already in db)
+        //  Status: (works)
+        newYear1.addChemicalRecord(outputChemRecord);
+        newYear1.addTaskRecord(outputTaskRecord);
+
+        // Todo: save year to the database
+        //  Status: (works, a lot of values are null though, probably didn't have tie to instantiate them)
+        Year outputYear1 = manager3.saveClass(newYear1);
         Year outputYear2 = manager3.saveClass(newYear2);
-        Field newField = new Field(null,"field5","FieldGerald", 51, "location");
-        outputYear.setCrop(outputCrop);
-        outputYear2.setCrop(outputCrop);
+
+
+        // Todo: updating the value a year that is already in Database
+        //  status: works ( need to test if updateClass works for other classes too)
+
+        // setting dates
+        outputYear1.setSeeding_date(LocalDate.of(2021, 2, 26));
+        outputYear1.setSpraying_date(LocalDate.of(2021, 4, 28));  // this still uses localdate time for somereason
+        outputYear1.setHarvest_date(LocalDate.of(2021, 7, 13));
+        outputYear1.setEnd_of_year(LocalDate.of(2021, 11, 29));
+
+        // setting other year details
+        outputYear1.setCrop(outputCrop1);
+        outputYear1.setSeeding_rate(15);
+        outputYear1.setFertilizer_rate(12);
+        outputYear1.setChemical_sprayed(outputChem);
+        outputYear2.setCrop(outputCrop2);
+
+        manager3.updateClass(outputYear1);
         manager3.updateClass(outputYear2);
-        newField.addYear(outputYear);
+
+        // Todo: create a new field, add year, save current year, and save to database
+        //  status: works
+        Field newField = new Field(null,"field5","FieldGerald", 51, "location");
+        newField.addYear(outputYear1);
         newField.setCurrentYear(outputYear2);
 
         Field outputField2 = manager3.saveClass(newField);
-        Field getFieldTest = manager3.fetchObjectById("Field",outputField2.getDbId());
 
-        System.out.println("output chem:" + outputChem);
 
+
+//
+//        Field getFieldTest = manager3.fetchObjectById("Field",outputField2.getDbId());
+//
+//        System.out.println("output chem:" + outputChem);
+//
 
         // check if tasks are reflected in document.
 

@@ -63,7 +63,6 @@ public class Task implements DatabaseInterface<Task>{
      * @param due_date task due date
      */
     public Task(ObjectId iddb,String id, String task_name, String descr, LocalDateTime due_date){
-        System.out.println("object id null" + iddb);
         dbID = iddb;
         ID = id;
         taskName = task_name;
@@ -211,7 +210,26 @@ public class Task implements DatabaseInterface<Task>{
      * @param staff staff to be added
      */
     public void addStaff(User staff){
-        staffList.add(staff);
+        // make sure staff is not null
+        if (staff != null){
+            boolean found = false;
+            // make sure task is not already assigned to user
+            // I would have used list.contains but i am concerned about it not being the same object when db does things, it would be identical details but not same object instance
+            for (User staffIter : staffList) {
+                if (staffIter.getID().equals(staff.getID())) {
+                    System.out.println("The staff member "+staff.getFirstName() + " " + staff.getLastName() + " is already assigned to the task '"+ this.taskName+ "' ! \n Here is the current stafflist: " + staffList);
+                    found = true;
+                }
+            }
+            if (!found) {
+                staffList.add(staff);
+                staff.addTask(this);
+                System.out.println("Staff member " + staff.getFirstName() + " " + staff.getLastName() + " successfully added to the task '"+ this.taskName+ "' ! \n Here is the current stafflist: " + staffList);
+            }
+        }
+        else {
+            System.out.println("The staff member you are trying to add is null!");
+        }
     }
 
 
@@ -220,12 +238,19 @@ public class Task implements DatabaseInterface<Task>{
      * @param staff_id id of staff
      */
     public void removeStaff(String staff_id) {
-        for (User user : staffList) {
-            if (user.getID().equals(staff_id)) {
-                staffList.remove(user);
-                return;
+        if (staff_id != null){
+            for (User user : staffList) {
+                if (user.getID().equals(staff_id)) {
+                    staffList.remove(user);
+                    user.removeTask(this.ID);
+                    return;
+                }
             }
         }
+        else {
+            System.out.println("The id of the staff member you are trying to add is null!");
+        }
+
     }
 
     /**

@@ -70,13 +70,21 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
         }
     }
 
-    public void addCrop(Crop cropType, int grain, boolean inputBushels, boolean clean, boolean tough){
-        if (isEmpty() && cropType != currentCrop){
+    /**
+     * Adds a crop to a bin
+     * @param cropToBeAdded : a crop to be added to the bin.
+     * @param grain: amount of the crop is being added.
+     * @param inputBushels: Unit of measure of the grain amount ( if true in bushels, if false in lbs).
+     * @param clean: whether the crop has been cleaned or not.
+     * @param tough: whether grain is moist enough for it to cause issues or not.
+     */
+    public void addCrop(Crop cropToBeAdded, int grain, boolean inputBushels, boolean clean, boolean tough){
+        if (isEmpty() && cropToBeAdded != currentCrop){
             if (this.currentCrop != null) {
                 this.lastCrop = this.currentCrop;
             }
-            this.currentCrop = cropType;
-        }else if (cropType != this.currentCrop){
+            this.currentCrop = cropToBeAdded;
+        }else if (cropToBeAdded != this.currentCrop){
             //TODO throw exception
         }
 
@@ -106,11 +114,11 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
     }
 
     private Double lbsToBushels(double lbs){
-        return (lbs*currentCrop.getBushelWeight());
+        return (lbs/currentCrop.getBushelWeight());
     }
 
     private Double bushelsToLbs(double bushels){
-        return (bushels/currentCrop.getBushelWeight());
+        return (bushels*currentCrop.getBushelWeight());
     }
 
     @Override
