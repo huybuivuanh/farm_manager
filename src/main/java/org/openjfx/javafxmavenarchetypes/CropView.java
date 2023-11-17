@@ -1,6 +1,7 @@
 package org.openjfx.javafxmavenarchetypes;
 
 
+import control.CropControl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -12,7 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.InitialFarm.Crop;
-import org.entities.Field;
+
 
 import java.time.LocalDate;
 
@@ -23,26 +24,30 @@ public class CropView extends StackPane implements ModelSubscriber {
     private Scene fieldScene;
 
     private Stage stage;
+    private int year;
+
+    public CropControl cropController = new CropControl();
 
 
     private TableView<Crop> grainTable = new TableView<Crop>();
-    private final ObservableList<Crop> cropData =
-            FXCollections.observableArrayList(
-                    new Crop("1", "Canola", "LibertyLink", 55),
-                    new Crop("2", "Canola", "RoundupReady", 54),
-                    new Crop("3", "Durum", "Navigator", 60),
-                    new Crop("4", "Red Lentil", "Clearfield", 58),
-                    new Crop("5", "Wheat & Barley", "All the other Grains", 45)
-
-            );
+//    private final ObservableList<Crop> cropData =
+//            FXCollections.observableArrayList(
+//                    new Crop(null, "Canola", "LibertyLink", 55),
+//                    new Crop(null, "Canola", "RoundupReady", 54),
+//                    new Crop(null, "Durum", "Navigator", 60),
+//                    new Crop(null, "Red Lentil", "Clearfield", 58),
+//                    new Crop(null, "Wheat & Barley", "All the other Grains", 45)
+//
+//            );
+    private ObservableList<Crop> cropData = cropController.cropList;
 
 
     private TableView<Record> recordTable = new TableView<>();
-    private ObservableList<Record> recordData =
-            FXCollections.observableArrayList(new Record("chem1", LocalDate.now(), "seed1", 11.0, LocalDate.now(), "fertilizer 1", LocalDate.now()),
-                    new Record("chem2", LocalDate.now(), "seed2", 22.0, LocalDate.now(), "fertilizer 2", LocalDate.now()),
-                    new Record("chem3", LocalDate.now(), "seed3", 33.0, LocalDate.now(), "fertilizer 3", LocalDate.now()));
-
+//    private ObservableList<Record> recordData =
+//            FXCollections.observableArrayList(new Record("chem1", LocalDate.now(), "seed1", 11.0, LocalDate.now(), "fertilizer 1", LocalDate.now()),
+//                    new Record("chem2", LocalDate.now(), "seed2", 22.0, LocalDate.now(), "fertilizer 2", LocalDate.now()),
+//                    new Record("chem3", LocalDate.now(), "seed3", 33.0, LocalDate.now(), "fertilizer 3", LocalDate.now()));
+    private ObservableList<Record> recordData;
 
 
 
@@ -51,8 +56,7 @@ public class CropView extends StackPane implements ModelSubscriber {
         // todo: crop and record view page within field
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-        Label yearLabel = new Label("Year: 2023");
+        Label yearLabel = new Label("Year: " + year);
         yearLabel.setFont(new Font("Arial", 20));
         yearLabel.setStyle("-fx-font-weight: bold;");
 
@@ -147,6 +151,10 @@ public class CropView extends StackPane implements ModelSubscriber {
     @Override
     public void modelChanged() {
         
+    }
+
+    public void sendYear(int year){
+        this.year = year;
     }
 
     public static class Record{

@@ -3,57 +3,50 @@ package control;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.InitialFarm.Crop;
+import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
 
 public class CropControl {
     public ObservableList<Crop> cropList;
-    public ObservableList<Crop> currentCrop;
-    public ObservableList<Crop> lastCrop;
 
-    public ObservableList<String> cropVariety;
+    public ObservableList<String> cropType;
 
     public CropControl(){
         cropList = FXCollections.observableArrayList();
-        currentCrop = FXCollections.observableArrayList();
-        lastCrop = FXCollections.observableArrayList();
-        cropVariety = FXCollections.observableArrayList();
+        cropType = FXCollections.observableArrayList();
     }
 
+    // methods for crop scene in bin view
     public void addCrop(Crop crop){
         cropList.add(crop);
     }
 
-    public void setCurrentCrop(String crop_id){
-        for (Crop crop : cropList){
-            if (crop.getID().equals(crop_id)){
-                currentCrop.add(crop);
-                break;
-            }
-        }
-    }
-    public void setLastCrop(String crop_id){
-        for (Crop crop : cropList){
-            if (crop.getID().equals(crop_id)){
-                lastCrop.add(crop);
-                break;
-            }
-        }
-    }
 
-    public void addCropVariety(String crop_variety){
+    public void addCropType(String crop_type){
         boolean existed = false;
-        for (String variety : cropVariety){
-            if (variety.equals(crop_variety)){
+        for (String type : cropType){
+            if (type.equals(crop_type)){
                 existed = true;
                 break;
             }
         }
         if (!existed){
-            System.out.println("not existed");
-            cropVariety.add(crop_variety);
+            cropType.add(crop_type);
         } else {
-            System.out.println("Crop variety already existed");
+            System.out.println("Crop type already existed");
         }
     }
+
+    public void deleteCropWhenDeleteBin(ObjectId db_id){
+        for (Crop crop : cropList) {
+            if (db_id == crop.getDbId()) {
+                cropList.remove(crop);
+            }
+        }
+    }
+
+
+
+    // methods for crop scene in field view
+
 }
