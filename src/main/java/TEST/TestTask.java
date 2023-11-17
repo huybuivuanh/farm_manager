@@ -185,7 +185,5 @@ public class TestTask {
         System.out.println("Total Tests: " + count + " Tests. Test Passed: " + (count - failed) + " tests");
         System.out.println("-----------------------------------\n");
 
-
-
     }
 }
