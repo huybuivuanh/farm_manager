@@ -75,21 +75,19 @@ public class BinControl {
         }
     }
 
-    public Crop getCrop(String bin_id){
-        for (GrainBin bin : binList){
-            if (bin_id.equals(bin.getID())){
-                return bin.getCurrentCrop();
+    public void clearBin(String bin_id) {
+        GrainBin binSearched = null;
+        for (GrainBin bin : binList) {
+            if (bin.getID().equals(bin_id)) {
+                binSearched = bin;
+                break;
             }
         }
-        return null;
-    }
-
-    public Crop getLastCrop(String bin_id){
-        for (GrainBin bin : binList){
-            if (bin_id.equals(bin.getID())){
-                return bin.getLastCrop();
-            }
+        if (binSearched != null){
+            binSearched.clearBin();
         }
-        return null;
+        else{
+            System.out.println("Cant find bin with ID (" + bin_id + ")");
+        }
     }
 }
