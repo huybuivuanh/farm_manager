@@ -1,5 +1,7 @@
 package org.entities;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -46,7 +48,7 @@ public class Task implements DatabaseInterface<Task>{
     /**
      * list of staffs working on this task
      */
-    private final ArrayList<User> staffList;
+    private ObservableList<User> staffList;
 
     private boolean isCompleted = false;
     private LocalDateTime completionDate;
@@ -69,7 +71,7 @@ public class Task implements DatabaseInterface<Task>{
         description = descr;
         dueDate = due_date;
         date = LocalDateTime.now();
-        staffList = new ArrayList<>();
+        staffList = FXCollections.observableArrayList();
     }
 
     /**
@@ -116,7 +118,7 @@ public class Task implements DatabaseInterface<Task>{
      * get list of all staffs working on this task
      * @return list of staffs
      */
-    public ArrayList<User> getStaffList() {
+    public ObservableList<User> getStaffList() {
         return staffList;
     }
 

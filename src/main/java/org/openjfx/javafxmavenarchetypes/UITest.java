@@ -96,21 +96,24 @@ public class UITest extends Application {
     // Todo: User tables and data (Need to implement user tasks view)
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private TableView<User> userTable = new TableView<User>();
-    private TableView<Task> userTasksTable = new TableView<Task>();
-
-    private TableView<Task> allTasksInUserViewTable = new TableView<Task>();
-
-    // for the selected user, will:
-    // 1) pull out the arrayList (to be changed to observable)
-    // 2) set the data of the userTasks TableView above to the contents of that list.
-    // 3) need to implement functionality adding and removing tasks to user array ( could use ones already in user class)
     UserControl userController = new UserControl();
-    /**
-     * new User ...
-     */
     private ObservableList<User> userData = userController.allEmployees;
-    private ObservableList<Task> userTaskData= FXCollections.observableArrayList();
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Todo: tableviews and data for users assigned to tasks
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private TableView<User> taskUsersTable = new TableView<User>();
+    private TableView<User> allUsersInTaskViewTable = new TableView<User>();
+    private ObservableList<User> taskUserData= FXCollections.observableArrayList();
+    private ObservableList<User> allUserDataInTaskViewTable = userController.allEmployees;
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Todo: tableviews and data for tasks assigned to users
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private TableView<Task> userTasksTable = new TableView<Task>();
+    private TableView<Task> allTasksInUserViewTable = new TableView<Task>();
+    private ObservableList<Task> userTaskData= FXCollections.observableArrayList();
     private ObservableList<Task> allTaskDataInUserViewTable = taskController.taskList;
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -188,7 +191,7 @@ public class UITest extends Application {
         taskSelector.getChildren().addAll(btasks,bfield,bbins,busers);
         taskSelector.setAlignment(Pos.CENTER);
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // TODO: adding functionality to the user tab (connecting to tasks)
+        // TODO: adding functionality to the user tab (connecting to tasks) (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Todo: adding users (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -227,6 +230,9 @@ public class UITest extends Application {
             stage.setScene(userScene);
             // not sure if below line is necessary
             userTable.refresh();
+            allUsersInTaskViewTable.refresh();
+            taskUsersTable.refresh();
+
         });
 
         Button userBackToMain = new Button("back");
@@ -272,6 +278,9 @@ public class UITest extends Application {
             System.out.println(userTable.getSelectionModel().getSelectedItem());
             stage.setScene(userScene);
             userTable.refresh();
+            allUsersInTaskViewTable.refresh();
+            taskUsersTable.refresh();
+
         });
 
         editUser.setOnMouseClicked(e-> {
@@ -287,7 +296,7 @@ public class UITest extends Application {
             System.out.println(userController.allEmployees);
         });
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //Todo 3: promote user (done - revisit changes to employee hierarchy)
+        //Todo 3: promote user (done - revisit changes to employee hierarchy) (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Button promoteUser = new Button("Promote User");
         promoteUser.setOnMouseClicked(e-> {
@@ -295,23 +304,15 @@ public class UITest extends Application {
             //userTable.getSelectionModel().getSelectedItem().
             userController.promoteUser(userTable.getSelectionModel().getSelectedItem().getID());
             //userTable.getSelectionModel().getSelectedItem().setOwner(true);
-            userTable.refresh();
             System.out.println(userController.allEmployees);
+
+            userTable.refresh();
+            allUsersInTaskViewTable.refresh();
+            taskUsersTable.refresh();
         });
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //Todo 3: task addition and removal to users
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // for the selected user, will:
-        // 1) pull out the arrayList (to be changed to observable)
-        // 2) set the data of the userTasks TableView above to the contents of that list.
-        // 3) need to implement functionality adding and removing tasks to user array ( could use ones already in user class)
-        // todo: first, create bogus tasks for bogus use just to test out view, then add functionality.
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Button userTaskAssigner = new Button("Assign Task");
-        // this assign task should show a list of tasks from which we can choose one to be assigned to the selected user
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //Todo 3: Employee Tasks view.
+        //Todo 4: Employee Tasks view. ( assigning and unassigning tasks to Employee) (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         VBox employeeTasksBox = new VBox(30);
@@ -345,8 +346,9 @@ public class UITest extends Application {
         employeeTasksBackToMain.setOnMouseClicked(e ->{
             stage.setScene(userScene);
         });
-
-        // Todo: Employee's tasks inside of employee task view
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Todo 4.1: Employee's tasks inside of employee task view (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         TableColumn<Task, String> userTaskIDCol = new TableColumn<Task, String>("Task ID");
         userTaskIDCol.editableProperty().setValue(true);
         userTaskIDCol.setMinWidth(130);
@@ -377,8 +379,9 @@ public class UITest extends Application {
         userTasksTable.setEditable(true);
         userTasksTable.getColumns().addAll(userTaskIDCol, userTaskName, userTaskDescription,userTaskDueDate);
 
-        // Todo: all tasks inside of employee task view
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Todo 4.2: all tasks inside of employee task view (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         TableColumn<Task, String> allTaskIDColInUser = new TableColumn<Task, String>("Task ID");
         allTaskIDColInUser.editableProperty().setValue(true);
         allTaskIDColInUser.setMinWidth(130);
@@ -415,7 +418,7 @@ public class UITest extends Application {
 
         employeeTasksBox.getChildren().addAll(employeeTasksLabel, employeeNameLabel, topUserAddTaskBar, userTasksTable, taskLabelWithinEmployeeTasks, allTasksInUserViewTable);
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Todo: User Table Formatting (done)
+        // Todo 4.3: User Table Formatting (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         HBox topUserBar= new HBox();
         topUserBar.getChildren().addAll(addUser,editUser,removeUser, promoteUser ,employeeTasks ,userBackToMain);
@@ -471,7 +474,7 @@ public class UITest extends Application {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //Todo: Making the add task window pop up (done)
+        //Todo 1 : Making the add task window pop up (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         VBox userBox = new VBox(30);
         Scene addUserScene = new Scene(userBox,300,250);
@@ -486,7 +489,7 @@ public class UITest extends Application {
         userBox.getChildren().addAll(idInput,taskNameF,descriptionF,dueDate,submitTask);
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //Todo: Task Addition (done)
+        //Todo 2: Task Addition (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Button addTask = new Button("add Task");
         addTask.setOnMouseClicked(e ->{
@@ -508,7 +511,7 @@ public class UITest extends Application {
         });
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //Todo: Task Editing
+        //Todo 3: Task Editing
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         Button editTask = new Button("edit task");
@@ -543,7 +546,7 @@ public class UITest extends Application {
         });
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Todo: Task Completion (done)
+        // Todo 4: Task Completion (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Button markComplete = new Button("Mark Complete");
 
@@ -559,7 +562,7 @@ public class UITest extends Application {
         });
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Todo: the view of completed tasks
+        // Todo 5: the view of completed tasks
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         VBox completedTaskBox = new VBox(30);
         Scene completedTaskScene = new Scene(completedTaskBox,300,250);
@@ -610,14 +613,159 @@ public class UITest extends Application {
         CompletedTaskTable.getColumns().addAll(completedTaskIDCol, completedTaskName, completedTaskDescription,completedTaskDueDate);
         completedTaskBox.getChildren().addAll(completedTaskLabel, completedTaskBackToMain, CompletedTaskTable);
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Todo 6: Task Employees view
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        VBox taskEmployeesBox = new VBox(30);
+        Scene taskEmployeesScene = new Scene(taskEmployeesBox,300,250);
+        Label taskEmployeesLabel = new Label("Task Employees Popup view");
+        Label taskNameLabel = new Label();
+        Label employeeLabelWithinTaskEmployees = new Label("All employees:");
+
+        Button taskEmployees = new Button("View Employees");
+        taskEmployees.setOnMouseClicked(e->{
+            taskUserData= taskTable.getSelectionModel().getSelectedItem().getStaffList();
+            taskUsersTable.setItems(taskUserData);
+            String taskName = taskTable.getSelectionModel().getSelectedItem().getTaskName();
+            taskNameLabel.setText("Task Name: " + taskName);
+            stage.setScene(taskEmployeesScene);
+        });
+
+        Button taskAddEmployees = new Button("Assign Employee");
+        taskAddEmployees.setOnMouseClicked(e->{
+            taskTable.getSelectionModel().getSelectedItem().addStaff(allUsersInTaskViewTable.getSelectionModel().getSelectedItem());
+            System.out.println( "the add Employee button has been clicked");
+        });
+
+        Button taskRemoveEmployees = new Button("Remove Employee");
+        taskRemoveEmployees.setOnMouseClicked(e->{
+            taskTable.getSelectionModel().getSelectedItem().removeStaff(taskUsersTable.getSelectionModel().getSelectedItem().getID());
+            System.out.println( "the remove Employee button has been clicked");
+        });
+
+
+        Button taskEmployeesBackToTask = new Button("back");
+        taskEmployeesBackToTask.setOnMouseClicked(e ->{
+            stage.setScene(taskScene);
+        });
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Todo 6.2: Task's employees inside of employee task view (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        TableColumn<User, String> taskUserIDCol = new TableColumn<User, String>("User ID");
+        taskUserIDCol.setMinWidth(130);
+        taskUserIDCol.setCellValueFactory(
+                new PropertyValueFactory<User, String>("ID")
+        );
+
+        TableColumn<User, String> taskUserEmailCol = new TableColumn<User, String>("User Email");
+        taskUserEmailCol.setMinWidth(130);
+        taskUserEmailCol.setCellValueFactory(
+                new PropertyValueFactory<User, String>("email")
+        );
+        TableColumn<User, String> taskUserPasswordCol = new TableColumn<User, String>("User Password");
+        taskUserPasswordCol.setMinWidth(130);
+        taskUserPasswordCol.setCellValueFactory(
+                new PropertyValueFactory<User, String>("password")
+        );
+        TableColumn<User, String> taskUserFirstNameCol = new TableColumn<User, String>("User First Name");
+        taskUserFirstNameCol.setMinWidth(130);
+        taskUserFirstNameCol.setCellValueFactory(
+                new PropertyValueFactory<User, String>("firstName")
+        );
+        TableColumn<User, String> taskUserLastNameCol = new TableColumn<User, String>("User Last Name");
+        taskUserLastNameCol.setMinWidth(130);
+        taskUserLastNameCol.setCellValueFactory(
+                new PropertyValueFactory<User, String>("lastName")
+        );
+
+        TableColumn<User, LocalDate> taskUserDOBCol = new TableColumn<User, LocalDate>("User Date of Birth");
+        taskUserDOBCol.setMinWidth(130);
+        taskUserDOBCol.setCellValueFactory(
+                new PropertyValueFactory<User, LocalDate>("DOB")
+        );
+
+        TableColumn<User, Boolean> taskUserOwnership = new TableColumn<User, Boolean>("Owner (T/F)");
+        taskUserOwnership.setMinWidth(130);
+        taskUserOwnership.setCellValueFactory(
+                new PropertyValueFactory<User, Boolean>("owner")
+        );
+
+        taskUsersTable.setItems(taskUserData);
+        taskUsersTable.setEditable(true);
+        taskUsersTable.getColumns().addAll(taskUserFirstNameCol, taskUserLastNameCol, taskUserOwnership,taskUserIDCol,taskUserEmailCol,taskUserPasswordCol, taskUserDOBCol);
 
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Todo: Task view formatting (done)
+        // Todo 6.3: All employee's inside task employee view (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        TableColumn<User, String> allUserIDColInTask = new TableColumn<User, String>("User ID");
+        allUserIDColInTask.setMinWidth(130);
+        allUserIDColInTask.setCellValueFactory(
+                new PropertyValueFactory<User, String>("ID")
+        );
+
+        TableColumn<User, String> allUserEmailColInTask = new TableColumn<User, String>("User Email");
+        allUserEmailColInTask.setMinWidth(130);
+        allUserEmailColInTask.setCellValueFactory(
+                new PropertyValueFactory<User, String>("email")
+        );
+
+        TableColumn<User, String> allUserPasswordColInTask = new TableColumn<User, String>("User Password");
+        allUserPasswordColInTask.setMinWidth(130);
+        allUserPasswordColInTask.setCellValueFactory(
+                new PropertyValueFactory<User, String>("password")
+        );
+        TableColumn<User, String> allUserFirstNameColInTask = new TableColumn<User, String>("User First Name");
+        allUserFirstNameColInTask.setMinWidth(130);
+        allUserFirstNameColInTask.setCellValueFactory(
+                new PropertyValueFactory<User, String>("firstName")
+        );
+
+        TableColumn<User, String> allUserLastNameColInTask = new TableColumn<User, String>("User Last Name");
+        allUserLastNameColInTask.setMinWidth(130);
+        allUserLastNameColInTask.setCellValueFactory(
+                new PropertyValueFactory<User, String>("lastName")
+        );
+
+        TableColumn<User, LocalDate> allUserDOBColInTask = new TableColumn<User, LocalDate>("User Date of Birth");
+        allUserDOBColInTask.setMinWidth(130);
+        allUserDOBColInTask.setCellValueFactory(
+                new PropertyValueFactory<User, LocalDate>("DOB")
+        );
+
+        TableColumn<User, Boolean> allUserOwnershipInTask = new TableColumn<User, Boolean>("Owner (T/F)");
+        allUserOwnershipInTask.setMinWidth(130);
+        allUserOwnershipInTask.setCellValueFactory(
+                new PropertyValueFactory<User, Boolean>("owner")
+        );
+
+        allUsersInTaskViewTable.setItems(allUserDataInTaskViewTable);
+        allUsersInTaskViewTable.setEditable(true);
+        allUsersInTaskViewTable.getColumns().addAll(allUserFirstNameColInTask, allUserLastNameColInTask, allUserOwnershipInTask,
+                                                        allUserIDColInTask,allUserEmailColInTask,allUserPasswordColInTask, allUserDOBColInTask);
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // todo 6.4:  creating top bar for the view of employee view inside of task and adding buttons to it (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        HBox topTaskAddUserBar= new HBox();
+        topTaskAddUserBar.getChildren().addAll(taskAddEmployees, taskRemoveEmployees, taskEmployeesBackToTask);
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // todo 6.5: adding the top bar itself into the page (done)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        taskEmployeesBox.getChildren().addAll(taskEmployeesLabel,taskNameLabel,topTaskAddUserBar, taskUsersTable,employeeLabelWithinTaskEmployees, allUsersInTaskViewTable);
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Todo 7: Task view formatting (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         HBox topBar= new HBox();
-        topBar.getChildren().addAll(addTask,editTask,markComplete,viewCompleted ,taskBackToMain);
+        topBar.getChildren().addAll(addTask,editTask,markComplete,viewCompleted,taskEmployees ,taskBackToMain);
 
         TableColumn<Task, String> taskIDCol = new TableColumn<Task, String>("Task ID");
 
