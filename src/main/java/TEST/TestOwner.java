@@ -2,7 +2,6 @@ package TEST;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.entities.Field;
 import org.entities.Owner;
 import org.entities.Task;
 
@@ -10,7 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Calendar;
-import java.util.Observable;
 
 public class TestOwner {
 
@@ -103,9 +101,43 @@ public class TestOwner {
         result2 = staff1.getDOB();
         if (!result2.equals(specificDate)) { failed ++ ;System.out.println(error_message(reason13, String.valueOf(specificDate), String.valueOf(result2)));}
 
-        String reason14 = "Testing getTask()";
+        String reason14 = "Testing getTasks() with no task";
         ObservableList<Task> testTask = FXCollections.observableArrayList();
         ObservableList<Task> resultTask;
+        resultTask = staff1.getTaskList();
+        if (!resultTask.equals(testTask)) { failed ++ ;System.out.println(error_message(reason14, String.valueOf(testTask), String.valueOf(resultTask)));}
+
+        String reason15 = "Testing getTasks() with tasks";
+        staff1.getTaskList().add(task1); staff1.getTaskList().add(task2); staff1.getTaskList().add(task3);
+        testTask.add(task1); testTask.add(task2); testTask.add(task3);
+        resultTask = staff1.getTaskList();
+        if (!resultTask.equals(testTask)) { failed ++ ;System.out.println(error_message(reason15, String.valueOf(testTask), String.valueOf(resultTask)));}
+
+        String reason16 = "Testing removeTasks() with tasks";
+        staff1.removeTask(task3.getID());
+        testTask.remove(2);
+        resultTask = staff1.getTaskList();
+        if (!resultTask.equals(testTask)) { failed ++ ;System.out.println(error_message(reason16, String.valueOf(testTask), String.valueOf(resultTask)));}
+
+        String reason17 = "Testing removeAllTasks() with tasks";
+        staff1.removeAllTasks();
+        testTask.remove(0); testTask.remove(0);
+        resultTask = staff1.getTaskList();
+        if (!resultTask.equals(testTask)) { failed ++ ;System.out.println(error_message(reason17, String.valueOf(testTask), String.valueOf(resultTask)));}
+
+        String[] reasons = {reason1, reason2, reason3, reason4, reason5, reason6, reason7,
+                reason8, reason9, reason10, reason11, reason12, reason13, reason14, reason15,
+                reason16, reason17};
+        System.out.println("*** Chemical Class Testing  ***\n");
+        for (String reason : reasons) {
+            count ++;
+            System.out.println("Passed " + (count - failed) + " out of total " + count + " tests");
+        }
+        System.out.println("Total Tests: " + count + " Tests. Test Passed: " + (count - failed) + " tests");
+        System.out.println("-----------------------------------\n");
+
+
+
 
     }
 }

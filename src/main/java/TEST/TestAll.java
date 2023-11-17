@@ -10,6 +10,7 @@ public class TestAll {
         TestGrainBin.main(args);
         TestCrop.main(args);
         TestChemical.main(args);
+        TestOwner.main(args);
 
 
     }
