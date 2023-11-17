@@ -11,6 +11,7 @@ public class TestAll {
         TestCrop.main(args);
         TestChemical.main(args);
         TestOwner.main(args);
+        TestTask.main(args);
 
 
     }
