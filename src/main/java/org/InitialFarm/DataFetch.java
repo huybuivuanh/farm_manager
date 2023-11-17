@@ -117,7 +117,7 @@ public class DataFetch {
 
             database.getCollection(collections).findOneAndUpdate(query,finaly);
             mongoClient.close();
-            System.out.println("Removed the database item successfully");
+            System.out.println("added the database item successfully");
 
 
         }
@@ -159,8 +159,6 @@ public class DataFetch {
             database.getCollection(collections).findOneAndDelete(query);
             mongoClient.close();
             System.out.println("Removed the database item successfully");
-
-
         }
     }
     /**
@@ -233,22 +231,48 @@ public class DataFetch {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
             ListCollectionsIterable<Document> list = database.listCollections();
             mongoClient.close();
-
             return list;
         }
 
     }
 
+    /**
+     * A method that deletes all the contents of a collection in the database.
+     * @param databaseName String name of the database the collection is in.
+     * @param collections String name of the collection whose elements are to be emptied.
+     */
+    public static void removeAllinCollection(String databaseName, String collections){
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            MongoDatabase database =  mongoClient.getDatabase(databaseName);
+            database.getCollection(collections).deleteMany(new Document());
+            mongoClient.close();
+            System.out.println("Removed all contents of the collection: "+ collections + " from the database successfully");
+        }
+        catch (Exception e){
+            System.out.println("failed to Removed all contents of the collection: "+ collections + " from the database.");
+        }
+    }
+//    public static void remove(ObjectId newId,String databaseName,String collections){
+//        try (MongoClient mongoClient = MongoClients.create(uri)) {
+//            MongoDatabase database =c
+//            BasicDBObject query = new BasicDBObject();
+//            query.put("_id", newId);
+//            database.getCollection(collections).findOneAndDelete(query);
+//            mongoClient.close();
+//            System.out.println("Removed the database item successfully");
+//        }
+//    }
 
     public static void main( String[] args ) throws NoSuchFieldException, FileAlreadyExistsException {
         // Replace the placeholder with your MongoDB deployment's connection string
 
-          Document newDoc = new Document();
-            newDoc.append("fieldName", "Theo's Field");
-            newDoc.append("acres",57);
-            newDoc.append("_id",new ObjectId("655586df80a5eb1421432f0f"));
+//          Document newDoc = new Document();
+//            newDoc.append("fieldName", "Theo's Field");
+//            newDoc.append("acres",57);
+//            newDoc.append("_id",new ObjectId("655586df80a5eb1421432f0f"));
+//
+//            replaceDoc(newDoc.getObjectId("_id"),newDoc,"FarmData","year_list");
 
-            replaceDoc(newDoc.getObjectId("_id"),newDoc,"FarmData","year_list");
 
 //        System.out.println(grab("FarmData","farm_list","fieldName","FieldGerald"));
 //
@@ -270,6 +294,14 @@ public class DataFetch {
 //        System.out.println("testing exist: " + existsID(test,"FarmData","farm_list"));
 //        addID("fieldyNameyboi","This is a test for adding",test,"FarmData","farm_list");
         // remove(test,"FarmData","farm_list");
+
+        // Todo: testing remove item (works)
+
+//        ObjectId testing = new ObjectId("655455027e8d2b62ffa64cc1");
+//        remove(testing, "FarmData", "employee_list");
+
+        // Todo: testing removeAllInCollection item (works)
+//        removeAllinCollection("FarmData", "employee_list");
 
 
     }
