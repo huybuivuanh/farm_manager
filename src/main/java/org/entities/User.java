@@ -66,7 +66,7 @@ public class User implements DatabaseInterface<User>{
         firstName = first_name;
         lastName = last_name;
         DOB = dob;
-        taskList = FXCollections.observableArrayList();;
+        taskList = FXCollections.observableArrayList();
         isOwner = ownership;
     }
 
