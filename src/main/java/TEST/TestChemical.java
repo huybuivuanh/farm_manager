@@ -36,7 +36,7 @@ public class TestChemical {
         resultChemGroup = Chemical1.getChemicalGroup();
         if (!resultChemGroup.equals(testChemGroup)) { failed ++ ;System.out.println(error_message(reason3, String.valueOf(testChemGroup), String.valueOf(resultChemGroup)));}
 
-        String reason4 = "Testing getGroup() with empty group";
+        String reason4 = "Testing getGroup() with a group";
         testChemGroup.add("4"); testChemGroup.add("14");
         Chemical1.getChemicalGroup().add("4"); Chemical1.getChemicalGroup().add("14");
         resultChemGroup = Chemical1.getChemicalGroup();
