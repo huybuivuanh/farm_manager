@@ -3,11 +3,18 @@ package control;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import org.InitialFarm.Chemical;
 import org.InitialFarm.Crop;
+import org.bson.types.ObjectId;
+import org.entities.ChemicalRecord;
 import org.entities.Field;
 import org.entities.Year;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.time.LocalDate.now;
 
 
 // need to see history of crop planted
@@ -97,7 +104,7 @@ public class FieldControl {
         }
     }
 
-    public void addCrop(String field_id, Crop crop){
+    public void addCrop(String field_id, Crop crop, double seedingRate, LocalDate seedingDate){
         Field fieldSearched = null;
         for (Field field : fieldList){
             if (field.getID().equals(field_id)){
@@ -106,13 +113,60 @@ public class FieldControl {
             }
         }
         if (fieldSearched != null){
-            Year cropYear = new Year(null, 2023, LocalDate.now());
-            cropYear.setCrop(crop);
-            fieldSearched.setCurrentYear(cropYear);
-            fieldSearched.addYear(cropYear);
+            if (fieldSearched.getCurrent_Year() == null){
+                Year cropYear = new Year(null, LocalDate.now().getYear(), LocalDate.now());
+                cropYear.setCrop(crop);
+                cropYear.setSeeding_rate(seedingRate);
+                cropYear.setSeeding_date(seedingDate);
+                fieldSearched.setCurrentYear(cropYear);
+                fieldSearched.addYear(cropYear);
+            }
+            else {
+                System.out.println("Farm is currently full of crop");
+            }
         }
         else {
             System.out.println("Can't find field with ID (" + field_id + ")");
         }
     }
+
+    public void harvest(String fieldID){
+        for (Field field : fieldList){
+            if (field.getID().equals(fieldID)){
+                if (field.getCurrent_Year() != null) {
+                    field.getCurrent_Year().harvest(LocalDate.now());
+                    field.setCurrentYear(null);
+                }
+                else {
+                    System.out.println("Field with ID (" + fieldID + ") is already harvested or no crop is planted.");
+                }
+            }
+            else {
+                System.out.println("Can't find field with ID (" + fieldID + ")");
+            }
+        }
+    }
+
+    public void addChemical(String fieldID, double fertilizerRate, String chemicalSprayed, String chemicalGroup, LocalDate sprayingDate){
+        for (Field field : fieldList){
+            if (field.getID().equals(fieldID)){
+                if (field.getCurrent_Year() != null) {
+                    List<String> chemGroup = new ArrayList<>();
+                    chemGroup.add(chemicalGroup);
+                    Chemical chemical = new Chemical(null, chemicalSprayed, chemGroup);
+                    ChemicalRecord chemicalRecord = new ChemicalRecord(null, chemical, sprayingDate);
+
+                    field.getCurrent_Year().setFertilizer_rate(fertilizerRate);
+                    field.getCurrent_Year().addChemicalRecord(chemicalRecord);
+                }
+                else {
+                    System.out.println("Field with ID (" + fieldID + ") is already harvested or no crop is planted.");
+                }
+            }
+            else {
+                System.out.println("Can't find field with ID (" + fieldID + ")");
+            }
+        }
+    }
+
 }

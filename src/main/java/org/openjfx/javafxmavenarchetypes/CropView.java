@@ -2,7 +2,6 @@ package org.openjfx.javafxmavenarchetypes;
 
 
 import control.CropControl;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -84,6 +83,7 @@ public class CropView extends StackPane implements ModelSubscriber {
         bushelWeightCol.setMinWidth(70);
         bushelWeightCol.setCellValueFactory(
                 new PropertyValueFactory<Crop, Float>("bushelWeight"));
+
 
         grainTable.setItems(cropData);
         grainTable.getColumns().addAll(cropTypeCol, cropVarietyCol, bushelWeightCol);

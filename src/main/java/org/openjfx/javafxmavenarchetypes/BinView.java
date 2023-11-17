@@ -38,7 +38,7 @@ public class BinView extends StackPane implements ModelSubscriber {
 
     public BinView(){
         VBox binCropPage = new VBox(30);
-        AtomicReference<Scene> binCropScene = new AtomicReference<>(new Scene(binCropPage, 300, 250));
+        Scene binCropScene = new Scene(binCropPage, 300, 250);
 
         Label currentCropLabel = new Label("Current Crop");
         Label currentCropData = new Label("Crop ID: "  + "\nCrop Type: "  +
@@ -228,15 +228,9 @@ public class BinView extends StackPane implements ModelSubscriber {
                         lastCropData.setText("Crop ID: " + selectedData.getLastCrop().getDbId() + "\nCrop Type: " + selectedData.getLastCrop().getCropType() +
                                 "\nCrop Variety: " + selectedData.getLastCrop().getCropVariety() + "\nBushel Weight: " + selectedData.getLastCrop().getBushelWeight());
                     }
-                    stage.setScene(binCropScene.get());
+                    stage.setScene(binCropScene);
                 }
             }});
-
-
-
-
-
-
 
 
         Button cropToBin = new Button("Back To Bin");

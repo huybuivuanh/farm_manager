@@ -136,6 +136,7 @@ public class Year implements DatabaseInterface<Year>{
      * The list of chemicals that have been sprayed on the
      * field over the year and their dates
      */
+    // bookmark
     private final LinkedList<ChemicalRecord> chemical_records;
 
     /**

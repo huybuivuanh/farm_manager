@@ -10,13 +10,16 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.InitialFarm.Crop;
+import org.entities.ChemicalRecord;
 import org.entities.Field;
+import org.entities.Year;
 
 import java.time.LocalTime;
-import java.time.Year;
-import java.util.Date;
+
+import java.util.*;
 
 
 public class FieldView extends StackPane implements ModelSubscriber {
@@ -24,9 +27,8 @@ public class FieldView extends StackPane implements ModelSubscriber {
     Stage stage;
     Scene MenuScene ;
     Scene fieldScene;
-
-    Scene cropScene;
-    CropView cropPage = new CropView();
+    VBox cropPage = new VBox();
+    Scene cropScene = new Scene(cropPage);
 
     VBox fieldPage = new VBox();
 
@@ -42,7 +44,17 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
     private CropControl cropController = new CropControl();
 
+
+
+
     public FieldView(){
+        ArrayList<String> recordData = new ArrayList<>();
+        ObservableList<String> observableList = FXCollections.observableArrayList(recordData);
+        ListView<String> listView = new ListView<>(observableList);
+
+        ArrayList<String> chemicalData = new ArrayList<>();
+        ObservableList<String> chemicalObservableList = FXCollections.observableArrayList(chemicalData);
+        ListView<String> listView2 = new ListView<>(chemicalObservableList);
 
         TableColumn<Field, String> fieldIDCol = new TableColumn<Field, String>("Field ID");
         fieldIDCol.setMinWidth(130);
@@ -139,19 +151,6 @@ public class FieldView extends StackPane implements ModelSubscriber {
             fieldTable.refresh();
         });
 
-        fieldTable.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
-                if (selectedData != null) {
-                    if (selectedData.getYears().isEmpty()){
-                        cropPage.sendYear(Year.now().getValue());
-                    }else {
-                        cropPage.sendYear(selectedData.getCurrent_Year().getYear());
-                    }
-                    stage.setScene(cropScene);
-                }
-            }
-        });
 
         VBox addCropBox = new VBox(30);
         Scene addCropScene = new Scene(addCropBox,300,250);
@@ -197,7 +196,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
             else {
                 crop = new Crop(null, cropTypeInput.getValue(), cropVarietyInput.getValue(), Float.parseFloat(bushelWeight.getText()));
             }
-            fieldController.addCrop(fieldId.getText(), crop);
+            fieldController.addCrop(fieldId.getText(), crop, Double.parseDouble(seedingRateInput.getText()), seedingDateInput.getValue());
             cropController.addCrop(crop);
 
             // clear the form
@@ -209,7 +208,100 @@ public class FieldView extends StackPane implements ModelSubscriber {
         });
 
 
-        fieldFunctionsBar.getChildren().addAll(addField, editField, deleteField, addCrop, fieldsBackToMain);
+        Button harvest = new Button("Harvest");
+        harvest.setOnMouseClicked(event ->{
+            fieldController.harvest(fieldTable.getSelectionModel().getSelectedItem().getID());
+        });
+
+
+
+        VBox addChemPage = new VBox(30);
+        Scene addChemScene = new Scene(addChemPage,300,250);
+
+        Button sprayChemical = new Button("Add Chemical Sprayed");
+        sprayChemical.setOnMouseClicked(event -> {
+            stage.setScene(addChemScene);
+        });
+
+        TextField chemFieldID = new TextField("Field ID");
+        TextField fertilizerInput = new TextField("Fertilizer Rate (lbs/acre)");
+        TextField chemSprayedInput = new TextField("Chemical Sprayed");
+        TextField chemGroupInput = new TextField("Chemical Group");
+        DatePicker sprayDate = new DatePicker();
+        Button submitChemInfo = new Button("Submit");
+
+        submitChemInfo.setOnMouseClicked(event -> {
+            fieldController.addChemical(chemFieldID.getText(), Double.parseDouble(fertilizerInput.getText()),
+                    chemSprayedInput.getText(), chemGroupInput.getText(), sprayDate.getValue());
+            stage.setScene(fieldScene);
+        });
+
+        addChemPage.getChildren().addAll(chemFieldID, fertilizerInput, chemSprayedInput, chemGroupInput, sprayDate, submitChemInfo);
+
+
+        fieldTable.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
+                if (selectedData != null) {
+                    if (!selectedData.getYears().isEmpty()){
+                        for (Year year : selectedData.getYears()){
+                            Crop crop = year.getCrop();
+                            String cropHistory = "Crop Type: " + crop.getCropType() + "\nCrop Variety: " +
+                                    crop.getCropVariety() + "\nBushel Weight: " + crop.getBushelWeight() +
+                                    "\nHarvested: " + (year.getHarvestDate() != null) + "\nHarvest Date: " + year.getHarvestDate() +
+                                    "\nSeeding Rate: " + year.getSeeding_rate() +
+                                    "\nSeeding Date: " + year.getSeeding_date();
+                            recordData.add(cropHistory);
+
+                            StringBuilder chemHistory = new StringBuilder();
+                            if (!year.getChemical_records().isEmpty()){
+                                chemHistory.append("Fertilizer Rate: ").append(year.getFertilizer_rate()).append("\n");
+                                for (ChemicalRecord record : year.getChemical_records()){
+                                    chemHistory.append(record.toString()).append("\n");
+                                }
+
+                            } else {
+                                chemHistory.append("Fertilizer Rate:\nChemical Sprayed:\nSpraying Date:");
+                            }
+                            chemicalData.add(chemHistory.toString());
+                        }
+                    }
+                }
+                Collections.reverse(recordData);
+                observableList.clear();
+                observableList.addAll(recordData);
+
+                Collections.reverse(chemicalData);
+                chemicalObservableList.clear();
+                chemicalObservableList.addAll(chemicalData);
+                stage.setScene(cropScene);
+            }
+        });
+
+
+        Label cropLabel = new Label("Crop Record (most recent at the top)");
+        cropLabel.setFont(new Font("Arial", 20));
+        cropLabel.setStyle("-fx-font-weight: bold;");
+
+
+        Label chemLabel = new Label("Chemical Record (most recent at the top)");
+        chemLabel.setFont(new Font("Arial", 20));
+        chemLabel.setStyle("-fx-font-weight: bold;");
+
+
+
+        Button cropBackToField = new Button("Back To Field");
+        cropBackToField.setOnMouseClicked(event -> {
+            recordData.clear();
+            chemicalData.clear();
+            stage.setScene(fieldScene);
+        });
+
+
+        cropPage.getChildren().addAll(cropBackToField, cropLabel, listView, chemLabel, listView2);
+
+
+        fieldFunctionsBar.getChildren().addAll(addField, editField, deleteField, addCrop, harvest, sprayChemical, fieldsBackToMain);
         fieldPage.getChildren().addAll(fieldFunctionsBar, fieldTable);
         this.getChildren().addAll(fieldPage);
     }
@@ -221,8 +313,6 @@ public class FieldView extends StackPane implements ModelSubscriber {
         this.stage = stage;
         this.MenuScene = main;
         this.fieldScene = field;
-        cropPage.setStageField(stage, fieldScene);
-        cropScene = new Scene(cropPage,300,250);
     }
 
 
