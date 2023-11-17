@@ -56,11 +56,6 @@ public class TestTask {
         LocalDateTime result2 = task1.getDueDate();
         if (!result2.equals(duDate)) { failed ++ ;System.out.println(error_message(reason5, String.valueOf(duDate), String.valueOf(result2)));}
 
-        String reason15 = "Testing getDate()";
-        result2 = task1.getDate();
-        if (!result2.equals(LocalDateTime.now())) { failed ++ ;System.out.println(error_message(reason15, String.valueOf(LocalDateTime.now()), String.valueOf(result2)));}
-
-
         String reason6 = "Testing getStatus() without setStatus()";
         result = task1.getStatus();
         expected = "Incomplete";
@@ -119,52 +114,52 @@ public class TestTask {
         expected3.clear();
         if (!result3.equals(expected3)) { failed ++ ;System.out.println(error_message(reason14, String.valueOf(expected3), String.valueOf(result3)));}
 
-        String reason16 = "Testing isCompleted()";
+        String reason15 = "Testing isCompleted()";
         task1.markAsCompleted(true);
         Boolean result4 = task1.isCompleted();
         Boolean expected4 = true;
-        if (!result4.equals(expected4)) { failed ++ ;System.out.println(error_message(reason16, String.valueOf(expected4), String.valueOf(result4)));}
+        if (!result4.equals(expected4)) { failed ++ ;System.out.println(error_message(reason15, String.valueOf(expected4), String.valueOf(result4)));}
 
-        String reason17 = "Testing isPaused()";
+        String reason16 = "Testing isPaused()";
         task1.pauseTask(true);
         result4 = task1.isPaused();
         expected4 = true;
-        if (!result4.equals(expected4)) { failed ++ ;System.out.println(error_message(reason17, String.valueOf(expected4), String.valueOf(result4)));}
+        if (!result4.equals(expected4)) { failed ++ ;System.out.println(error_message(reason16, String.valueOf(expected4), String.valueOf(result4)));}
 
-        String reason18 = "Testing isOverDue()";
+        String reason17 = "Testing isOverDue()";
         result4 = task1.isOverDue();
         expected4 = true;
-        if (!result4.equals(expected4)) { failed ++ ;System.out.println(error_message(reason18, String.valueOf(expected4), String.valueOf(result4)));}
+        if (!result4.equals(expected4)) { failed ++ ;System.out.println(error_message(reason17, String.valueOf(expected4), String.valueOf(result4)));}
 
-        String reason19 = "Testing setTaskName() + getTaskName()";
+        String reason18 = "Testing setTaskName() + getTaskName()";
         task1.setTaskName("Water Crops");
         result = task1.getTaskName();
         expected = "Water Crops";
-        if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason19, expected, result));}
+        if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason18, expected, result));}
 
-        String reason20 = "Testing setID ()+ getID()";
+        String reason19 = "Testing setID ()+ getID()";
         task1.setID("1234");
         result = task1.getID();
         expected = "1234";
-        if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason20, expected, result));}
+        if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason19, expected, result));}
 
-        String reason21 = "Testing setDescription() + getDescription()";
+        String reason20 = "Testing setDescription() + getDescription()";
         task1.setDescription("Ensure you wet the crops");
         result = task1.getDescription();
         expected = "Ensure you wet the crops";
-        if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason21, expected, result));}
+        if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason20, expected, result));}
 
-        String reason22 = "Testing setDueDate + getDueDate()";
+        String reason21 = "Testing setDueDate + getDueDate()";
         task1.setDueDate(duDate2);
         result2 = task1.getDueDate();
-        if (!result2.equals(duDate2)) { failed ++ ;System.out.println(error_message(reason22, String.valueOf(duDate2), String.valueOf(result2)));}
+        if (!result2.equals(duDate2)) { failed ++ ;System.out.println(error_message(reason21, String.valueOf(duDate2), String.valueOf(result2)));}
 
-        String reason23 = "Testing isOverDue()";
+        String reason22 = "Testing isOverDue()";
         result4 = task1.isOverDue();
         expected4 = false;
-        if (!result4.equals(expected4)) { failed ++ ;System.out.println(error_message(reason23, String.valueOf(expected4), String.valueOf(result4)));}
+        if (!result4.equals(expected4)) { failed ++ ;System.out.println(error_message(reason22, String.valueOf(expected4), String.valueOf(result4)));}
 
-        String reason24 = "Testing toString()";
+        String reason23 = "Testing toString()";
         result = task1.toString();
         expected =
                 "Task ID: 1234" +
@@ -176,17 +171,19 @@ public class TestTask {
                 "\nPause Date: " + task1.getPauseDate() +
                 "\nStaffs: [ empty ]";
 
-        if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason24, expected, result));}
+        if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason23, expected, result));}
 
+        String[] reasons = {reason1, reason2, reason3, reason4, reason5, reason6, reason7,
+                reason8, reason9, reason10, reason11, reason12, reason13, reason14, reason15,
+                reason16, reason17, reason18, reason19, reason20, reason21, reason22, reason23};
 
-
-
-
-
-
-
-
-
+        System.out.println("*** Field Class Testing  ***\n");
+        for (String reason : reasons) {
+            count ++;
+            System.out.println("Passed " + (count - failed) + " out of total " + count + " tests");
+        }
+        System.out.println("Total Tests: " + count + " Tests. Test Passed: " + (count - failed) + " tests");
+        System.out.println("-----------------------------------\n");
 
 
 
