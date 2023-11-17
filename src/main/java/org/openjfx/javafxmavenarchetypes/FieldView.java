@@ -1,5 +1,5 @@
 package org.openjfx.javafxmavenarchetypes;
-import control.CropControl;
+import control.BinControl;
 import control.FieldControl;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -42,7 +42,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
     private ObservableList<Field> fieldData = fieldController.fieldList;
 
 
-    private CropControl cropController = new CropControl();
+    private BinControl binController = new BinControl();
 
 
 
@@ -86,6 +86,8 @@ public class FieldView extends StackPane implements ModelSubscriber {
         fieldTable.getColumns().addAll(fieldIDCol, fieldNameCol, fieldSizeCol, fieldLocationCol);
 
 
+
+
         VBox addFieldBox = new VBox(30);
         Scene addFieldScene = new Scene(addFieldBox,300,250);
 
@@ -94,9 +96,16 @@ public class FieldView extends StackPane implements ModelSubscriber {
         TextField fieldSizeInput = new TextField("Field Size");
         TextField fieldLocation = new TextField("Field Location");
         Button submitFieldInfo = new Button("Submit");
+        Button addFieldCancel = new Button("Cancel");
+        addFieldCancel.setOnMouseClicked(event -> {
+            stage.setScene(fieldScene);
+        });
+
+        Label space1 = new Label("\t\t");
+        HBox submitAndCancelBox1 = new HBox(submitFieldInfo, space1, addFieldCancel);
 
 
-        addFieldBox.getChildren().addAll(fieldIDInput, fieldNameInput, fieldSizeInput, fieldLocation, submitFieldInfo);
+        addFieldBox.getChildren().addAll(fieldIDInput, fieldNameInput, fieldSizeInput, fieldLocation, submitAndCancelBox1);
         Button addField = new Button("Add Field");
         addField.setOnMouseClicked(e ->{
             stage.setScene(addFieldScene);
@@ -120,10 +129,18 @@ public class FieldView extends StackPane implements ModelSubscriber {
         TextField fieldNameFEdit = new TextField();
         TextField fieldSizeEdit = new TextField();
         TextField locationEdit = new TextField();
-        Button submitTaskEdit = new Button("Submit");
+        Button submitFieldEdit = new Button("Submit");
+        Button editFieldCancel = new Button("Cancel");
+        editFieldCancel.setOnMouseClicked(event -> {
+            stage.setScene(fieldScene);
+        });
 
-        fieldEditBox.getChildren().addAll(idInputEdit, fieldNameFEdit, fieldSizeEdit, locationEdit,submitTaskEdit);
-        submitTaskEdit.setOnMouseClicked(e ->{
+        Label space2 = new Label("\t\t");
+        HBox submitAndCancelBox2 = new HBox(submitFieldEdit, space2, editFieldCancel);
+
+
+        fieldEditBox.getChildren().addAll(idInputEdit, fieldNameFEdit, fieldSizeEdit, locationEdit,submitAndCancelBox2);
+        submitFieldEdit.setOnMouseClicked(e ->{
             fieldController.editField(fieldTable.getSelectionModel().getSelectedItem().getID(),
                     idInputEdit.getText(), fieldNameFEdit.getText(), Double.parseDouble(fieldSizeEdit.getText()),
                     locationEdit.getText());
@@ -133,11 +150,16 @@ public class FieldView extends StackPane implements ModelSubscriber {
         });
 
         editField.setOnMouseClicked(e ->{
-            idInputEdit.setText(fieldTable.getSelectionModel().getSelectedItem().getID());
-            fieldNameFEdit.setText(fieldTable.getSelectionModel().getSelectedItem().getName());
-            fieldSizeEdit.setText(Double.toString(fieldTable.getSelectionModel().getSelectedItem().getSize()));
-            locationEdit.setText(fieldTable.getSelectionModel().getSelectedItem().getLocation());
-            stage.setScene(editFieldScene);
+            if (fieldTable.getSelectionModel().getSelectedItem() != null){
+                idInputEdit.setText(fieldTable.getSelectionModel().getSelectedItem().getID());
+                fieldNameFEdit.setText(fieldTable.getSelectionModel().getSelectedItem().getName());
+                fieldSizeEdit.setText(Double.toString(fieldTable.getSelectionModel().getSelectedItem().getSize()));
+                locationEdit.setText(fieldTable.getSelectionModel().getSelectedItem().getLocation());
+                stage.setScene(editFieldScene);
+            }
+            else {
+                System.out.println("Select a Field");
+            }
         });
 
         Button fieldsBackToMain = new Button("Back To Main");
@@ -147,29 +169,42 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
         Button deleteField = new Button("Delete Field");
         deleteField.setOnAction(event -> {
-            fieldController.deleteField(fieldTable.getSelectionModel().getSelectedItem().getID());
-            fieldTable.refresh();
+            if (fieldTable.getSelectionModel().getSelectedItem() != null){
+                fieldController.deleteField(fieldTable.getSelectionModel().getSelectedItem().getID());
+                fieldTable.refresh();
+            }
+            else {
+                System.out.println("Select a Field");
+            }
         });
 
 
         VBox addCropBox = new VBox(30);
         Scene addCropScene = new Scene(addCropBox,300,250);
 
-        TextField fieldId = new TextField("Field ID");
-        Label newCropTypeLabel = new Label("Add New Crop Type");
+        Label addCropPageTitle = new Label();
+        TextField addCropfieldId = new TextField();
+        Label newCropTypeLabel = new Label("Or Add New Crop Type");
         TextField newCropTypeInput = new TextField();
 
         Label cropTypeLabel = new Label("Select Crop Type");
         ComboBox<String> cropTypeInput = new ComboBox<>();
-        cropTypeInput.getItems().addAll(cropController.cropType);
+        cropTypeInput.getItems().addAll(binController.cropType);
+
+        Label space5 = new Label("\t\t");
+        Label space6 = new Label("\t\t");
+        HBox groupBox1 = new HBox(cropTypeLabel, space5, cropTypeInput);
+        HBox groupBox2 = new HBox(newCropTypeLabel, space6, newCropTypeInput);
+
+        Label cropVarietyLabel = new Label("Select Crop Variety");
 
         ComboBox<String> cropVarietyInput = new ComboBox<>();
         cropVarietyInput.getItems().addAll("LibertyLink", "RoundupReady", "Navigator", "ClearField", "All Other Grains");
 
 
 
-        cropController.cropType.addListener((ListChangeListener<String>) change -> {
-            cropTypeInput.setItems(cropController.cropType);
+        binController.cropType.addListener((ListChangeListener<String>) change -> {
+            cropTypeInput.setItems(binController.cropType);
         });
 
         TextField bushelWeight = new TextField("Bushel Weight");
@@ -177,18 +212,36 @@ public class FieldView extends StackPane implements ModelSubscriber {
         Label seedingDateLabel = new Label("Seeding Date");
         DatePicker seedingDateInput = new DatePicker();
         Button submitCropInfo = new Button("Submit");
+        Button addCropCancel = new Button("Cancel");
+        addCropCancel.setOnMouseClicked(event -> {
+            stage.setScene(fieldScene);
+        });
 
-        addCropBox.getChildren().addAll(fieldId, cropTypeLabel, cropTypeInput, newCropTypeLabel, newCropTypeInput,
-                cropVarietyInput, bushelWeight, seedingRateInput, seedingDateLabel, seedingDateInput, submitCropInfo);
+        Label space3 = new Label("\t\t");
+        HBox submitAndCancelBox3 = new HBox(submitCropInfo, space3, addCropCancel);
+
+        addCropBox.getChildren().addAll(addCropPageTitle, groupBox1, groupBox2, cropVarietyLabel,
+                cropVarietyInput, bushelWeight, seedingRateInput, seedingDateLabel, seedingDateInput, submitAndCancelBox3);
         Button addCrop = new Button("Add Crop");
         addCrop.setOnMouseClicked(e ->{
-            stage.setScene(addCropScene);
+            Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
+            if (selectedData != null){
+                addCropfieldId.setText(selectedData.getID());
+                addCropPageTitle.setText("Add Crop to Field with ID (" + selectedData.getID() + ")");
+                addCropPageTitle.setFont(new Font("Arial", 20));
+                addCropPageTitle.setStyle("-fx-font-weight: bold;");
+                stage.setScene(addCropScene);
+            }
+            else {
+                System.out.println("Select a Field");
+            }
+
         });
 
         submitCropInfo.setOnMouseClicked(e ->{
             Crop crop;
             if (!newCropTypeInput.getText().isEmpty()){
-                cropController.addCropType(newCropTypeInput.getText());
+                binController.addCropType(newCropTypeInput.getText());
             }
             if (cropTypeInput.getValue() == null){
                 crop = new Crop(null, newCropTypeInput.getText(), cropVarietyInput.getValue(), Float.parseFloat(bushelWeight.getText()));
@@ -196,8 +249,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
             else {
                 crop = new Crop(null, cropTypeInput.getValue(), cropVarietyInput.getValue(), Float.parseFloat(bushelWeight.getText()));
             }
-            fieldController.addCrop(fieldId.getText(), crop, Double.parseDouble(seedingRateInput.getText()), seedingDateInput.getValue());
-            cropController.addCrop(crop);
+            fieldController.addCrop(addCropfieldId.getText(), crop, Double.parseDouble(seedingRateInput.getText()), seedingDateInput.getValue());
 
             // clear the form
             cropTypeInput.setValue(null);
@@ -210,7 +262,12 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
         Button harvest = new Button("Harvest");
         harvest.setOnMouseClicked(event ->{
-            fieldController.harvest(fieldTable.getSelectionModel().getSelectedItem().getID());
+            if (fieldTable.getSelectionModel().getSelectedItem() != null){
+                fieldController.harvest(fieldTable.getSelectionModel().getSelectedItem().getID());
+            }
+            else {
+                System.out.println("Select a Field");
+            }
         });
 
 
@@ -218,17 +275,37 @@ public class FieldView extends StackPane implements ModelSubscriber {
         VBox addChemPage = new VBox(30);
         Scene addChemScene = new Scene(addChemPage,300,250);
 
-        Button sprayChemical = new Button("Add Chemical Sprayed");
-        sprayChemical.setOnMouseClicked(event -> {
-            stage.setScene(addChemScene);
-        });
 
-        TextField chemFieldID = new TextField("Field ID");
+
+        Label addChemPageTitle = new Label();
+        TextField chemFieldID = new TextField();
         TextField fertilizerInput = new TextField("Fertilizer Rate (lbs/acre)");
         TextField chemSprayedInput = new TextField("Chemical Sprayed");
         TextField chemGroupInput = new TextField("Chemical Group");
         DatePicker sprayDate = new DatePicker();
         Button submitChemInfo = new Button("Submit");
+        Button addChemCancel = new Button("Cancel");
+        addChemCancel.setOnMouseClicked(event -> {
+            stage.setScene(fieldScene);
+        });
+
+        Label space4 = new Label("\t\t");
+        HBox submitAndCancelBox4 = new HBox(submitChemInfo, space4, addChemCancel);
+
+        Button sprayChemical = new Button("Add Chemical Sprayed");
+        sprayChemical.setOnMouseClicked(event -> {
+            Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
+            if (selectedData != null){
+                chemFieldID.setText(selectedData.getID());
+                addChemPageTitle.setText("Add Chemical to Field with Field ID (" + selectedData.getID() + ")");
+                addChemPageTitle.setFont(new Font("Arial", 20));
+                addChemPageTitle.setStyle("-fx-font-weight: bold;");
+                stage.setScene(addChemScene);
+            }
+            else {
+                System.out.println("Select a Field");
+            }
+        });
 
         submitChemInfo.setOnMouseClicked(event -> {
             fieldController.addChemical(chemFieldID.getText(), Double.parseDouble(fertilizerInput.getText()),
@@ -236,7 +313,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
             stage.setScene(fieldScene);
         });
 
-        addChemPage.getChildren().addAll(chemFieldID, fertilizerInput, chemSprayedInput, chemGroupInput, sprayDate, submitChemInfo);
+        addChemPage.getChildren().addAll(addChemPageTitle, fertilizerInput, chemSprayedInput, chemGroupInput, sprayDate, submitAndCancelBox4);
 
 
         fieldTable.setOnMouseClicked(event -> {

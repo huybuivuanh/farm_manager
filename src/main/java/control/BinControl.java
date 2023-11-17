@@ -12,6 +12,8 @@ public class BinControl {
      */
     public ObservableList<GrainBin> binList;
 
+    public ObservableList<String> cropType;
+
 
 
     /**
@@ -19,6 +21,7 @@ public class BinControl {
      */
     public BinControl(){
         binList = FXCollections.observableArrayList();
+        cropType = FXCollections.observableArrayList();
     }
 
     public void addBin(String bin_id, String bin_name, int bin_size, String bin_location, boolean hopper, boolean fan)
@@ -88,6 +91,21 @@ public class BinControl {
         }
         else{
             System.out.println("Cant find bin with ID (" + bin_id + ")");
+        }
+    }
+
+    public void addCropType(String crop_type){
+        boolean existed = false;
+        for (String type : cropType){
+            if (type.equals(crop_type)){
+                existed = true;
+                break;
+            }
+        }
+        if (!existed){
+            cropType.add(crop_type);
+        } else {
+            System.out.println("Crop type already existed");
         }
     }
 }
