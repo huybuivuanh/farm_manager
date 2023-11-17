@@ -30,7 +30,7 @@ import java.util.Calendar;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.lang.Boolean.parseBoolean;
-import static org.entities.Owner.owner;
+//import static org.entities.Owner.owner;
 import java.util.Iterator;
 //HBox root = new HBox();
 //root.setStyle("-fx-background-color: Green");

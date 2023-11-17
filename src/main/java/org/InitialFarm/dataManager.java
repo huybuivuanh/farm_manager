@@ -132,7 +132,7 @@ public class dataManager {
         {
             newObj =  new Owner(objectDoc.getString("_id"), objectDoc.getString("user_email"),
                     objectDoc.getString("user_password"), objectDoc.getString("first_name"),
-                    objectDoc.getString("last_name"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate() );
+                    objectDoc.getString("last_name"), objectDoc.getDate("dob").toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), objectDoc.getBoolean("isOwner") );
         }
 
 //        else if (classType.equals("Field"))
