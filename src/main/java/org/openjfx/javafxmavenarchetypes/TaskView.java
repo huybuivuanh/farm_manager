@@ -69,7 +69,11 @@ public class TaskView extends StackPane implements ModelSubscriber {
         submitTask.setOnMouseClicked(e ->{
             //Task newTask = new Task(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
             //taskData.add(newTask);
-            taskController.addTask(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
+            try {
+                taskController.addTask(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
+            } catch (NoSuchFieldException ex) {
+                throw new RuntimeException(ex);
+            }
             stage.setScene(taskScene);
         });
 

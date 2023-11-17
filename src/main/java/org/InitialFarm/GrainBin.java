@@ -121,6 +121,13 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
         return (bushels*currentCrop.getBushelWeight());
     }
 
+    public void clearBin(){
+        lastCrop = currentCrop;
+        currentCrop = null;
+        cropBushels = (double) 0;
+        cropLbs = (double) 0;
+    }
+
     @Override
     public Document classToDoc() {
         Document newDoc = new Document();

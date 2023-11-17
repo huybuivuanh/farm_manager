@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.InitialFarm.Crop;
 import org.InitialFarm.GrainBin;
+import org.bson.types.ObjectId;
 
 
 public class BinView extends StackPane implements ModelSubscriber {
@@ -147,7 +148,7 @@ public class BinView extends StackPane implements ModelSubscriber {
         Button deleteBin = new Button("Delete Bin");
         deleteBin.setOnAction(event -> {
             if (binTable.getSelectionModel().getSelectedItem() != null){
-                binController.deleteBin(binTable.getSelectionModel().getSelectedItem().getID());
+                binController.deleteBin(binTable.getSelectionModel().getSelectedItem().getDbId());
                 binTable.refresh();
             }
             else {
@@ -204,8 +205,8 @@ public class BinView extends StackPane implements ModelSubscriber {
         addCrop.setOnMouseClicked(e ->{
             GrainBin selectedData = binTable.getSelectionModel().getSelectedItem();
             if (selectedData != null){
-                addCropBinID.setText(selectedData.getID());
-                addCropPageTitle.setText("Add Crop to bin with ID (" + selectedData.getID() + ")");
+                addCropBinID.setText(selectedData.getDbId().toString());
+                addCropPageTitle.setText("Add Crop to bin with ID (" + selectedData.getDbId() + ")");
                 addCropPageTitle.setFont(new Font("Arial", 20));
                 addCropPageTitle.setStyle("-fx-font-weight: bold;");
                 stage.setScene(addCropScene);
@@ -227,7 +228,7 @@ public class BinView extends StackPane implements ModelSubscriber {
             else {
                 crop = new Crop(null, cropTypeInput.getValue(), cropVarietyInput.getValue(), Double.parseDouble(bushelWeight.getText()));
             }
-            binController.addCrop(addCropBinID.getText(), crop, Integer.parseInt(grainInput.getText()), inputBushels.isSelected(), cleanCrop.isSelected(), toughCrop.isSelected());
+            binController.addCrop(new ObjectId(addCropBinID.getText()), crop, Integer.parseInt(grainInput.getText()), inputBushels.isSelected(), cleanCrop.isSelected(), toughCrop.isSelected());
 
             // clear the form
             cropTypeInput.setValue(null);
@@ -244,7 +245,7 @@ public class BinView extends StackPane implements ModelSubscriber {
         Button clearBin = new Button("Clear Bin");
         clearBin.setOnMouseClicked(event -> {
             if (binTable.getSelectionModel().getSelectedItem() != null){
-                binController.clearBin(binTable.getSelectionModel().getSelectedItem().getID());
+                binController.clearBin(binTable.getSelectionModel().getSelectedItem().getDbId());
                 currentCropData.setText("Crop ID: " + "\nCrop Type: "  +
                         "\nCrop Variety: " + "\nBushel Weight: ");
                 binTable.refresh();

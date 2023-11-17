@@ -79,7 +79,11 @@ public class UserView extends StackPane implements ModelSubscriber {
         submitAddUserInfo.setOnMouseClicked(e ->{
             //User newUser = new Employee(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), parseBoolean(ownerInput.getText()));
             //userData.add(newUser);
-            userController.addUser(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), parseBoolean(ownerInput.getText()));
+            try {
+                userController.addUser(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), parseBoolean(ownerInput.getText()));
+            } catch (NoSuchFieldException ex) {
+                throw new RuntimeException(ex);
+            }
             stage.setScene(userScene);
             // not sure if below line is necessary
             userTable.refresh();

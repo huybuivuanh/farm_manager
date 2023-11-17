@@ -4,7 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.InitialFarm.Crop;
 import org.InitialFarm.GrainBin;
-
+import org.InitialFarm.dataManager;
+import org.bson.types.ObjectId;
 
 public class BinControl {
     /**
@@ -13,6 +14,8 @@ public class BinControl {
     public ObservableList<GrainBin> binList;
 
     public ObservableList<String> cropType;
+
+    private dataManager dataManager = new dataManager();
 
 
 
@@ -31,14 +34,16 @@ public class BinControl {
 
 
         for (GrainBin bin : binList) {
-            if (bin.getID().equals(bin_id)) {
+            if (bin.getDbId().equals(bin_id)) {
                 binExists = true;
                 break;
             }
         }
         // if it doesn't, add it. If it does, report it.
         if (!binExists){
-            GrainBin Bin = new GrainBin(bin_id, bin_name, bin_location, bin_size, hopper, fan);
+            GrainBin Bin = new GrainBin(null, bin_name, bin_location, bin_size, hopper, fan);
+           // Bin = (GrainBin) dataManager.saveClass(Bin);
+
             binList.add(Bin);
         }
         else {
@@ -46,10 +51,10 @@ public class BinControl {
         }
     }
 
-    public void deleteBin(String bin_id){
+    public void deleteBin(ObjectId bin_id){
         GrainBin deleted = null;
         for (GrainBin bin : binList){
-            if (bin.getID().equals(bin_id)){
+            if (bin.getDbId().equals(bin_id)){
                 deleted = bin;
                 break;
             }
@@ -62,10 +67,10 @@ public class BinControl {
         }
     }
 
-    public void addCrop(String bin_id, Crop cropType, int grain, boolean inputBushels, boolean clean, boolean tough){
+    public void addCrop(ObjectId bin_id, Crop cropType, int grain, boolean inputBushels, boolean clean, boolean tough){
         GrainBin binSearched = null;
         for (GrainBin bin : binList){
-            if (bin.getID().equals(bin_id)){
+            if (bin.getDbId().equals(bin_id)){
                 binSearched = bin;
                 break;
             }
@@ -78,10 +83,10 @@ public class BinControl {
         }
     }
 
-    public void clearBin(String bin_id) {
+    public void clearBin(ObjectId bin_id) {
         GrainBin binSearched = null;
         for (GrainBin bin : binList) {
-            if (bin.getID().equals(bin_id)) {
+            if (bin.getDbId().equals(bin_id)) {
                 binSearched = bin;
                 break;
             }
