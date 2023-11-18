@@ -120,9 +120,9 @@ public class FieldControl {
             if (fieldSearched.getCurrent_Year() == null){
                 Year cropYear = new Year(null, LocalDate.now().getYear(), LocalDate.now());
                 Year dbYear = new dataManager().saveClass(cropYear);
-                cropYear.setCrop(crop);
-                cropYear.setSeeding_rate(seedingRate);
-                cropYear.setSeeding_date(seedingDate);
+                dbYear.setCrop(crop);
+                dbYear.setFertilizer_rate(seedingRate);
+                dbYear.setSeeding_date(seedingDate);
                 fieldSearched.setCurrentYear(dbYear);
                 fieldSearched.addYear(dbYear);
             }
