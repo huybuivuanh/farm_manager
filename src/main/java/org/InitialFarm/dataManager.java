@@ -438,9 +438,14 @@ public class dataManager {
          */
         else if (classType.equals("Field"))
         {
-            Field newField = new Field(objectDoc.getObjectId("_id"),objectDoc.getString("fieldId"),objectDoc.getString("fieldName"),objectDoc.getDouble("fieldSize"),objectDoc.getString("location"));
+            Field newField = new Field(objectDoc.getObjectId("_id"),objectDoc.getString("fieldId"),objectDoc.getString("fieldName"),objectDoc.getDouble("fieldSize"),objectDoc.getString("fieldLocation"));
             BsonArray test = objectDoc.toBsonDocument().getArray("field_years");
-            newField.setCurrentYear(fetchObjectById("Year",objectDoc.getObjectId("currentYear")));
+            if (objectDoc.getObjectId("currentYear") != null) {
+                newField.setCurrentYear(fetchObjectById("Year", objectDoc.getObjectId("currentYear")));
+            }
+            else{
+                newField.setCurrentYear(null);
+            }
             for (int i = 0; i < test.size();i++){
                 ObjectId output = test.get(0).asObjectId().getValue();
                 Year newYear = fetchObjectById("Year",output);

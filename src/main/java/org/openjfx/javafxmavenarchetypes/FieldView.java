@@ -241,10 +241,10 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 binController.addCropType(newCropTypeInput.getText());
             }
             if (cropTypeInput.getValue() == null){
-                crop = new Crop(null, newCropTypeInput.getText(), cropVarietyInput.getValue(), Float.parseFloat(bushelWeight.getText()));
+                crop = fieldController.makeCrop(null, newCropTypeInput.getText(), cropVarietyInput.getValue(), Float.parseFloat(bushelWeight.getText()));
             }
             else {
-                crop = new Crop(null, cropTypeInput.getValue(), cropVarietyInput.getValue(), Float.parseFloat(bushelWeight.getText()));
+                crop = fieldController.makeCrop(null, cropTypeInput.getValue(), cropVarietyInput.getValue(), Float.parseFloat(bushelWeight.getText()));
             }
             fieldController.addCrop(addCropfieldId.getText(), crop, Double.parseDouble(seedingRateInput.getText()), seedingDateInput.getValue());
 

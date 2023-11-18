@@ -42,9 +42,9 @@ public class BinControl {
         // if it doesn't, add it. If it does, report it.
         if (!binExists){
             GrainBin Bin = new GrainBin(null, bin_name, bin_location, bin_size, hopper, fan);
-           // Bin = (GrainBin) dataManager.saveClass(Bin);
+           GrainBin dbBin = dataManager.saveClass(Bin);
 
-            binList.add(Bin);
+            binList.add(dbBin);
         }
         else {
             System.out.println("There already is a Bin with the desired ID");
@@ -60,7 +60,9 @@ public class BinControl {
             }
         }
         if (deleted != null){
+            dataManager.removeClass(deleted);
             binList.remove(deleted);
+
         }
         else {
             System.out.println("Bin with ID (" + bin_id + ") does not exist");
@@ -93,12 +95,28 @@ public class BinControl {
         }
         if (binSearched != null){
             binSearched.clearBin();
+            binSearched = dataManager.updateClass(binSearched);
+
         }
         else{
             System.out.println("Cant find bin with ID (" + bin_id + ")");
         }
     }
 
+    /**
+     * Makes a new Crop initalized in database.
+     * @param dbid
+     * @param cropType
+     * @param cropVariety
+     * @param bushelWeight
+     * @return
+     */
+    public Crop makeCrop(ObjectId dbid,String cropType, String cropVariety, double bushelWeight){
+        Crop baseCrop = new Crop(dbid, cropType, cropVariety, bushelWeight);
+        Crop dbCrop = dataManager.saveClass(baseCrop);
+        return dbCrop;
+
+    }
     public void addCropType(String crop_type){
         boolean existed = false;
         for (String type : cropType){
