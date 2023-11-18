@@ -128,6 +128,7 @@ public class UITest extends Application {
                     new Record("chem3", LocalDate.now(), "seed3", 33.0, LocalDate.now(), "fertilizer 3", LocalDate.now()));
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
     public static void main(String[] args) {
         launch(args);
     }
