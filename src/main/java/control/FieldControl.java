@@ -102,6 +102,7 @@ public class FieldControl {
             }
         }
         if (deleted != null){
+            dataManager.removeClass(deleted);
             fieldList.remove(deleted);
         }
         else {
