@@ -75,19 +75,23 @@ public class TaskView extends StackPane implements ModelSubscriber {
         VBox userBox = new VBox(30);
         Scene addUserScene = new Scene(userBox,300,250);
 
-        Label albel = new Label("Popup");
+
         TextField idInput = new TextField("Input ID (optional)");
         TextField taskNameF = new TextField("Input taskName");
         TextField descriptionF = new TextField("Input task description");
         DatePicker dueDate = new DatePicker();
-        Button submitTask = new Button("submit");
+        Button submitTask = new Button("Submit");
+        Button cancelAddTask = new Button("Cancel");
+        cancelAddTask.setOnMouseClicked(event -> {
+            stage.setScene(taskScene);
+        });
 
-        userBox.getChildren().addAll(idInput,taskNameF,descriptionF,dueDate,submitTask);
+        userBox.getChildren().addAll(idInput,taskNameF,descriptionF,dueDate,submitTask, cancelAddTask);
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Todo 2: Task Addition (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Button addTask = new Button("add Task");
+        Button addTask = new Button("Add Task");
         addTask.setOnMouseClicked(e ->{
             idInput.setText("Input ID (optional)");
             taskNameF.setText("Input taskName");
@@ -100,25 +104,32 @@ public class TaskView extends StackPane implements ModelSubscriber {
             //Task newTask = new Task(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
             //taskData.add(newTask);
             try {
-                taskController.addTask(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
+                if (dueDate.getValue() != null){
+                    taskController.addTask(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
+                } else {
+                    System.out.println("Please Select Due Date");
+                }
+
             } catch (NoSuchFieldException ex) {
                 throw new RuntimeException(ex);
             }
-            stage.setScene(taskScene);
-            taskTable.refresh();
-            allTasksInUserViewTable.refresh();
-            userTasksTable.refresh();
-            CompletedTaskTable.refresh();
-            taskUsersTable.refresh();
-            allUsersInTaskViewTable.refresh();
-            userTable.refresh();
+            if (dueDate.getValue() != null){
+                stage.setScene(taskScene);
+                taskTable.refresh();
+                allTasksInUserViewTable.refresh();
+                userTasksTable.refresh();
+                CompletedTaskTable.refresh();
+                taskUsersTable.refresh();
+                allUsersInTaskViewTable.refresh();
+                userTable.refresh();
+            }
         });
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Todo 3: Task Editing
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        Button editTask = new Button("edit task");
+        Button editTask = new Button("Edit Task");
         VBox userEditBox = new VBox(30);
         Scene editUserScene = new Scene(userEditBox,300,250);
 
@@ -126,9 +137,13 @@ public class TaskView extends StackPane implements ModelSubscriber {
         TextField taskNameFEdit = new TextField();
         TextField descriptionFEdit = new TextField();
         DatePicker dueDateEdit = new DatePicker();
-        Button submitTaskEdit = new Button("submit");
+        Button submitTaskEdit = new Button("Submit");
+        Button cancelEditTask = new Button("Cancel");
+        cancelEditTask.setOnMouseClicked(event -> {
+            stage.setScene(taskScene);
+        });
 
-        userEditBox.getChildren().addAll(idInputEdit,taskNameFEdit,descriptionFEdit,dueDateEdit,submitTaskEdit);
+        userEditBox.getChildren().addAll(idInputEdit,taskNameFEdit,descriptionFEdit,dueDateEdit,submitTaskEdit, cancelEditTask);
         submitTaskEdit.setOnMouseClicked(e ->{
             taskController.editTask(taskTable.getSelectionModel().getSelectedItem().getID(),
                     idInputEdit.getText(), taskNameFEdit.getText(), descriptionFEdit.getText(),
@@ -145,12 +160,17 @@ public class TaskView extends StackPane implements ModelSubscriber {
         });
 
         editTask.setOnMouseClicked(e ->{
-            idInputEdit.setText(taskTable.getSelectionModel().getSelectedItem().getID());
-            taskNameFEdit.setText(taskTable.getSelectionModel().getSelectedItem().getTaskName());
-            descriptionFEdit.setText(taskTable.getSelectionModel().getSelectedItem().getDescription());
-            dueDateEdit.setValue(taskTable.getSelectionModel().getSelectedItem().getDueDate().toLocalDate());
+            if (taskTable.getSelectionModel().getSelectedItem() != null){
+                idInputEdit.setText(taskTable.getSelectionModel().getSelectedItem().getID());
+                taskNameFEdit.setText(taskTable.getSelectionModel().getSelectedItem().getTaskName());
+                descriptionFEdit.setText(taskTable.getSelectionModel().getSelectedItem().getDescription());
+                dueDateEdit.setValue(taskTable.getSelectionModel().getSelectedItem().getDueDate().toLocalDate());
 
-            stage.setScene(editUserScene);
+                stage.setScene(editUserScene);
+            } else {
+                System.out.println("Need to select a task");
+            }
+
         });
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -159,17 +179,22 @@ public class TaskView extends StackPane implements ModelSubscriber {
         Button markComplete = new Button("Mark Complete");
 
         markComplete.setOnMouseClicked(e ->{
-            taskController.completeTask(taskTable.getSelectionModel().getSelectedItem().getID());
-            taskTable.refresh();
-            allTasksInUserViewTable.refresh();
-            userTasksTable.refresh();
-            CompletedTaskTable.refresh();
-            taskUsersTable.refresh();
-            allUsersInTaskViewTable.refresh();
-            userTable.refresh();
+            if (taskTable.getSelectionModel().getSelectedItem() != null){
+                taskController.completeTask(taskTable.getSelectionModel().getSelectedItem().getID());
+                taskTable.refresh();
+                allTasksInUserViewTable.refresh();
+                userTasksTable.refresh();
+                CompletedTaskTable.refresh();
+                taskUsersTable.refresh();
+                allUsersInTaskViewTable.refresh();
+                userTable.refresh();
+            } else {
+                System.out.println("Need to select a task");
+            }
+
         });
 
-        Button taskBackToMain = new Button("back");
+        Button taskBackToMain = new Button("Back To Main");
         taskBackToMain.setOnMouseClicked(e ->{
             stage.setScene(MenuScene);
         });
@@ -185,12 +210,13 @@ public class TaskView extends StackPane implements ModelSubscriber {
             stage.setScene(completedTaskScene);
         });
 
-        Button completedTaskBackToMain = new Button("back");
+        Button completedTaskBackToMain = new Button("Back");
         completedTaskBackToMain.setOnMouseClicked(e ->{
             stage.setScene(taskScene);
         });
 
         Label completedTaskLabel = new Label("Completed Task Popup");
+        completedTaskLabel.getStyleClass().add("page-label");
 
         TableColumn<Task, String> completedTaskIDCol = new TableColumn<Task, String>("Task ID");
         completedTaskIDCol.editableProperty().setValue(true);
@@ -233,16 +259,24 @@ public class TaskView extends StackPane implements ModelSubscriber {
         VBox taskEmployeesBox = new VBox(30);
         Scene taskEmployeesScene = new Scene(taskEmployeesBox,300,250);
         Label taskEmployeesLabel = new Label("Task Employees Popup view");
+        taskEmployeesLabel.getStyleClass().add("page-label");
         Label taskNameLabel = new Label();
+        taskNameLabel.getStyleClass().add("page-label");
         Label employeeLabelWithinTaskEmployees = new Label("All employees:");
+        employeeLabelWithinTaskEmployees.getStyleClass().add("page-label");
 
         Button taskEmployees = new Button("View Employees");
         taskEmployees.setOnMouseClicked(e->{
-            taskUserData= taskTable.getSelectionModel().getSelectedItem().getStaffList();
-            taskUsersTable.setItems(taskUserData);
-            String taskName = taskTable.getSelectionModel().getSelectedItem().getTaskName();
-            taskNameLabel.setText("Task Name: " + taskName);
-            stage.setScene(taskEmployeesScene);
+            if (taskTable.getSelectionModel().getSelectedItem() != null){
+                taskUserData= taskTable.getSelectionModel().getSelectedItem().getStaffList();
+                taskUsersTable.setItems(taskUserData);
+                String taskName = taskTable.getSelectionModel().getSelectedItem().getTaskName();
+                taskNameLabel.setText("Task Name: " + taskName);
+                stage.setScene(taskEmployeesScene);
+            } else {
+                System.out.println("Need to select a task");
+            }
+
         });
 
         Button taskAddEmployees = new Button("Assign Employee");
@@ -260,7 +294,7 @@ public class TaskView extends StackPane implements ModelSubscriber {
         });
 
 
-        Button taskEmployeesBackToTask = new Button("back");
+        Button taskEmployeesBackToTask = new Button("Back");
         taskEmployeesBackToTask.setOnMouseClicked(e ->{
             stage.setScene(taskScene);
         });
@@ -413,6 +447,11 @@ public class TaskView extends StackPane implements ModelSubscriber {
         taskTable.getColumns().addAll(taskIDCol,taskName,taskDescription,taskDueDate);
         taskPage.getChildren().addAll(topBar,taskTable);
 
+        //css
+        addUserScene.getStylesheets().add(getClass().getClassLoader().getResource("task.css").toExternalForm());
+        completedTaskScene.getStylesheets().add(getClass().getClassLoader().getResource("task.css").toExternalForm());
+        taskEmployeesScene.getStylesheets().add(getClass().getClassLoader().getResource("task.css").toExternalForm());
+        editUserScene.getStylesheets().add(getClass().getClassLoader().getResource("task.css").toExternalForm());
         this.getChildren().addAll(taskPage);
     }
 
@@ -420,6 +459,7 @@ public class TaskView extends StackPane implements ModelSubscriber {
         this.stage = stage;
         this.MenuScene = MenuScene;
         this.taskScene = taskScene;
+        taskScene.getStylesheets().add(getClass().getClassLoader().getResource("task.css").toExternalForm());
     }
 
     @Override

@@ -96,11 +96,15 @@ public class UserView extends StackPane implements ModelSubscriber {
         TextField lNameInput = new TextField("User Last Name");
         TextField ownerInput = new TextField("Ownership");
         DatePicker dob = new DatePicker();
-        Button submitAddUserInfo = new Button("submit");
+        Button submitAddUserInfo = new Button("Submit");
+        Button cancelAddUser = new Button("Cancel");
+        cancelAddUser.setOnMouseClicked(event -> {
+            stage.setScene(userScene);
+        });
 
-        userBox2.getChildren().addAll(fNameInput,lNameInput, ownerInput,userIdInput,emailInput,passwordInput,dob,submitAddUserInfo);
+        userBox2.getChildren().addAll(fNameInput,lNameInput, ownerInput,userIdInput,emailInput,passwordInput,dob,submitAddUserInfo, cancelAddUser);
 
-        Button addUser = new Button("add User");
+        Button addUser = new Button("Add User");
         addUser.setOnMouseClicked(e ->{
             userIdInput.setText("Input User ID");
             emailInput.setText("User Email");
@@ -115,22 +119,28 @@ public class UserView extends StackPane implements ModelSubscriber {
             //User newUser = new Employee(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), parseBoolean(ownerInput.getText()));
             //userData.add(newUser);
             try {
-                userController.addUser(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), parseBoolean(ownerInput.getText()));
+                if (dob.getValue() != null){
+                    userController.addUser(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), parseBoolean(ownerInput.getText()));
+
+                } else {
+                    System.out.println("Select Date Of Birth");
+                }
             } catch (NoSuchFieldException ex) {
                 throw new RuntimeException(ex);
             }
-            stage.setScene(userScene);
-            taskTable.refresh();
-            allTasksInUserViewTable.refresh();
-            userTasksTable.refresh();
-            CompletedTaskTable.refresh();
-            taskUsersTable.refresh();
-            allUsersInTaskViewTable.refresh();
-            userTable.refresh();
-
+            if (dob.getValue() != null){
+                stage.setScene(userScene);
+                taskTable.refresh();
+                allTasksInUserViewTable.refresh();
+                userTasksTable.refresh();
+                CompletedTaskTable.refresh();
+                taskUsersTable.refresh();
+                allUsersInTaskViewTable.refresh();
+                userTable.refresh();
+            }
         });
 
-        Button userBackToMain = new Button("back");
+        Button userBackToMain = new Button("Back To Main");
         userBackToMain.setOnMouseClicked(e ->{
             stage.setScene(MenuScene);
         });
@@ -139,23 +149,28 @@ public class UserView extends StackPane implements ModelSubscriber {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Button removeUser = new Button("Remove User");
         removeUser.setOnMouseClicked(e-> {
-            // not sure if any additional work is needed here within the class itself
-            //userTable.getSelectionModel().getSelectedItem().
-            //userTable.getItems().remove(userTable.getSelectionModel().getSelectedItem());
-            userController.removeUser(userTable.getSelectionModel().getSelectedItem().getID());
-            taskTable.refresh();
-            allTasksInUserViewTable.refresh();
-            userTasksTable.refresh();
-            CompletedTaskTable.refresh();
-            taskUsersTable.refresh();
-            allUsersInTaskViewTable.refresh();
-            userTable.refresh();
-            System.out.println(userController.allEmployees);
+            if (userTable.getSelectionModel().getSelectedItem() != null){
+                // not sure if any additional work is needed here within the class itself
+                //userTable.getSelectionModel().getSelectedItem().
+                //userTable.getItems().remove(userTable.getSelectionModel().getSelectedItem());
+                userController.removeUser(userTable.getSelectionModel().getSelectedItem().getID());
+                taskTable.refresh();
+                allTasksInUserViewTable.refresh();
+                userTasksTable.refresh();
+                CompletedTaskTable.refresh();
+                taskUsersTable.refresh();
+                allUsersInTaskViewTable.refresh();
+                userTable.refresh();
+                System.out.println(userController.allEmployees);
+            } else {
+                System.out.println("Need to select a user");
+            }
+
         });
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Todo 2: edit user (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Button editUser = new Button("edit user");
+        Button editUser = new Button("Edit User");
 
         //Making editPopup
         VBox actualUserEditBox = new VBox(30);
@@ -168,9 +183,13 @@ public class UserView extends StackPane implements ModelSubscriber {
         TextField lNameEdit = new TextField("");
         TextField ownerEdit = new TextField("");
         DatePicker dobEdit = new DatePicker();
-        Button submitUserInfoEdit = new Button("submit");
+        Button submitUserInfoEdit = new Button("Submit");
+        Button cancelEditUser = new Button("Cancel");
+        cancelEditUser.setOnMouseClicked(event -> {
+            stage.setScene(userScene);
+        });
 
-        actualUserEditBox.getChildren().addAll(fNameEdit,lNameEdit,ownerEdit,userIdEdit, emailEdit, passwordEdit, dobEdit,submitUserInfoEdit);
+        actualUserEditBox.getChildren().addAll(fNameEdit,lNameEdit,ownerEdit,userIdEdit, emailEdit, passwordEdit, dobEdit,submitUserInfoEdit, cancelEditUser);
         submitUserInfoEdit.setOnMouseClicked(e-> {
             userController.editUser(userTable.getSelectionModel().getSelectedItem().getID(),
                     userIdEdit.getText(), fNameEdit.getText(),lNameEdit.getText(),
@@ -189,35 +208,45 @@ public class UserView extends StackPane implements ModelSubscriber {
         });
 
         editUser.setOnMouseClicked(e-> {
-            fNameEdit.setText(userTable.getSelectionModel().getSelectedItem().getFirstName());
-            lNameEdit.setText(userTable.getSelectionModel().getSelectedItem().getLastName());
-            ownerEdit.setText(String.valueOf(userTable.getSelectionModel().getSelectedItem().getOwner()));
-            userIdEdit.setText(userTable.getSelectionModel().getSelectedItem().getID());
-            emailEdit.setText(userTable.getSelectionModel().getSelectedItem().getEmail());
-            passwordEdit.setText(userTable.getSelectionModel().getSelectedItem().getPassword());
-            dobEdit.setValue(userTable.getSelectionModel().getSelectedItem().getDOB());
+            if (userTable.getSelectionModel().getSelectedItem() != null){
+                fNameEdit.setText(userTable.getSelectionModel().getSelectedItem().getFirstName());
+                lNameEdit.setText(userTable.getSelectionModel().getSelectedItem().getLastName());
+                ownerEdit.setText(String.valueOf(userTable.getSelectionModel().getSelectedItem().getOwner()));
+                userIdEdit.setText(userTable.getSelectionModel().getSelectedItem().getID());
+                emailEdit.setText(userTable.getSelectionModel().getSelectedItem().getEmail());
+                passwordEdit.setText(userTable.getSelectionModel().getSelectedItem().getPassword());
+                dobEdit.setValue(userTable.getSelectionModel().getSelectedItem().getDOB());
 
-            stage.setScene(actualUserEditScene);
-            System.out.println(userController.allEmployees);
+                stage.setScene(actualUserEditScene);
+                System.out.println(userController.allEmployees);
+            } else {
+                System.out.println("Need to select a user");
+            }
+
         });
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Todo 3: promote user (done - revisit changes to employee hierarchy) (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Button promoteUser = new Button("Promote User");
         promoteUser.setOnMouseClicked(e-> {
-            // not sure if any additional work is needed here within the class itself
-            //userTable.getSelectionModel().getSelectedItem().
-            userController.promoteUser(userTable.getSelectionModel().getSelectedItem().getID());
-            //userTable.getSelectionModel().getSelectedItem().setOwner(true);
-            System.out.println(userController.allEmployees);
+            if (userTable.getSelectionModel().getSelectedItem() != null){
+                // not sure if any additional work is needed here within the class itself
+                //userTable.getSelectionModel().getSelectedItem().
+                userController.promoteUser(userTable.getSelectionModel().getSelectedItem().getID());
+                //userTable.getSelectionModel().getSelectedItem().setOwner(true);
+                System.out.println(userController.allEmployees);
 
-            taskTable.refresh();
-            allTasksInUserViewTable.refresh();
-            userTasksTable.refresh();
-            CompletedTaskTable.refresh();
-            taskUsersTable.refresh();
-            allUsersInTaskViewTable.refresh();
-            userTable.refresh();
+                taskTable.refresh();
+                allTasksInUserViewTable.refresh();
+                userTasksTable.refresh();
+                CompletedTaskTable.refresh();
+                taskUsersTable.refresh();
+                allUsersInTaskViewTable.refresh();
+                userTable.refresh();
+            } else {
+                System.out.println("Need to select a user");
+            }
+
         });
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -227,16 +256,23 @@ public class UserView extends StackPane implements ModelSubscriber {
         VBox employeeTasksBox = new VBox(30);
         Scene employeeTasksScene = new Scene(employeeTasksBox,300,250);
         Label employeeTasksLabel = new Label("Employee Tasks Popup view");
+        employeeTasksLabel.getStyleClass().add("page-label");
         Label employeeNameLabel = new Label();
+        employeeNameLabel.getStyleClass().add("page-label");
 
         Button employeeTasks = new Button("View Tasks");
         employeeTasks.setOnMouseClicked(e->{
-            userTaskData= userTable.getSelectionModel().getSelectedItem().getTaskList();
-            userTasksTable.setItems(userTaskData);
-            String firstName = userTable.getSelectionModel().getSelectedItem().getFirstName();
-            String lastName =  userTable.getSelectionModel().getSelectedItem().getLastName();
-            employeeNameLabel.setText("Employee: " + firstName +" " + lastName);
-            stage.setScene(employeeTasksScene);
+            if (userTable.getSelectionModel().getSelectedItem() != null){
+                userTaskData= userTable.getSelectionModel().getSelectedItem().getTaskList();
+                userTasksTable.setItems(userTaskData);
+                String firstName = userTable.getSelectionModel().getSelectedItem().getFirstName();
+                String lastName =  userTable.getSelectionModel().getSelectedItem().getLastName();
+                employeeNameLabel.setText("Employee: " + firstName +" " + lastName);
+                stage.setScene(employeeTasksScene);
+            } else {
+                System.out.println("Need to select a user");
+            }
+
         });
 
         Button employeeAddTasks = new Button("Add Task");
@@ -253,7 +289,7 @@ public class UserView extends StackPane implements ModelSubscriber {
             System.out.println( "the remove task button has been clicked");
         });
 
-        Button employeeTasksBackToMain = new Button("back");
+        Button employeeTasksBackToMain = new Button("Back");
         employeeTasksBackToMain.setOnMouseClicked(e ->{
             stage.setScene(userScene);
         });
@@ -323,6 +359,7 @@ public class UserView extends StackPane implements ModelSubscriber {
         allTasksInUserViewTable.getColumns().addAll(allTaskIDColInUser,allTaskNameColInUser, allTaskDescriptionColInUser, allTaskDueDateColInUser);
 
         Label taskLabelWithinEmployeeTasks = new Label("All tasks:");
+        taskLabelWithinEmployeeTasks.getStyleClass().add("page-label");
         HBox topUserAddTaskBar= new HBox();
         topUserAddTaskBar.getChildren().addAll( employeeAddTasks, employeeRemoveTasks ,employeeTasksBackToMain);
 
@@ -377,6 +414,12 @@ public class UserView extends StackPane implements ModelSubscriber {
         userTable.setEditable(true);
         userTable.getColumns().addAll(userFirstNameCol, userLastNameCol, userOwnership,userIDCol,userEmailCol,userPasswordCol, userDOBCol);
         userPage.getChildren().addAll(topUserBar,userTable);
+
+        // css
+        addUserScene2.getStylesheets().add(getClass().getClassLoader().getResource("user.css").toExternalForm());
+        actualUserEditScene.getStylesheets().add(getClass().getClassLoader().getResource("user.css").toExternalForm());
+        employeeTasksScene.getStylesheets().add(getClass().getClassLoader().getResource("user.css").toExternalForm());
+
         this.getChildren().add(userPage);
     }
 
@@ -385,6 +428,7 @@ public class UserView extends StackPane implements ModelSubscriber {
         this.stage = stage;
         this.MenuScene = MenuScene;
         this.userScene = userScene;
+        userScene.getStylesheets().add(getClass().getClassLoader().getResource("user.css").toExternalForm());
     }
 
     @Override

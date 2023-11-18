@@ -359,11 +359,13 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
 
         Label cropLabel = new Label("Crop Record (most recent at the top)");
+        cropLabel.getStyleClass().add("page-label");
         cropLabel.setFont(new Font("Arial", 20));
         cropLabel.setStyle("-fx-font-weight: bold;");
 
 
         Label chemLabel = new Label("Chemical Record (most recent at the top)");
+        chemLabel.getStyleClass().add("page-label");
         chemLabel.setFont(new Font("Arial", 20));
         chemLabel.setStyle("-fx-font-weight: bold;");
 
@@ -382,6 +384,13 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
         fieldFunctionsBar.getChildren().addAll(addField, editField, deleteField, addCrop, harvest, sprayChemical, fieldsBackToMain);
         fieldPage.getChildren().addAll(fieldFunctionsBar, fieldTable);
+
+        // css
+        addFieldScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
+        editFieldScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
+        addChemScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
+        addCropScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
+        cropScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
         this.getChildren().addAll(fieldPage);
     }
 
@@ -392,6 +401,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
         this.stage = stage;
         this.MenuScene = main;
         this.fieldScene = field;
+        fieldScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
     }
 
 
