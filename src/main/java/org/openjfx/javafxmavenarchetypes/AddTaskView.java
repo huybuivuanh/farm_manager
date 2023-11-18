@@ -39,11 +39,11 @@ public class AddTaskView {
         private TableView<Crop> grainTable = new TableView<Crop>();
         private final ObservableList<Crop>  cropData =
                 FXCollections.observableArrayList(
-                        new Crop("Canola","LibertyLink",55),
-                        new Crop("Canola","RoundupReady",54),
-                        new Crop("Durum","Navigator", 60),
-                        new Crop("Red Lentil", "Clearfield",58),
-                        new Crop("Wheat & Barley","All the other Grains",45)
+                        new Crop(null ,"Canola","LibertyLink",55),
+                        new Crop(null,"Canola","RoundupReady",54),
+                        new Crop(null,"Durum","Navigator", 60),
+                        new Crop(null,"Red Lentil", "Clearfield",58),
+                        new Crop(null,"Wheat & Barley","All the other Grains",45)
 
                 );
 

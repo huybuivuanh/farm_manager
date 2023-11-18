@@ -25,13 +25,13 @@ public class TestOwner {
         LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY, 2);
         LocalDate specificDate = LocalDate.of(2111, Month.JANUARY, 1);
 
-        Task task1 = new Task("1", "task 1", "task 1 description",  LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
-        Task task2 = new Task("2", "task 2", "task 2 description",  LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
-        Task task3 = new Task("3", "task 3", "task 3 description",  LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        Task task1 = new Task(null, "1", "task 1", "task 1 description",  LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        Task task2 = new Task(null, "2", "task 2", "task 2 description",  LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
+        Task task3 = new Task(null, "3", "task 3", "task 3 description",  LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43));
 
 
         String reason1 = "Constructor + getFirstName()";
-        Owner staff1 = new Owner("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob, true);
+        Owner staff1 = new Owner(null, "ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob);
         String result = staff1.getFirstName();
         String expected = "John1";
         if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason1, expected, result));}
@@ -128,7 +128,7 @@ public class TestOwner {
         String[] reasons = {reason1, reason2, reason3, reason4, reason5, reason6, reason7,
                 reason8, reason9, reason10, reason11, reason12, reason13, reason14, reason15,
                 reason16, reason17};
-        System.out.println("*** Chemical Class Testing  ***\n");
+        System.out.println("*** Owner Class Testing  ***\n");
         for (String reason : reasons) {
             count ++;
             System.out.println("Passed " + (count - failed) + " out of total " + count + " tests");

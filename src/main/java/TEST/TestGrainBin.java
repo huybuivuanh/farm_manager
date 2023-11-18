@@ -22,7 +22,7 @@ public class TestGrainBin {
         boolean fan = false;
 
         String reason1 = "Constructor + getBinName()";
-        GrainBin GrainBin1 = new GrainBin(binName, binLocation, binSize, hopper, fan);
+        GrainBin GrainBin1 = new GrainBin(null, binName, binLocation, binSize, hopper, fan);
         String result = GrainBin1.getBinName();
         String expected = "GrainBin1";
         if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason1, expected, result));}
@@ -38,7 +38,7 @@ public class TestGrainBin {
         if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason3, expected, result));}
 
         String reason4 = "Testing getSize()";
-        int result2 = GrainBin1.getBinSize();
+        double result2 = GrainBin1.getBinSize();
         if (result2 != (binSize)) { failed ++ ;System.out.println(error_message(reason4, String.valueOf(binSize), String.valueOf(result2)));}
 
         String reason5 = "Testing isHopper()";
@@ -54,11 +54,16 @@ public class TestGrainBin {
         cropResult = GrainBin1.getCurrentCrop();
         if (cropResult != null){ failed++; System.out.println(error_message(reason7, null, cropResult.getCropType())); }
 
-        String reason8 = " Testing unloadBin() with empty bin";
-        GrainBin1.unloadBin(12, true);
+        String reason8 = "";
+        try {
+            GrainBin1.unloadBin(12, true);
+        } catch(Exception e) {
+            reason8 = " Testing unloadBin() with empty bin";
+        }
 
 
-        Crop testCrop = new Crop("cropType", "cropVariety", 3);
+
+        Crop testCrop = new Crop(null,"cropType", "cropVariety", 3);
         String reason9 = "Testing currentCrop() with Crop";
         GrainBin1.addCrop(testCrop, 12, true, true, true );
         cropResult = GrainBin1.getCurrentCrop();

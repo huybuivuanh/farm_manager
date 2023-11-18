@@ -1,5 +1,7 @@
 package org.entities;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -9,6 +11,7 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class Task implements DatabaseInterface<Task>{
     /**
@@ -19,7 +22,7 @@ public class Task implements DatabaseInterface<Task>{
     /**
      * The unique ID of the Task for the DataBase
      */
-    private final ObjectId dbID = null;
+    private ObjectId dbID;
 
     /**
      * task name
@@ -45,7 +48,7 @@ public class Task implements DatabaseInterface<Task>{
     /**
      * list of staffs working on this task
      */
-    private final ArrayList<User> staffList;
+    private ObservableList<User> staffList;
 
     private boolean isCompleted = false;
     private LocalDateTime completionDate;
@@ -61,13 +64,14 @@ public class Task implements DatabaseInterface<Task>{
      * @param descr task description
      * @param due_date task due date
      */
-    public Task(String id, String task_name, String descr, LocalDateTime due_date){
+    public Task(ObjectId iddb,String id, String task_name, String descr, LocalDateTime due_date){
+        dbID = iddb;
         ID = id;
         taskName = task_name;
         description = descr;
         dueDate = due_date;
         date = LocalDateTime.now();
-        staffList = new ArrayList<>();
+        staffList = FXCollections.observableArrayList();
     }
 
     /**
@@ -114,7 +118,7 @@ public class Task implements DatabaseInterface<Task>{
      * get list of all staffs working on this task
      * @return list of staffs
      */
-    public ArrayList<User> getStaffList() {
+    public ObservableList<User> getStaffList() {
         return staffList;
     }
 
@@ -208,7 +212,26 @@ public class Task implements DatabaseInterface<Task>{
      * @param staff staff to be added
      */
     public void addStaff(User staff){
-        staffList.add(staff);
+        // make sure staff is not null
+        if (staff != null){
+            boolean found = false;
+            // make sure task is not already assigned to user
+            // I would have used list.contains but i am concerned about it not being the same object when db does things, it would be identical details but not same object instance
+            for (User staffIter : staffList) {
+                if (staffIter.getID().equals(staff.getID())) {
+//                    System.out.println("The staff member "+staff.getFirstName() + " " + staff.getLastName() + " is already assigned to the task '"+ this.taskName+ "' ! \n Here is the current stafflist: " + staffList);
+                    found = true;
+                }
+            }
+            if (!found) {
+                staffList.add(staff);
+                staff.addTask(this);
+//                System.out.println("Staff member " + staff.getFirstName() + " " + staff.getLastName() + " successfully added to the task '"+ this.taskName+ "' ! \n Here is the current stafflist: " + staffList);
+            }
+        }
+        else {
+            System.out.println("The staff member you are trying to add is null!");
+        }
     }
 
 
@@ -217,12 +240,19 @@ public class Task implements DatabaseInterface<Task>{
      * @param staff_id id of staff
      */
     public void removeStaff(String staff_id) {
-        for (User user : staffList) {
-            if (user.getID().equals(staff_id)) {
-                staffList.remove(user);
-                return;
+        if (staff_id != null){
+            for (User user : staffList) {
+                if (user.getID().equals(staff_id)) {
+                    staffList.remove(user);
+                    user.removeTask(this.ID);
+                    return;
+                }
             }
         }
+        else {
+            System.out.println("The id of the staff member you are trying to add is null!");
+        }
+
     }
 
     /**
@@ -273,6 +303,7 @@ public class Task implements DatabaseInterface<Task>{
     public String toString(){
         StringBuilder result = new StringBuilder("Task ID: " + getID() +
                 "\nTask name: " + getTaskName() +
+                "\nTask dbID: " + getDbId() +
                 "\nTask Description: " + getDescription() +
                 "\nCreated: " + getDate() +
                 "\nStatus: " + getStatus() +
@@ -292,12 +323,34 @@ public class Task implements DatabaseInterface<Task>{
 
 
     /**
-     * @param task
      * @return
+     *
+     *  newObj =  new Task(objectDoc.getObjectId("_id"),objectDoc.getString("taskID"), objectDoc.getString("task_name"),
+     *                     objectDoc.getString("task_description"), objectDoc.getDate("task_dueDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+     *         }
      */
     @Override
-    public Document classToDoc(Task task) {
-        return null;
+    public Document classToDoc() {
+
+
+        String taskID = this.getID();
+
+
+
+        Document newDoc = new Document();
+        ArrayList<ObjectId> staffList = new ArrayList<ObjectId>();
+        for (User staff : this.getStaffList()) {
+            staffList.add(staff.getDbId());
+        }
+
+
+        newDoc.append("taskID",this.getID());
+        newDoc.append("task_name",this.getTaskName());
+        newDoc.append("task_description",this.getDescription());
+        newDoc.append("task_dueDate",this.getDueDate());
+        newDoc.append("task_date",this.getDate());
+        newDoc.append("stafflist",staffList);
+        return newDoc;
     }
 
     @Override
@@ -317,7 +370,7 @@ public class Task implements DatabaseInterface<Task>{
 
     @Override
     public ObjectId getDbId() {
-        return null;
+        return dbID;
     }
 
     @Override
@@ -330,16 +383,17 @@ public class Task implements DatabaseInterface<Task>{
      * @param args args
      */
     public static void main(String[] args){
-        Task task = new Task("1", "task 1", "task 1 description", LocalDateTime.now());
+        Task task = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.now());
         LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY, 2);
-        User staff1 = new User("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob, true);
-        User staff2 = new User("ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob, true);
+        User staff1 = new User(null,"ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob, true);
+        User staff2 = new User(null,"ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob, true);
         task.addStaff(staff1);
         task.addStaff(staff2);
 
         // testing getters
         System.out.println("Testing getters\n");
         System.out.println("Task ID: " + task.getID());
+        System.out.println("Task DBID: " + task.getDbId());
         System.out.println("Task name :" + task.getTaskName());
         System.out.println("Task Description: " + task.getDescription());
         System.out.println("Created: " + task.getDate());
@@ -360,7 +414,7 @@ public class Task implements DatabaseInterface<Task>{
 
         // testing setters
         System.out.println("Testing setters\n");
-        User staff3 = new User("ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob, false);
+        User staff3 = new User(null,"ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob, false);
         LocalDateTime specificDate = LocalDateTime.of(2012, Month.JANUARY, 2, 0, 32, 43);
 
         task.setID("2");

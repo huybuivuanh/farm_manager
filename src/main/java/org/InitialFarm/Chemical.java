@@ -1,16 +1,19 @@
 package org.InitialFarm;
 
+import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.entities.DatabaseInterface;
 
 import java.util.List;
 
-public class Chemical {
+public class Chemical implements DatabaseInterface<Chemical> {
     private String chemicalName;
-    private ObjectId chemicalID;
+    private ObjectId dbID = null;
     private List<String> chemicalGroup;
     
     
-    public Chemical (String chemicalName, List<String> chemicalGroup){
+    public Chemical (ObjectId dbid,String chemicalName, List<String> chemicalGroup){
+        dbID = dbid;
         this.chemicalName = chemicalName;
         this.chemicalGroup = chemicalGroup;
         //TODO chemicalID
@@ -25,6 +28,40 @@ public class Chemical {
     }
 
     public ObjectId getChemicalID() {
-        return chemicalID;
+        return dbID;
+    }
+
+    @Override
+    public Document classToDoc() {
+
+        Document newDoc = new Document();
+        newDoc.append("chemicalName", this.chemicalName);
+        newDoc.append("chemicalGroup", this.chemicalGroup);
+        return newDoc;
+    }
+
+    @Override
+    public Document docToClass() {
+        return null;
+    }
+
+    @Override
+    public void save() {
+
+    }
+
+    @Override
+    public void sync() {
+
+    }
+
+    @Override
+    public ObjectId getDbId() {
+        return dbID;
+    }
+
+    @Override
+    public boolean isDatabase() {
+        return false;
     }
 }

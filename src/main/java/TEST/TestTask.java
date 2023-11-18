@@ -1,5 +1,6 @@
 package TEST;
 
+import javafx.collections.ObservableList;
 import org.entities.Employee;
 import org.entities.User;
 import org.entities.Owner;
@@ -25,14 +26,14 @@ public class TestTask {
         LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY, 2);
         LocalDate specificDate = LocalDate.of(2111, Month.JANUARY, 1);
 
-        Owner staff1 = new Owner("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob, true);
-        Owner staff2 = new Owner("ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob, true);
+        Owner staff1 = new Owner(null, "ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob);
+        Owner staff2 = new Owner(null, "ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob);
 
         LocalDateTime duDate = LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43);
         LocalDateTime duDate2 = LocalDateTime.of(2024, Month.JANUARY, 2, 13, 32, 43);
 
         String reason1 = "Constructor + getTaskName()";
-        Task task1 = new Task("1", "task 1", "task 1 description",  duDate);
+        Task task1 = new Task(null, "1", "task 1", "task 1 description",  duDate);
         String result = task1.getTaskName();
         String expected = "task 1";
         if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason1, expected, result));}
@@ -81,7 +82,7 @@ public class TestTask {
 
         String reason10 = "Testing addStaff() + getStaffList";
         task1.addStaff(staff1);
-        ArrayList <User> result3 = task1.getStaffList();
+        ObservableList<User> result3 = task1.getStaffList();
         ArrayList <User> expected3 =   new ArrayList<>();
         expected3.add(staff1);
         if (!result3.equals(expected3)) { failed ++ ;System.out.println(error_message(reason10, String.valueOf(expected3), String.valueOf(result3)));}
@@ -164,6 +165,7 @@ public class TestTask {
         expected =
                 "Task ID: 1234" +
                 "\nTask name: Water Crops"+
+                        "\nTask dbID: null" +
                 "\nTask Description: Ensure you wet the crops" +
                 "\nCreated: " + task1.getDate() +
                 "\nStatus: Paused" +
@@ -177,7 +179,7 @@ public class TestTask {
                 reason8, reason9, reason10, reason11, reason12, reason13, reason14, reason15,
                 reason16, reason17, reason18, reason19, reason20, reason21, reason22, reason23};
 
-        System.out.println("*** Field Class Testing  ***\n");
+        System.out.println("*** Task Class Testing  ***\n");
         for (String reason : reasons) {
             count ++;
             System.out.println("Passed " + (count - failed) + " out of total " + count + " tests");

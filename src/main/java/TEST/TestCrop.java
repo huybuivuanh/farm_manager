@@ -17,7 +17,7 @@ public class TestCrop {
         float bushelWeight = 3;
 
         String reason1 = "Constructor + getCropType()";
-        Crop Crop1 = new Crop(cropType, cropVariety, bushelWeight);
+        Crop Crop1 = new Crop(null, cropType, cropVariety, bushelWeight);
         String result = Crop1.getCropType();
         String expected = "type1";
         if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason1, expected, result));}
@@ -33,7 +33,7 @@ public class TestCrop {
         if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason3, expected, result));}
 
         String reason4 = "Testing getBushelWeight()";
-        float result2 = Crop1.getBushelWeight();
+        double result2 = Crop1.getBushelWeight();
         float expected2 = 3;
         if (result2 != (expected2)) { failed ++ ;System.out.println(error_message(reason4, String.valueOf(expected2), String.valueOf(result2)));}
 

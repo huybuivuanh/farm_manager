@@ -1,4 +1,7 @@
 package org.entities;
+import javafx.collections.ObservableList;
+import org.bson.types.ObjectId;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -29,8 +32,8 @@ public class TaskController {
      * @param description task description
      * @param due_date task due date
      */
-    public void createTask(String id, String taskName, String description, LocalDateTime due_date) {
-        Task newTask = new Task(id, taskName, description, due_date);
+    public void createTask(ObjectId dbid, String id, String taskName, String description, LocalDateTime due_date) {
+        Task newTask = new Task(dbid,id, taskName, description, due_date);
         taskList.add(newTask);
     }
 
@@ -214,7 +217,7 @@ public class TaskController {
      * @param staffId staff id
      * @return list of staffs assigned to task
      */
-    public ArrayList<User> getAssignedStaffs(String staffId){
+    public ObservableList<User> getAssignedStaffs(String staffId){
         return this.getTaskByID(staffId).getStaffList();
     }
 
@@ -255,17 +258,17 @@ public class TaskController {
         TaskController controller = new TaskController();
 
         LocalDateTime localDate = LocalDateTime.of(2012, Month.JANUARY, 2, 13, 32, 43);
-        Task task1 = new Task("1", "task 1", "task 1 description", localDate);
-        Task task2 = new Task("2", "task 2", "task 2 description", localDate);
-        Task task3 = new Task("3", "task 3", "task 3 description", localDate);
+        Task task1 = new Task(null,"1", "task 1", "task 1 description", localDate);
+        Task task2 = new Task(null,"2", "task 2", "task 2 description", localDate);
+        Task task3 = new Task(null,"3", "task 3", "task 3 description", localDate);
 
         LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY,2);
-        User staff1 = new User("ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob,true);
-        User staff2 = new User("ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob,true);
-        User staff3 = new User("ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob,true);
+        User staff1 = new User(null,"ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob,true);
+        User staff2 = new User(null,"ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob,true);
+        User staff3 = new User(null,"ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob,true);
 
         // createTask and add staff
-        controller.createTask("0", "task 0", "task 0 description", localDate);
+        controller.createTask(null,"0", "task 0", "task 0 description", localDate);
 
         controller.addTask(task1);
         controller.addTask(task2);

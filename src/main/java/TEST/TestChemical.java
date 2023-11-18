@@ -20,7 +20,7 @@ public class TestChemical {
         List<String> chemGroup = new ArrayList<>();
 
         String reason1 = "Testing Constructor + getName()";
-        Chemical Chemical1 = new Chemical(chemName, chemGroup);
+        Chemical Chemical1 = new Chemical(null, chemName, chemGroup);
         String result = Chemical1.getChemicalName();
         String expected = "Chem1";
         if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason1, expected, result));}

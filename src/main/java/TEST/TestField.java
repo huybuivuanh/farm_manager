@@ -37,7 +37,7 @@ public class TestField {
         size = 123;
 
         // test all methods with this instance
-        Field Field1 = new Field(ID ,fName, size, location);
+        Field Field1 = new Field(null, ID ,fName, size, location);
         result = Field1.getName();
         expected = "Field1";
         if (!result.equals(expected)) { failed ++ ;System.out.println(error_message(reason1, expected, result));}

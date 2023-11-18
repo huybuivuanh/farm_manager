@@ -2,12 +2,16 @@ package control;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.InitialFarm.dataManager;
+import org.bson.types.ObjectId;
 import org.entities.Employee;
+import org.entities.Task;
 import org.entities.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserControl {
 
@@ -17,6 +21,9 @@ public class UserControl {
     public ObservableList<User> allEmployees;
     public  ObservableList<User>owners;
 
+    public dataManager dataManager = new dataManager();
+
+
     /**
      * constructor
      */
@@ -25,9 +32,18 @@ public class UserControl {
         owners =  FXCollections.observableArrayList();
     }
 
-    // (String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob)
-    public void addUser (String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob, Boolean owner)
-    {
+
+    /**
+     * Adds a user to the list of users that the controller is keeping track of
+     * @param id: The id of the user to be added
+     * @param user_email: The email of the user to be added
+     * @param user_password: The password of the user to be added
+     * @param first_name: The firstname of the user to be added
+     * @param last_name: The lastname of the user to be added
+     * @param dob: The date of birth of the user to be added
+     * @param owner: whether the user is an owner or not
+     */
+    public void addUser (String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob, Boolean owner) throws NoSuchFieldException {
         boolean exists= false;
         for (User employee: allEmployees)
         {
@@ -38,8 +54,11 @@ public class UserControl {
         }
         if (!exists)
         {
-            Employee employee = new Employee(  id, user_email , user_password, first_name, last_name, dob, owner);
+            //TODO WE NEED TO ADD MANAGER HERE TO SAVE IT ALLLLLL
+            Employee employee = new Employee( null,id, user_email , user_password, first_name, last_name, dob, owner);
+            employee= (Employee) dataManager.saveClass(employee);
             allEmployees.add(employee);
+
             if (owner){
                 owners.add(employee);
             }
@@ -47,7 +66,17 @@ public class UserControl {
         else {System.out.println("User ID already exists");}
     }
 
-
+    /**
+     * Edits a user in the list of users that the controller is keeping track of
+     * @param oldId: The old id of the user to be edited
+     * @param newId: The suggested new id of the user to be edited
+     * @param user_email: The email of the user to be edited
+     * @param user_password: The password of the user to be edited
+     * @param first_name: The firstname of the user to be edited
+     * @param last_name: The lastname of the user to be edited
+     * @param dob: The date of birth of the user to be edited
+     * @param owner: whether the user is an owner or not
+     */
     public void editUser(String oldId,String newId,  String first_name, String last_name,  Boolean owner, String user_email, String user_password , LocalDate dob){
         Employee edited = null;
         boolean newIdAlreadyInUse = false;
@@ -81,6 +110,7 @@ public class UserControl {
                 edited.setLastName(last_name);
                 edited.setDOB(dob);
                 edited.isOwner = owner;
+                edited = (Employee) dataManager.updateClass(edited);
             }
             else {
                 System.out.println("The proposed userId is already in Use!");
@@ -88,6 +118,10 @@ public class UserControl {
         }
     }
 
+    /**
+     * Promotes a user in the list of users that the controller is keeping track of
+     * @param id: The id of the user to be promoted
+     */
     public void promoteUser(String id){
 
         Employee promoted = null;
@@ -109,13 +143,19 @@ public class UserControl {
             }
             else {
                 promoted.isOwner = true;
+                promoted = (Employee) dataManager.updateClass(promoted);
                 owners.add(promoted);
             }
         }
     }
 
+    /**
+     * Removes a user in the list of users that the controller is keeping track of
+     * @param id: The id of the user to be removed
+     */
     public void removeUser(String id){
         Employee removed = null;
+
         for (User employee: allEmployees)
         {
             if (employee.getID().equals(id))
@@ -137,14 +177,80 @@ public class UserControl {
                 if (removed.isOwner)
                 {
                     owners.remove(removed);
-                    allEmployees.remove(removed);
                 }
-                else {
-                    allEmployees.remove(removed);
+
+                List<Task> taskList = new ArrayList<>();
+                for (Task iter: removed.getTaskList())
+                {
+                    taskList.add(iter);
                 }
+                for(Task s2ndIter: taskList){
+                    s2ndIter.removeStaff(removed.getID());
+                    s2ndIter= dataManager.updateClass(s2ndIter);
+                }
+                allEmployees.remove(removed);
+                dataManager.removeClass(removed);
             }
         }
     }
+
+    /**
+     * Assigns a task to a user in the list of users that the controller is keeping track of
+     * @param userId: The id of the user to whom the task is going to be assigned
+     * @param task: The task to be assigned to the user
+     */
+    public void assignTask(String userId, Task task )
+    {
+        Employee employee = null;
+        // check if employee Id is found
+        for (User iter: allEmployees)
+        {
+            if (iter.getID().equals(userId))
+            {
+                employee = (Employee) iter;
+            }
+        }
+        if (employee == null)
+        {
+            System.out.println("User you are trying to assign task to wasn't in the list of users!");
+        }
+        else{
+            employee.addTask(task);
+            task =dataManager.updateClass(task);
+            employee =(Employee) dataManager.updateClass(employee);
+        }
+    }
+
+
+    /**
+     * unAssigns a task to a user in the list of users that the controller is keeping track of
+     * @param userId: The id of the user to whom the task is going to be unassigned
+     * @param task: The task to be unassigned to the user
+     */
+    public void unAssignTask(String userId, Task task )
+    {
+        Employee employee = null;
+        // check if employee Id is found
+        for (User iter: allEmployees)
+        {
+            if (iter.getID().equals(userId))
+            {
+                employee = (Employee) iter;
+            }
+        }
+        if (employee == null)
+        {
+            System.out.println("User you are trying to unassign a task to wasn't in the list of users!");
+        }
+        else{
+            employee.removeTask(task.getID());
+            task =dataManager.updateClass(task);
+            employee =(Employee) dataManager.updateClass(employee);
+
+        }
+    }
+
+
     public String viewUser (String id)
     {
         Employee viewed = null;
@@ -167,4 +273,6 @@ public class UserControl {
         }
           return returned;
     }
+
+
 }

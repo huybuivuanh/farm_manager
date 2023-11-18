@@ -18,7 +18,7 @@ public class GigaController {
     }
 
     public Field makeField(String id,String fieldname,double size,String location) {
-        return new Field(id, fieldname, size, location);
+        return new Field(null,id, fieldname, size, location);
     }
 
 
