@@ -39,10 +39,12 @@ public class BinView extends StackPane implements ModelSubscriber {
         Scene binCropScene = new Scene(binCropPage, 300, 250);
 
         Label currentCropLabel = new Label("Current Crop");
+        currentCropLabel.getStyleClass().add("page-label");
         Label currentCropData = new Label("Crop ID: "  + "\nCrop Type: "  +
                 "\nCrop Variety: " + "\nBushel Weight: ");
 
         Label lastCropLabel = new Label("Last Crop");
+        lastCropLabel.getStyleClass().add("page-label");
         Label lastCropData = new Label("Crop ID: "  + "\nCrop Type: "  +
                 "\nCrop Variety: " + "\nBushel Weight: ");
 
@@ -295,6 +297,11 @@ public class BinView extends StackPane implements ModelSubscriber {
         binFunctionBar.getChildren().addAll(addBin, deleteBin, addCrop, clearBin, binsBackToMain);
 
         binPage.getChildren().addAll(binFunctionBar, binTable);
+
+        //css
+        addBinScene.getStylesheets().add(getClass().getClassLoader().getResource("bin.css").toExternalForm());
+        binCropScene.getStylesheets().add(getClass().getClassLoader().getResource("bin.css").toExternalForm());
+        addCropScene.getStylesheets().add(getClass().getClassLoader().getResource("bin.css").toExternalForm());
         this.getChildren().addAll(binPage);
     }
 
@@ -302,6 +309,7 @@ public class BinView extends StackPane implements ModelSubscriber {
         this.stage = stage;
         this.MenuScene = MenuScene;
         this.binScene = binScene;
+        binScene.getStylesheets().add(getClass().getClassLoader().getResource("bin.css").toExternalForm());
     }
 
     @Override

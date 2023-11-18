@@ -1,0 +1,64 @@
+/* styles.css */
+
+.button {
+    -fx-background-color: #3498db; /* Blue background */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-size: 15px; /* Larger font size */
+    /*-fx-padding: 15 30; !* Increased padding *!*/
+    -fx-border-color: #2980b9; /* Darker blue border color */
+    -fx-border-width: 1px; /* Thicker border width */
+    -fx-background-radius: 5; /* Rounded corners */
+    -fx-border-radius: 5; /* Rounded corners for the border */
+    -fx-cursor: hand; /* Change cursor on hover to indicate interactivity */
+    /*-fx-pref-width: 400px; !* Set the preferred width *!*/
+}
+
+.button:hover {
+    -fx-background-color: #2ecc71; /* Darker green on hover */
+    -fx-border-color: #27ae60; /* Darker green border on hover */
+}
+
+.table-view {
+    -fx-control-inner-background: #ecf0f1; /* Light background */
+    -fx-text-fill: #34495e; /* Dark text color */
+    -fx-font-size: 15px; /* Larger font size */
+    -fx-border-color: #bdc3c7; /* Lighter border color */
+    -fx-border-width: 1px; /* Thicker border width */
+    -fx-background-radius: 5; /* Rounded corners */
+    -fx-border-radius: 5; /* Rounded corners for the border */
+    -fx-cursor: hand; /* Change cursor on hover to indicate interactivity */
+}
+
+.table-view:hover {
+    -fx-control-inner-background: #d2d7db; /* Lighter background on hover */
+    -fx-border-color: #7f8c8d; /* Darker border color on hover */
+}
+
+.list-view {
+    -fx-control-inner-background: #ecf0f1; /* Light background */
+    -fx-text-fill: #34495e; /* Dark text color */
+    -fx-font-size: 15px; /* Larger font size */
+    -fx-border-color: #bdc3c7; /* Lighter border color */
+    -fx-border-width: 1px; /* Thicker border width */
+    -fx-background-radius: 5; /* Rounded corners */
+    -fx-border-radius: 5; /* Rounded corners for the border */
+    -fx-cursor: hand; /* Change cursor on hover to indicate interactivity */
+}
+
+.list-view:hover {
+    -fx-control-inner-background: #d2d7db; /* Lighter background on hover */
+    -fx-border-color: #7f8c8d; /* Darker border color on hover */
+}
+
+.page-label {
+    -fx-font-family: "Quicksand", sans-serif; /* Stylish font family */
+    -fx-font-size: 28px; /* Font size */
+    -fx-font-weight: bold; /* Font weight */
+    -fx-text-fill: #3498db; /* Stylish blue text color */
+    -fx-padding: 10 0; /* Padding to add space around the title */
+}
+
+.root {
+    -fx-background-color: #F2FFE9; /* Subtle light gray background */
+}
+
