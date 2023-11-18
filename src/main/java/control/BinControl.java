@@ -27,28 +27,10 @@ public class BinControl {
         cropType = FXCollections.observableArrayList();
     }
 
-    public void addBin(String bin_id, String bin_name, int bin_size, String bin_location, boolean hopper, boolean fan)
-    {
-        //check if Bin already exists
-        boolean binExists= false;
-
-
-        for (GrainBin bin : binList) {
-            if (bin.getDbId().equals(bin_id)) {
-                binExists = true;
-                break;
-            }
-        }
-        // if it doesn't, add it. If it does, report it.
-        if (!binExists){
-            GrainBin Bin = new GrainBin(null, bin_name, bin_location, bin_size, hopper, fan);
-           GrainBin dbBin = dataManager.saveClass(Bin);
-
-            binList.add(dbBin);
-        }
-        else {
-            System.out.println("There already is a Bin with the desired ID");
-        }
+    public void addBin(String bin_name, int bin_size, String bin_location, boolean hopper, boolean fan) {
+        GrainBin Bin = new GrainBin(null, bin_name, bin_location, bin_size, hopper, fan);
+        GrainBin dbBin = dataManager.saveClass(Bin);
+        binList.add(dbBin);
     }
 
     public void deleteBin(ObjectId bin_id){

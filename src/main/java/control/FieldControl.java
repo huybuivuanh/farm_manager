@@ -85,6 +85,7 @@ public class FieldControl {
                 edited.setName(new_field_name);
                 edited.setSize(new_field_size);
                 edited.setLocation(new_field_location);
+                edited = dataManager.updateClass(edited);
             }
             else{
                 System.out.println("The suggested new Field ID is already in use.");
@@ -121,7 +122,7 @@ public class FieldControl {
                 Year cropYear = new Year(null, LocalDate.now().getYear(), LocalDate.now());
                 Year dbYear = new dataManager().saveClass(cropYear);
                 dbYear.setCrop(crop);
-                dbYear.setFertilizer_rate(seedingRate);
+                dbYear.setSeeding_rate(seedingRate);
                 dbYear.setSeeding_date(seedingDate);
                 fieldSearched.setCurrentYear(dbYear);
                 fieldSearched.addYear(dbYear);
@@ -141,6 +142,7 @@ public class FieldControl {
                 if (field.getCurrent_Year() != null) {
                     field.getCurrent_Year().harvest(LocalDate.now());
                     field.setCurrentYear(null);
+                    field = dataManager.updateClass(field);
                 }
                 else {
                     System.out.println("Field with ID (" + fieldID + ") is already harvested or no crop is planted.");
