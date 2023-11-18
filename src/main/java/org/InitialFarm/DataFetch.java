@@ -300,18 +300,18 @@ public class DataFetch {
 
         // Todo: testing removeAllInCollection item (works)
         //  Nuke everything below !
-//        removeAllinCollection("FarmData", "chemical_list");
-//        removeAllinCollection("FarmData", "chemical_record_list");
-//        removeAllinCollection("FarmData", "crop_list");
+        removeAllinCollection("FarmData", "chemical_list");
+        removeAllinCollection("FarmData", "chemical_record_list");
+        removeAllinCollection("FarmData", "crop_list");
         removeAllinCollection("FarmData", "employee_list");
-//        removeAllinCollection("FarmData", "farm_bins");
-//        removeAllinCollection("FarmData", "farm_list");
-//        removeAllinCollection("FarmData", "field_list");
-//        removeAllinCollection("FarmData", "grain_bin_list");
-//        removeAllinCollection("FarmData", "owner_list");
+        removeAllinCollection("FarmData", "farm_bins");
+        removeAllinCollection("FarmData", "farm_list");
+        removeAllinCollection("FarmData", "field_list");
+        removeAllinCollection("FarmData", "grain_bin_list");
+        removeAllinCollection("FarmData", "owner_list");
         removeAllinCollection("FarmData", "task_list");
-//        removeAllinCollection("FarmData", "task_record_list");
-//        removeAllinCollection("FarmData", "year_list");
+        removeAllinCollection("FarmData", "task_record_list");
+        removeAllinCollection("FarmData", "year_list");
 
 
     }
