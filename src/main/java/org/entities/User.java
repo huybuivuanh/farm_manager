@@ -12,7 +12,7 @@ import java.util.Iterator;
 public class User implements DatabaseInterface<User>{
 
     /**
-     * whether is owner
+     * whether is owner or not
      */
     public Boolean isOwner;
     /**
@@ -52,9 +52,6 @@ public class User implements DatabaseInterface<User>{
      */
     ObservableList<Task> taskList;
 
-
-
-
     /**
      * constructor
      * @param id user id
@@ -72,7 +69,7 @@ public class User implements DatabaseInterface<User>{
         firstName = first_name;
         lastName = last_name;
         DOB = dob;
-        taskList = FXCollections.observableArrayList();;
+        taskList = FXCollections.observableArrayList();
         isOwner = ownership;
     }
 
@@ -90,7 +87,6 @@ public class User implements DatabaseInterface<User>{
     public void setOwner(boolean X) {
         isOwner=X;
     }
-
 
     /**
      * get user id

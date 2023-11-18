@@ -16,40 +16,6 @@ public class Owner extends Employee {
         super(iddb,id, user_email, user_password, first_name, last_name, dob, owner);
     }
 
-// I don't think we need this here because it will inherit it from employee,
-    // it wasn't even letting me implement
-
-//    /**
-//     * Translates an object into a JSON Document representation of itself.
-//     * @param own : an owner object that is going to be translated into a doc
-//     */
-//    public Document translateToDoc (Owner own)
-//    {
-//        Document newDoc = new Document();
-//
-//        //  ObjectId ownerId= owner.ownerId;  => this is for the database
-//        String owner_id = own.getID();
-//        String owner_first_name= own.getFirstName();
-//        String owner_last_name= own.getLastName() ;
-//        Date owner_dob = own.getDOB();
-//        String owner_user_email= own.getEmail();
-//        String owner_user_password= own.getPassword();
-//
-//
-//
-//        // might need to add the objectID here still
-//        newDoc.append("_id", owner_id);
-//        newDoc.append("first_name", owner_first_name);
-//        newDoc.append("last_name", owner_last_name);
-//        newDoc.append("dob", owner_dob);
-//        newDoc.append("user_email", owner_user_email);
-//        newDoc.append("user_password", owner_user_password);
-//        Date added = new Date();
-//        newDoc.append("Date Added:",added.getTime());
-//
-//        return newDoc;
-//    }
-
     @Override
     public String toString() {
         return super.toString();
