@@ -208,14 +208,14 @@ public class User implements DatabaseInterface<User>{
             // I would have used list.contains but i am concerned about it not being the same object when db does things, it would be identical details but not same object instance
             for (Task taskIter: taskList){
                 if (taskIter.getID().equals(task.getID())){
-                    System.out.println("The task "+ task.getTaskName() + " is already assigned to the user! \n Here is the current tasklist: " + taskList);
+//                    System.out.println("The task "+ task.getTaskName() + " is already assigned to the user! \n Here is the current tasklist: " + taskList);
                     found = true;
                 }
             }
             if (!found){
                 taskList.add(task);
                 task.addStaff(this);
-                System.out.println("The task " + task.getTaskName() + " was successfully added to the user! \n Here is the current tasklist:" +taskList);
+//                System.out.println("The task " + task.getTaskName() + " was successfully added to the user! \n Here is the current tasklist:" +taskList);
             }
         }
         else{

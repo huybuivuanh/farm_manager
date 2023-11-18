@@ -10,7 +10,7 @@ import java.util.Calendar;
 
 public class Owner extends Employee {
 
-    public static final Boolean owner = null;
+    public static final Boolean owner = false;
 
     public Owner(ObjectId iddb, String id, String user_email, String user_password, String first_name, String last_name, LocalDate dob){
         super(iddb,id, user_email, user_password, first_name, last_name, dob, owner);
