@@ -17,7 +17,13 @@ public class ChemicalRecord implements DatabaseInterface<ChemicalRecord> {
         chemical = _chemical;
         date = _date;
     }
-    Chemical getChemical(){ return this.chemical; }
+
+    public String toString(){
+        return "Chemical Sprayed: " + chemical.getChemicalName() +
+                "\nChemical Group: " + chemical.getChemicalGroup().get(0) +  "\nSpraying Date: " + date;
+    }
+
+    public Chemical getChemical(){ return this.chemical; }
     public LocalDate getDate(){ return this.date; }
 
     @Override

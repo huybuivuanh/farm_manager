@@ -10,6 +10,7 @@ module org.openjfx.javafxmavenarchetypes {
     requires org.mongodb.bson;
     requires org.mongodb.driver.core;
     requires org.mongodb.driver.sync.client;
+    requires junit;
 
     opens org.InitialFarm to javafx.base;
     opens org.entities to javafx.base;

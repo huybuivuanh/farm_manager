@@ -12,7 +12,7 @@ import java.util.Iterator;
 public class User implements DatabaseInterface<User>{
 
     /**
-     * whether is owner
+     * whether is owner or not
      */
     public Boolean isOwner;
     /**
@@ -52,9 +52,6 @@ public class User implements DatabaseInterface<User>{
      */
     ObservableList<Task> taskList;
 
-
-
-
     /**
      * constructor
      * @param id user id
@@ -72,7 +69,7 @@ public class User implements DatabaseInterface<User>{
         firstName = first_name;
         lastName = last_name;
         DOB = dob;
-        taskList = FXCollections.observableArrayList();;
+        taskList = FXCollections.observableArrayList();
         isOwner = ownership;
     }
 
@@ -90,7 +87,6 @@ public class User implements DatabaseInterface<User>{
     public void setOwner(boolean X) {
         isOwner=X;
     }
-
 
     /**
      * get user id
@@ -201,7 +197,26 @@ public class User implements DatabaseInterface<User>{
      * @param task task to be added
      */
     public void addTask(Task task){
-        taskList.add(task);
+        // make sure task is not null
+        if ( task != null) {
+            boolean found = false;
+            // make sure task is not already assigned to user
+            // I would have used list.contains but i am concerned about it not being the same object when db does things, it would be identical details but not same object instance
+            for (Task taskIter: taskList){
+                if (taskIter.getID().equals(task.getID())){
+//                    System.out.println("The task "+ task.getTaskName() + " is already assigned to the user! \n Here is the current tasklist: " + taskList);
+                    found = true;
+                }
+            }
+            if (!found){
+                taskList.add(task);
+                task.addStaff(this);
+//                System.out.println("The task " + task.getTaskName() + " was successfully added to the user! \n Here is the current tasklist:" +taskList);
+            }
+        }
+        else{
+            System.out.println("The task you are trying to add is null!");
+        }
     }
 
     /**
@@ -209,11 +224,17 @@ public class User implements DatabaseInterface<User>{
      * @param taskID id of task to be removed
      */
     public void removeTask(String taskID){
-        for (Task task : taskList){
-            if (task.getID().equals(taskID)){
-                taskList.remove(task);
-                return;
+        if (taskID != null){
+            for (Task task : taskList){
+                if (task.getID().equals(taskID)){
+                    taskList.remove(task);
+                    task.removeStaff(this.ID);
+                    return;
+                }
             }
+        }
+        else {
+            System.out.println("The id of the task you are trying to add is null!");
         }
     }
 
@@ -309,6 +330,13 @@ public class User implements DatabaseInterface<User>{
     @Override
     public ObjectId getDbId() {
         return dbID;
+    }
+
+    /**
+     * @return
+     */
+    public void setDbId(ObjectId id) {
+        this.dbID= id;
     }
 
     /**

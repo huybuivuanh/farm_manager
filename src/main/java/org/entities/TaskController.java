@@ -1,4 +1,5 @@
 package org.entities;
+import javafx.collections.ObservableList;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
@@ -216,7 +217,7 @@ public class TaskController {
      * @param staffId staff id
      * @return list of staffs assigned to task
      */
-    public ArrayList<User> getAssignedStaffs(String staffId){
+    public ObservableList<User> getAssignedStaffs(String staffId){
         return this.getTaskByID(staffId).getStaffList();
     }
 
