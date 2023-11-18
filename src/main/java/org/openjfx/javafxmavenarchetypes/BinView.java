@@ -56,15 +56,13 @@ public class BinView extends StackPane implements ModelSubscriber {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //todo: Bin table formatting
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        final Label binlabel = new Label("Bin Table");
-        binlabel.setFont(new Font("Arial", 20));
 
         binTable.setEditable(true);
 
-        TableColumn<GrainBin, String> binIDCol = new TableColumn<GrainBin, String>("Bin ID");
+        TableColumn<GrainBin, ObjectId> binIDCol = new TableColumn<GrainBin, ObjectId>("Bin ID");
         binIDCol.setMinWidth(130);
         binIDCol.setCellValueFactory(
-                new PropertyValueFactory<GrainBin, String>("ID"));
+                new PropertyValueFactory<GrainBin, ObjectId>("DbId"));
 
         TableColumn<GrainBin, String> binNameCol = new TableColumn<GrainBin, String>("Bin Name");
         binNameCol.setMinWidth(130);
@@ -76,7 +74,7 @@ public class BinView extends StackPane implements ModelSubscriber {
         binLocationCol.setCellValueFactory(
                 new PropertyValueFactory<GrainBin, String>("binLocation"));
 
-        TableColumn<GrainBin, Integer> binSizeCol = new TableColumn<GrainBin, Integer>("Bin Size");
+        TableColumn<GrainBin, Integer> binSizeCol = new TableColumn<GrainBin, Integer>("Bin Size (Acre)");
         binSizeCol.setMinWidth(70);
         binSizeCol.setCellValueFactory(
                 new PropertyValueFactory<GrainBin, Integer>("binSize"));
@@ -96,7 +94,7 @@ public class BinView extends StackPane implements ModelSubscriber {
         binBushelsCol.setCellValueFactory(
                 new PropertyValueFactory<GrainBin, Integer>("cropBushels"));
 
-        TableColumn<GrainBin, Integer> binCropLbsCol = new TableColumn<GrainBin, Integer>("Crop Lbs");
+        TableColumn<GrainBin, Integer> binCropLbsCol = new TableColumn<GrainBin, Integer>("Crop (lbs)");
         binCropLbsCol.setMinWidth(70);
         binCropLbsCol.setCellValueFactory(
                 new PropertyValueFactory<GrainBin, Integer>("cropLbs"));
@@ -118,7 +116,7 @@ public class BinView extends StackPane implements ModelSubscriber {
         VBox addBinBox = new VBox(30);
         Scene addBinScene = new Scene(addBinBox,300,250);
 
-        TextField binIDInput = new TextField("Bin ID");
+
         TextField binNameInput = new TextField("Bin Name");
         TextField binSizeInput = new TextField("Bin Size");
         TextField binLocation = new TextField("Bin Location");
@@ -134,14 +132,14 @@ public class BinView extends StackPane implements ModelSubscriber {
         HBox submitAndCancelBox1 = new HBox(submitBinInfo, space1, cancelAddBin);
 
 
-        addBinBox.getChildren().addAll(binIDInput, binNameInput, binSizeInput, binLocation, hopperInput, fanInput, submitAndCancelBox1);
+        addBinBox.getChildren().addAll(binNameInput, binSizeInput, binLocation, hopperInput, fanInput, submitAndCancelBox1);
         Button addBin = new Button("Add Bin");
         addBin.setOnMouseClicked(e ->{
             stage.setScene(addBinScene);
         });
 
         submitBinInfo.setOnMouseClicked(e ->{
-            binController.addBin(binIDInput.getText(),binNameInput.getText(), Integer.parseInt(binSizeInput.getText()), binLocation.getText(), hopperInput.isSelected(), fanInput.isSelected() );
+            binController.addBin(binNameInput.getText(), Integer.parseInt(binSizeInput.getText()), binLocation.getText(), hopperInput.isSelected(), fanInput.isSelected() );
             stage.setScene(binScene);
         });
 
@@ -296,7 +294,7 @@ public class BinView extends StackPane implements ModelSubscriber {
         HBox binFunctionBar = new HBox();
         binFunctionBar.getChildren().addAll(addBin, deleteBin, addCrop, clearBin, binsBackToMain);
 
-        binPage.getChildren().addAll(binFunctionBar,binlabel, binTable);
+        binPage.getChildren().addAll(binFunctionBar, binTable);
         this.getChildren().addAll(binPage);
     }
 
