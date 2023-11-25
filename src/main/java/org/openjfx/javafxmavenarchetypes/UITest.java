@@ -50,7 +50,7 @@ public class UITest extends Application {
         bbins.setText("Bins");
         bbins.setOnAction(e -> stage.setScene(sceneBins));
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // task page
         TaskView taskPage = new TaskView();
         Scene taskScene = new Scene(taskPage,300,250);
@@ -78,6 +78,11 @@ public class UITest extends Application {
         Button busers= new Button();
         busers.setText("Users");
         busers.setOnAction(e -> stage.setScene(userScene));
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        TaskUserViews taskUserViews = new TaskUserViews();
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // add all pages buttons to main menu
         taskSelector.getChildren().addAll(btasks,bfield,bbins,busers,bgraph);
