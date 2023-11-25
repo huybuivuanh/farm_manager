@@ -114,7 +114,6 @@ public class TaskView extends StackPane implements ModelSubscriber {
                 throw new RuntimeException(ex);
             }
             if (dueDate.getValue() != null){
-                stage.setScene(taskScene);
                 taskTable.refresh();
                 allTasksInUserViewTable.refresh();
                 userTasksTable.refresh();
@@ -122,6 +121,8 @@ public class TaskView extends StackPane implements ModelSubscriber {
                 taskUsersTable.refresh();
                 allUsersInTaskViewTable.refresh();
                 userTable.refresh();
+
+                stage.setScene(taskScene);
             }
         });
 
@@ -149,7 +150,6 @@ public class TaskView extends StackPane implements ModelSubscriber {
                     idInputEdit.getText(), taskNameFEdit.getText(), descriptionFEdit.getText(),
                     dueDateEdit.getValue().atTime(LocalTime.now()));
             System.out.println(taskTable.getSelectionModel().getSelectedItem());
-            stage.setScene(taskScene);
             taskTable.refresh();
             allTasksInUserViewTable.refresh();
             userTasksTable.refresh();
@@ -157,6 +157,8 @@ public class TaskView extends StackPane implements ModelSubscriber {
             taskUsersTable.refresh();
             allUsersInTaskViewTable.refresh();
             userTable.refresh();
+
+            stage.setScene(taskScene);
         });
 
         editTask.setOnMouseClicked(e ->{
@@ -165,7 +167,13 @@ public class TaskView extends StackPane implements ModelSubscriber {
                 taskNameFEdit.setText(taskTable.getSelectionModel().getSelectedItem().getTaskName());
                 descriptionFEdit.setText(taskTable.getSelectionModel().getSelectedItem().getDescription());
                 dueDateEdit.setValue(taskTable.getSelectionModel().getSelectedItem().getDueDate().toLocalDate());
-
+                taskTable.refresh();
+                allTasksInUserViewTable.refresh();
+                userTasksTable.refresh();
+                CompletedTaskTable.refresh();
+                taskUsersTable.refresh();
+                allUsersInTaskViewTable.refresh();
+                userTable.refresh();
                 stage.setScene(editUserScene);
             } else {
                 System.out.println("Need to select a task");
@@ -272,6 +280,13 @@ public class TaskView extends StackPane implements ModelSubscriber {
                 taskUsersTable.setItems(taskUserData);
                 String taskName = taskTable.getSelectionModel().getSelectedItem().getTaskName();
                 taskNameLabel.setText("Task Name: " + taskName);
+                taskTable.refresh();
+                allTasksInUserViewTable.refresh();
+                userTasksTable.refresh();
+                CompletedTaskTable.refresh();
+                taskUsersTable.refresh();
+                allUsersInTaskViewTable.refresh();
+                userTable.refresh();
                 stage.setScene(taskEmployeesScene);
             } else {
                 System.out.println("Need to select a task");
@@ -283,6 +298,13 @@ public class TaskView extends StackPane implements ModelSubscriber {
         taskAddEmployees.setOnMouseClicked(e->{
             //taskTable.getSelectionModel().getSelectedItem().addStaff(allUsersInTaskViewTable.getSelectionModel().getSelectedItem());
             taskController.assignEmployee(taskTable.getSelectionModel().getSelectedItem().getID(),allUsersInTaskViewTable.getSelectionModel().getSelectedItem() );
+            taskTable.refresh();
+            allTasksInUserViewTable.refresh();
+            userTasksTable.refresh();
+            CompletedTaskTable.refresh();
+            taskUsersTable.refresh();
+            allUsersInTaskViewTable.refresh();
+            userTable.refresh();
             System.out.println( "the add Employee button has been clicked");
         });
 
@@ -290,6 +312,13 @@ public class TaskView extends StackPane implements ModelSubscriber {
         taskRemoveEmployees.setOnMouseClicked(e->{
             //taskTable.getSelectionModel().getSelectedItem().removeStaff(taskUsersTable.getSelectionModel().getSelectedItem().getID());
             taskController.unAssignEmployee(taskTable.getSelectionModel().getSelectedItem().getID(),allUsersInTaskViewTable.getSelectionModel().getSelectedItem() );
+            taskTable.refresh();
+            allTasksInUserViewTable.refresh();
+            userTasksTable.refresh();
+            CompletedTaskTable.refresh();
+            taskUsersTable.refresh();
+            allUsersInTaskViewTable.refresh();
+            userTable.refresh();
             System.out.println( "the remove Employee button has been clicked");
         });
 
