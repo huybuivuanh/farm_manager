@@ -196,7 +196,7 @@ public class UserView extends StackPane implements ModelSubscriber {
                     parseBoolean(ownerEdit.getText()),emailEdit.getText(),
                     passwordEdit.getText(), dobEdit.getValue());
             System.out.println(userTable.getSelectionModel().getSelectedItem());
-            stage.setScene(userScene);
+
             taskTable.refresh();
             allTasksInUserViewTable.refresh();
             userTasksTable.refresh();
@@ -205,6 +205,7 @@ public class UserView extends StackPane implements ModelSubscriber {
             allUsersInTaskViewTable.refresh();
             userTable.refresh();
 
+            stage.setScene(userScene);
         });
 
         editUser.setOnMouseClicked(e-> {
@@ -216,6 +217,14 @@ public class UserView extends StackPane implements ModelSubscriber {
                 emailEdit.setText(userTable.getSelectionModel().getSelectedItem().getEmail());
                 passwordEdit.setText(userTable.getSelectionModel().getSelectedItem().getPassword());
                 dobEdit.setValue(userTable.getSelectionModel().getSelectedItem().getDOB());
+
+                taskTable.refresh();
+                allTasksInUserViewTable.refresh();
+                userTasksTable.refresh();
+                CompletedTaskTable.refresh();
+                taskUsersTable.refresh();
+                allUsersInTaskViewTable.refresh();
+                userTable.refresh();
 
                 stage.setScene(actualUserEditScene);
                 System.out.println(userController.allEmployees);
@@ -268,6 +277,13 @@ public class UserView extends StackPane implements ModelSubscriber {
                 String firstName = userTable.getSelectionModel().getSelectedItem().getFirstName();
                 String lastName =  userTable.getSelectionModel().getSelectedItem().getLastName();
                 employeeNameLabel.setText("Employee: " + firstName +" " + lastName);
+                taskTable.refresh();
+                allTasksInUserViewTable.refresh();
+                userTasksTable.refresh();
+                CompletedTaskTable.refresh();
+                taskUsersTable.refresh();
+                allUsersInTaskViewTable.refresh();
+                userTable.refresh();
                 stage.setScene(employeeTasksScene);
             } else {
                 System.out.println("Need to select a user");
@@ -279,6 +295,13 @@ public class UserView extends StackPane implements ModelSubscriber {
         employeeAddTasks.setOnMouseClicked(e->{
             //userTable.getSelectionModel().getSelectedItem().addTask(allTasksInUserViewTable.getSelectionModel().getSelectedItem());
             userController.assignTask(userTable.getSelectionModel().getSelectedItem().getID(),allTasksInUserViewTable.getSelectionModel().getSelectedItem() );
+            taskTable.refresh();
+            allTasksInUserViewTable.refresh();
+            userTasksTable.refresh();
+            CompletedTaskTable.refresh();
+            taskUsersTable.refresh();
+            allUsersInTaskViewTable.refresh();
+            userTable.refresh();
             System.out.println( "the add task button has been clicked");
         });
 
@@ -286,6 +309,13 @@ public class UserView extends StackPane implements ModelSubscriber {
         employeeRemoveTasks.setOnMouseClicked(e->{
             //userTable.getSelectionModel().getSelectedItem().removeTask(userTasksTable.getSelectionModel().getSelectedItem().getID());
             userController.unAssignTask( userTable.getSelectionModel().getSelectedItem().getID(), userTasksTable.getSelectionModel().getSelectedItem());
+            taskTable.refresh();
+            allTasksInUserViewTable.refresh();
+            userTasksTable.refresh();
+            CompletedTaskTable.refresh();
+            taskUsersTable.refresh();
+            allUsersInTaskViewTable.refresh();
+            userTable.refresh();
             System.out.println( "the remove task button has been clicked");
         });
 
