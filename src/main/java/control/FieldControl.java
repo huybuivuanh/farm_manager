@@ -30,7 +30,7 @@ public class FieldControl {
 
 
     public FieldControl(){
-        fieldList = FXCollections.observableArrayList();
+        fieldList = dataManager.initializeFieldsFromDB();
     }
 
     public void addField(String field_id, String field_name, double field_size, String field_location)

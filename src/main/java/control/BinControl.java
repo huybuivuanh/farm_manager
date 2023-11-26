@@ -23,7 +23,7 @@ public class BinControl {
      * constructor
      */
     public BinControl(){
-        binList = FXCollections.observableArrayList();
+        binList = dataManager.initializeGrainBinsFromDB();
         cropType = FXCollections.observableArrayList();
     }
 
