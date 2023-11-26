@@ -138,20 +138,23 @@ public class FieldControl {
     }
 
     public void harvest(String fieldID){
-        for (Field field : fieldList){
-            if (field.getID().equals(fieldID)){
-                if (field.getCurrent_Year() != null) {
-                    field.getCurrent_Year().harvest(LocalDate.now());
-                    field.setCurrentYear(null);
-                    field = dataManager.updateClass(field);
-                }
-                else {
-                    System.out.println("Field with ID (" + fieldID + ") is already harvested or no crop is planted.");
-                }
+        Field searchedField = null;
+        for (Field field : fieldList) {
+            if (field.getID().equals(fieldID)) {
+                searchedField = field;
+                break;
             }
-            else {
-                System.out.println("Can't find field with ID (" + fieldID + ")");
+        }
+        if (searchedField != null){
+            if (searchedField.getCurrent_Year() != null) {
+                searchedField.getCurrent_Year().harvest(LocalDate.now());
+                searchedField.setCurrentYear(null);
+                searchedField = dataManager.updateClass(searchedField);
+            } else {
+                System.out.println("Field with ID (" + fieldID + ") is already harvested or no crop is planted.");
             }
+        } else {
+            System.out.println("Can't find field with ID (" + fieldID + ")");
         }
     }
     public Crop makeCrop(ObjectId dbid,String cropType, String cropVariety, double bushelWeight){
@@ -161,28 +164,29 @@ public class FieldControl {
 
     }
     public void addChemical(String fieldID, double fertilizerRate, String chemicalSprayed, String chemicalGroup, LocalDate sprayingDate){
-        for (Field field : fieldList){
-            if (field.getID().equals(fieldID)){
-                if (field.getCurrent_Year() != null) {
-                    List<String> chemGroup = new ArrayList<>();
-                    chemGroup.add(chemicalGroup);
-                    Chemical chemical = new Chemical(null, chemicalSprayed, chemGroup);
-                    Chemical dbChemical = dataManager.saveClass(chemical);
-                    ChemicalRecord chemicalRecord = new ChemicalRecord(null, dbChemical, sprayingDate);
-                    ChemicalRecord dbChemRec = dataManager.saveClass(chemicalRecord);
-
-                    field.getCurrent_Year().setFertilizer_rate(fertilizerRate);
-                    field.getCurrent_Year().addChemicalRecord(dbChemRec);
-                }
-                else {
-                    System.out.println("Field with ID (" + fieldID + ") is already harvested or no crop is planted.");
-                }
-            }
-            else {
-                System.out.println("Can't find field with ID (" + fieldID + ")");
+        Field searchedField = null;
+        for (Field field : fieldList) {
+            if (field.getID().equals(fieldID)) {
+                searchedField = field;
+                break;
             }
         }
+        if (searchedField != null){
+            if (searchedField.getCurrent_Year() != null) {
+                List<String> chemGroup = new ArrayList<>();
+                chemGroup.add(chemicalGroup);
+                Chemical chemical = new Chemical(null, chemicalSprayed, chemGroup);
+                Chemical dbChemical = dataManager.saveClass(chemical);
+                ChemicalRecord chemicalRecord = new ChemicalRecord(null, dbChemical, sprayingDate);
+                ChemicalRecord dbChemRec = dataManager.saveClass(chemicalRecord);
+
+                searchedField.getCurrent_Year().setFertilizer_rate(fertilizerRate);
+                searchedField.getCurrent_Year().addChemicalRecord(dbChemRec);
+            } else {
+                System.out.println("Field with ID (" + fieldID + ") is already harvested or no crop is planted.");
+            }
+        } else {
+            System.out.println("Can't find field with ID (" + fieldID + ")");
+        }
     }
-
-
 }
