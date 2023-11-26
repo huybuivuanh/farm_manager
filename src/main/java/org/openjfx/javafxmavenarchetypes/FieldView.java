@@ -393,13 +393,13 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
                             StringBuilder chemHistory = new StringBuilder();
                             if (!year.getChemical_records().isEmpty()){
-                                chemHistory.append("CropID Chemical Sprayed on: ").append(year.getCrop().getDbId()).append("\nFertilizer Rate (lbs/acre): ").append(year.getFertilizer_rate()).append("\n");
+                                chemHistory.append("Crop ID Chemical Sprayed on: ").append(year.getCrop().getDbId()).append("\nFertilizer Rate (lbs/acre): ").append(year.getFertilizer_rate()).append("\n");
                                 for (ChemicalRecord record : year.getChemical_records()){
                                     chemHistory.append(record.toString()).append("\n\n");
                                 }
 
                             } else {
-                                chemHistory.append("CropID Chemical Sprayed on: ").append(year.getCrop().getDbId()).append("\nFertilizer Rate(lbs/acre): None\nChemical Sprayed: None\nSpraying Date: None");
+                                chemHistory.append("Crop ID Chemical Sprayed on: ").append(year.getCrop().getDbId()).append("\nFertilizer Rate(lbs/acre): None\nChemical Sprayed: None\nSpraying Date: None");
                             }
                             chemicalData.add(chemHistory.toString());
                         }
@@ -453,13 +453,13 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
                         StringBuilder chemHistory = new StringBuilder();
                         if (!year.getChemical_records().isEmpty()){
-                            chemHistory.append("CropID Chemical Sprayed on: ").append(year.getCrop().getDbId()).append("\nFertilizer Rate (lbs/acre): ").append(year.getFertilizer_rate()).append("\n");
+                            chemHistory.append("Crop ID Chemical Sprayed on: ").append(year.getCrop().getDbId()).append("\nFertilizer Rate (lbs/acre): ").append(year.getFertilizer_rate()).append("\n");
                             for (ChemicalRecord record : year.getChemical_records()){
                                 chemHistory.append(record.toString()).append("\n\n");
                             }
 
                         } else {
-                            chemHistory.append("CropID Chemical Sprayed on: ").append(year.getCrop().getDbId()).append("\nFertilizer Rate(lbs/acre): None\nChemical Sprayed: None\nSpraying Date: None");
+                            chemHistory.append("Crop ID Chemical Sprayed on: ").append(year.getCrop().getDbId()).append("\nFertilizer Rate(lbs/acre): None\nChemical Sprayed: None\nSpraying Date: None");
                         }
                         chemicalData.add(chemHistory.toString());
                     }
