@@ -111,6 +111,7 @@ public class FieldControl {
     }
 
     public void addCrop(String field_id, Crop crop, double seedingRate, LocalDate seedingDate){
+
         Field fieldSearched = null;
         for (Field field : fieldList){
             if (field.getID().equals(field_id)){
@@ -122,9 +123,11 @@ public class FieldControl {
             if (fieldSearched.getCurrent_Year() == null){
                 Year cropYear = new Year(null, LocalDate.now().getYear(), LocalDate.now());
                 Year dbYear = new dataManager().saveClass(cropYear);
+
                 dbYear.setCrop(crop);
                 dbYear.setSeeding_rate(seedingRate);
                 dbYear.setSeeding_date(seedingDate);
+                dataManager.updateClass(dbYear);
                 fieldSearched.setCurrentYear(dbYear);
                 fieldSearched.addYear(dbYear);
             }
