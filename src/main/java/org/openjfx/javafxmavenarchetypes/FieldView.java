@@ -88,9 +88,11 @@ public class FieldView extends StackPane implements ModelSubscriber {
         VBox addFieldBox = new VBox(30);
         Scene addFieldScene = new Scene(addFieldBox,300,250);
 
+        Label addFieldPageTitle = new Label("Add New Field");
+        addFieldPageTitle.getStyleClass().add("page-label");
         TextField fieldIDInput = new TextField("Field ID");
         TextField fieldNameInput = new TextField("Field Name");
-        TextField fieldSizeInput = new TextField("Field Size");
+        TextField fieldSizeInput = new TextField("Field Size (acre) ei: 20");
         TextField fieldLocation = new TextField("Field Location");
         Button submitFieldInfo = new Button("Submit");
         Button addFieldCancel = new Button("Cancel");
@@ -102,15 +104,23 @@ public class FieldView extends StackPane implements ModelSubscriber {
         HBox submitAndCancelBox1 = new HBox(submitFieldInfo, space1, addFieldCancel);
 
 
-        addFieldBox.getChildren().addAll(fieldIDInput, fieldNameInput, fieldSizeInput, fieldLocation, submitAndCancelBox1);
+        addFieldBox.getChildren().addAll(addFieldPageTitle, fieldIDInput, fieldNameInput, fieldSizeInput, fieldLocation, submitAndCancelBox1);
         Button addField = new Button("Add Field");
         addField.setOnMouseClicked(e ->{
             stage.setScene(addFieldScene);
         });
 
         submitFieldInfo.setOnMouseClicked(e ->{
-            fieldController.addField(fieldIDInput.getText(),fieldNameInput.getText(), Double.parseDouble(fieldSizeInput.getText()), fieldLocation.getText());
-            stage.setScene(fieldScene);
+            double fieldSize = -1.0;
+            try {
+                fieldSize = Double.parseDouble(fieldSizeInput.getText());
+            } catch (Exception b){
+                System.out.println("Invalid field size");
+            }
+            if (fieldSize != -1.0){
+                fieldController.addField(fieldIDInput.getText(),fieldNameInput.getText(), fieldSize, fieldLocation.getText());
+                stage.setScene(fieldScene);
+            }
         });
 
         VBox fieldEditBox = new VBox(30);
@@ -139,20 +149,27 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
         fieldEditBox.getChildren().addAll(editFieldPageTitle, idInputEdit, fieldNameFEdit, fieldSizeEdit, locationEdit,submitAndCancelBox2);
         submitFieldEdit.setOnMouseClicked(e ->{
-            fieldController.editField(fieldTable.getSelectionModel().getSelectedItem().getID(),
-                    idInputEdit.getText(), fieldNameFEdit.getText(), Double.parseDouble(fieldSizeEdit.getText()),
-                    locationEdit.getText());
-            System.out.println(fieldTable.getSelectionModel().getSelectedItem());
-            stage.setScene(fieldScene);
-            fieldTable.refresh();
+            double fieldSize = -1.0;
+            try {
+                fieldSize = Double.parseDouble(fieldSizeEdit.getText());
+            } catch (Exception b){
+                System.out.println("Invalid field size");
+            }
+            if (fieldSize != -1.0){
+                fieldController.editField(fieldTable.getSelectionModel().getSelectedItem().getID(),
+                        idInputEdit.getText(), fieldNameFEdit.getText(), fieldSize,
+                        locationEdit.getText());
+                System.out.println(fieldTable.getSelectionModel().getSelectedItem());
+                stage.setScene(fieldScene);
+                fieldTable.refresh();
+            }
         });
 
         editField.setOnMouseClicked(e ->{
             Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
             if (selectedData != null){
                 editFieldPageTitle.setText("Edit Field With ID (" + selectedData.getID() + ")");
-                editFieldPageTitle.setFont(new Font("Arial", 20));
-                editFieldPageTitle.setStyle("-fx-font-weight: bold;");
+                editFieldPageTitle.getStyleClass().add("page-label");
                 idInputEdit.setText(selectedData.getID());
                 fieldNameFEdit.setText(selectedData.getName());
                 fieldSizeEdit.setText(Double.toString(selectedData.getSize()));
@@ -209,8 +226,8 @@ public class FieldView extends StackPane implements ModelSubscriber {
             cropTypeInput.setItems(binController.cropType);
         });
 
-        TextField bushelWeight = new TextField("Bushel Weight (lbs)");
-        TextField seedingRateInput = new TextField("Seeding Rate (lbs/acre)");
+        TextField bushelWeight = new TextField("Bushel Weight (lbs) ie: 20");
+        TextField seedingRateInput = new TextField("Seeding Rate (lbs/acre) ie: 20");
         Label seedingDateLabel = new Label("Seeding Date");
         DatePicker seedingDateInput = new DatePicker();
         Button submitCropInfo = new Button("Submit");
@@ -230,8 +247,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
             if (selectedData != null){
                 addCropfieldId.setText(selectedData.getID());
                 addCropPageTitle.setText("Add Crop to Field with ID (" + selectedData.getID() + ")");
-                addCropPageTitle.setFont(new Font("Arial", 20));
-                addCropPageTitle.setStyle("-fx-font-weight: bold;");
+                addCropPageTitle.getStyleClass().add("page-label");
                 stage.setScene(addCropScene);
             }
             else {
@@ -241,24 +257,40 @@ public class FieldView extends StackPane implements ModelSubscriber {
         });
 
         submitCropInfo.setOnMouseClicked(e ->{
-            Crop crop;
-            if (!newCropTypeInput.getText().isEmpty()){
-                binController.addCropType(newCropTypeInput.getText());
+            double bWeight = -1.0;
+            double seedingRate = -1.0;
+            try {
+                bWeight = Double.parseDouble(bushelWeight.getText());
+                seedingRate = Double.parseDouble(seedingRateInput.getText());
+            } catch (Exception error){
+                System.out.println("Invalid bushel weight or seeding rate input");
             }
-            if (cropTypeInput.getValue() == null){
-                crop = fieldController.makeCrop(null, newCropTypeInput.getText(), cropVarietyInput.getValue(), Float.parseFloat(bushelWeight.getText()));
-            }
-            else {
-                crop = fieldController.makeCrop(null, cropTypeInput.getValue(), cropVarietyInput.getValue(), Float.parseFloat(bushelWeight.getText()));
-            }
-            fieldController.addCrop(addCropfieldId.getText(), crop, Double.parseDouble(seedingRateInput.getText()), seedingDateInput.getValue());
+            if (seedingDateInput.getValue() == null){
+                System.out.println("Need to pick a seeding date");
+            } else {
+                if (seedingRate != -1.0 && bWeight != -1.0) {
+                    Crop crop;
+                    if (!newCropTypeInput.getText().isEmpty()){
+                        binController.addCropType(newCropTypeInput.getText());
+                    }
+                    if (cropTypeInput.getValue() == null){
+                        crop = fieldController.makeCrop(null, newCropTypeInput.getText(), cropVarietyInput.getValue(), bWeight);
+                    }
+                    else {
+                        crop = fieldController.makeCrop(null, cropTypeInput.getValue(), cropVarietyInput.getValue(), bWeight);
+                    }
+                    fieldController.addCrop(addCropfieldId.getText(), crop, seedingRate, seedingDateInput.getValue());
 
-            // clear the form
-            cropTypeInput.setValue(null);
-            cropVarietyInput.setValue(null);
-            newCropTypeInput.clear();
+                    // clear the form
+                    cropTypeInput.setValue(null);
+                    cropVarietyInput.setValue(null);
+                    newCropTypeInput.clear();
 
-            stage.setScene(fieldScene);
+                    stage.setScene(fieldScene);
+                }
+            }
+
+
         });
 
 
@@ -298,11 +330,14 @@ public class FieldView extends StackPane implements ModelSubscriber {
         sprayChemical.setOnMouseClicked(event -> {
             Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
             if (selectedData != null){
-                chemFieldID.setText(selectedData.getID());
-                addChemPageTitle.setText("Add Chemical to Field with Field ID (" + selectedData.getID() + ")");
-                addChemPageTitle.setFont(new Font("Arial", 20));
-                addChemPageTitle.setStyle("-fx-font-weight: bold;");
-                stage.setScene(addChemScene);
+                if (selectedData.getCurrent_Year() != null) {
+                    chemFieldID.setText(selectedData.getID());
+                    addChemPageTitle.setText("Add Chemical to Field with Field ID (" + selectedData.getID() + ")");
+                    addChemPageTitle.getStyleClass().add("page-label");
+                    stage.setScene(addChemScene);
+                } else {
+                    System.out.println("Field with ID (" + selectedData.getID() + ") current has no crop to spray chemical");
+                }
             }
             else {
                 System.out.println("Select a Field");
@@ -310,9 +345,22 @@ public class FieldView extends StackPane implements ModelSubscriber {
         });
 
         submitChemInfo.setOnMouseClicked(event -> {
-            fieldController.addChemical(chemFieldID.getText(), Double.parseDouble(fertilizerInput.getText()),
-                    chemSprayedInput.getText(), chemGroupInput.getText(), sprayDate.getValue());
-            stage.setScene(fieldScene);
+            double fertilizerRate = -1.0;
+            try {
+                fertilizerRate = Double.parseDouble(fertilizerInput.getText());
+            } catch(Exception b){
+                System.out.println("Invalid fertilizer rate");
+            }
+
+            if (sprayDate.getValue() == null){
+                System.out.println("Need to pick a spraying date");
+            } else {
+                if (fertilizerRate != -1.0){
+                    fieldController.addChemical(chemFieldID.getText(), fertilizerRate,
+                            chemSprayedInput.getText(), chemGroupInput.getText(), sprayDate.getValue());
+                    stage.setScene(fieldScene);
+                }
+            }
         });
 
         addChemPage.getChildren().addAll(addChemPageTitle, fertilizerInput, chemSprayedInput, chemGroupInput, sprayDate, submitAndCancelBox4);
@@ -378,11 +426,51 @@ public class FieldView extends StackPane implements ModelSubscriber {
             stage.setScene(fieldScene);
         });
 
+        Button viewField = new Button("View Field");
+        viewField.setOnMouseClicked(event -> {
+            Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
+            if (selectedData != null) {
+                if (!selectedData.getYears().isEmpty()){
+                    for (Year year : selectedData.getYears()){
+                        Crop crop = year.getCrop();
+                        String cropHistory = "Crop ID: "+ crop.getDbId() + "\nCrop Type: " + crop.getCropType() + "\nCrop Variety: " +
+                                crop.getCropVariety() + "\nBushel Weight (lbs): " + crop.getBushelWeight() +
+                                "\nHarvested: " + (year.getHarvestDate() != null) + "\nHarvest Date: " + year.getHarvestDate() +
+                                "\nSeeding Rate (lbs/acre): " + year.getSeeding_rate() +
+                                "\nSeeding Date: " + year.getSeeding_date();
+                        recordData.add(cropHistory);
+
+                        StringBuilder chemHistory = new StringBuilder();
+                        if (!year.getChemical_records().isEmpty()){
+                            chemHistory.append("CropID Chemical Sprayed on: ").append(year.getCrop().getDbId()).append("\nFertilizer Rate (lbs/acre): ").append(year.getFertilizer_rate()).append("\n");
+                            for (ChemicalRecord record : year.getChemical_records()){
+                                chemHistory.append(record.toString()).append("\n\n");
+                            }
+
+                        } else {
+                            chemHistory.append("CropID Chemical Sprayed on: ").append(year.getCrop().getDbId()).append("\nFertilizer Rate(lbs/acre): None\nChemical Sprayed: None\nSpraying Date: None");
+                        }
+                        chemicalData.add(chemHistory.toString());
+                    }
+                }
+                Collections.reverse(recordData);
+                observableList.clear();
+                observableList.addAll(recordData);
+
+                Collections.reverse(chemicalData);
+                chemicalObservableList.clear();
+                chemicalObservableList.addAll(chemicalData);
+                stage.setScene(cropScene);
+            } else {
+                System.out.println("Select a field");
+            }
+        });
+
 
         cropPage.getChildren().addAll(cropBackToField, cropLabel, listView, chemLabel, listView2);
 
 
-        fieldFunctionsBar.getChildren().addAll(addField, editField, deleteField, addCrop, harvest, sprayChemical, fieldsBackToMain);
+        fieldFunctionsBar.getChildren().addAll(addField, editField, viewField, deleteField, addCrop, harvest, sprayChemical, fieldsBackToMain);
         fieldPage.getChildren().addAll(fieldFunctionsBar, fieldTable);
 
         // css
