@@ -7,6 +7,7 @@ import org.entities.DatabaseInterface;
 public class GrainBin implements DatabaseInterface<GrainBin> {
     //dynamic
     private Crop currentCrop;
+    private String currentCropType = "";
     private Crop lastCrop;
     private Double cropBushels = 0.0;
     private Double cropLbs = 0.0;
@@ -47,6 +48,7 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
         if (this.cropBushels <= 0){
             this.cropBushels = 0.0;
             this.cropLbs = 0.0;
+            System.out.println("Bin is empty now");
         }
     }
 
@@ -61,6 +63,9 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
     public boolean isClean(){return this.clean;}
     public boolean isHopper(){ return hopper;}
     public boolean isFan(){ return fan; }
+    public String getCurrentCropType(){
+        return this.currentCropType;
+    }
 
     public Boolean isEmpty(){
         if (cropBushels <= 0){
@@ -79,15 +84,24 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
      * @param tough: whether grain is moist enough for it to cause issues or not.
      */
     public void addCrop(Crop cropToBeAdded, int grain, boolean inputBushels, boolean clean, boolean tough){
-        if (isEmpty() && cropToBeAdded != currentCrop){
-            if (this.currentCrop != null) {
+//        if (isEmpty() && cropToBeAdded != currentCrop){
+//            if (this.currentCrop != null) {
+//                this.lastCrop = this.currentCrop;
+//            }
+//            this.currentCrop = cropToBeAdded;
+//        }else if (cropToBeAdded != this.currentCrop){
+//            //TODO throw exception
+//        }
+        if (isEmpty() && !currentCropType.equals(cropToBeAdded.getCropType())){
+            if (this.currentCrop != null){
                 this.lastCrop = this.currentCrop;
             }
             this.currentCrop = cropToBeAdded;
-        }else if (cropToBeAdded != this.currentCrop){
-            //TODO throw exception
+            this.currentCropType = currentCrop.getCropType();
+        } else if (!currentCropType.equals(cropToBeAdded.getCropType())){
+            System.out.println("Can't add different crop type to bin when bin is not empty");
+            return;
         }
-
         if (inputBushels){
             fillBushels(grain);
         }else {
@@ -100,6 +114,8 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
     private void fillLbs( int lbs){
         if (cropBushels + lbsToBushels(lbs) > binSize){
             //TODO throw exception
+            System.out.println("Capacity Exceeded");
+            return;
         }
         this.cropLbs += lbs;
         this.cropBushels += lbsToBushels(lbs);
@@ -108,6 +124,8 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
     private void fillBushels(int bushels){
         if (cropBushels + bushels > binSize){
             //TODO throw exception
+            System.out.println("Capacity Exceeded");
+            return;
         }
         this.cropBushels += bushels;
         this.cropLbs += bushelsToLbs(bushels);
@@ -134,6 +152,7 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
         newDoc.append("binName", this.binName);
         newDoc.append("binLocation", this.binLocation);
         newDoc.append("binSize", this.binSize);
+        newDoc.append("currentCropType", this.currentCropType);
         newDoc.append("hopper", this.hopper);
         newDoc.append("fan", this.fan);
         if (this.currentCrop != null){
@@ -182,6 +201,10 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
 
     public void setLastCrop(Crop crop) {
         this.lastCrop = crop;
+    }
+
+    public void setCurrentCropType(String cropType){
+        this.currentCropType = cropType;
     }
 
     public void setCropBushels(Double cropBushels) {

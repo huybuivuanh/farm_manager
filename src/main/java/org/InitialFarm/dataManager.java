@@ -329,6 +329,12 @@ public class dataManager {
             else{
                 newGrainBin.setLastCrop(null);
             }
+            if (objectDoc.getString("currentCropType") != null){
+                newGrainBin.setCurrentCropType(objectDoc.getString("currentCropType"));
+            }
+            else{
+                newGrainBin.setCurrentCropType("");
+            }
 
             if (objectDoc.getDouble("cropBushels") != null) {
                 newGrainBin.setCropBushels(objectDoc.getDouble("cropBushels"));
