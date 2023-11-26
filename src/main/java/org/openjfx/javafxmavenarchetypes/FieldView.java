@@ -116,6 +116,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 fieldSize = Double.parseDouble(fieldSizeInput.getText());
             } catch (Exception b){
                 System.out.println("Invalid field size");
+                showErrorPopup("Invalid field Size");
             }
             if (fieldSize != -1.0){
                 fieldController.addField(fieldIDInput.getText(),fieldNameInput.getText(), fieldSize, fieldLocation.getText());
@@ -154,12 +155,12 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 fieldSize = Double.parseDouble(fieldSizeEdit.getText());
             } catch (Exception b){
                 System.out.println("Invalid field size");
+                showErrorPopup("Invalid field size");
             }
             if (fieldSize != -1.0){
                 fieldController.editField(fieldTable.getSelectionModel().getSelectedItem().getID(),
                         idInputEdit.getText(), fieldNameFEdit.getText(), fieldSize,
                         locationEdit.getText());
-                System.out.println(fieldTable.getSelectionModel().getSelectedItem());
                 stage.setScene(fieldScene);
                 fieldTable.refresh();
             }
@@ -177,7 +178,8 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 stage.setScene(editFieldScene);
             }
             else {
-                System.out.println("Select a Field");
+                System.out.println("Select a field");
+                showErrorPopup("Select a field");
             }
         });
 
@@ -193,7 +195,8 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 fieldTable.refresh();
             }
             else {
-                System.out.println("Select a Field");
+                System.out.println("Select a field");
+                showErrorPopup("Select a field");
             }
         });
 
@@ -251,7 +254,8 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 stage.setScene(addCropScene);
             }
             else {
-                System.out.println("Select a Field");
+                System.out.println("Select a field");
+                showErrorPopup("Select a field");
             }
 
         });
@@ -264,9 +268,11 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 seedingRate = Double.parseDouble(seedingRateInput.getText());
             } catch (Exception error){
                 System.out.println("Invalid bushel weight or seeding rate input");
+                showErrorPopup("Invalid bushel weight or seeding rate input");
             }
             if (seedingDateInput.getValue() == null){
                 System.out.println("Need to pick a seeding date");
+                showErrorPopup("Need to pick a seeding date");
             } else {
                 if (seedingRate != -1.0 && bWeight != -1.0) {
                     Crop crop;
@@ -300,7 +306,8 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 fieldController.harvest(fieldTable.getSelectionModel().getSelectedItem().getID());
             }
             else {
-                System.out.println("Select a Field");
+                System.out.println("Select a field");
+                showErrorPopup("Select a field");
             }
         });
 
@@ -337,10 +344,12 @@ public class FieldView extends StackPane implements ModelSubscriber {
                     stage.setScene(addChemScene);
                 } else {
                     System.out.println("Field with ID (" + selectedData.getID() + ") current has no crop to spray chemical");
+                    showErrorPopup("Field with ID (" + selectedData.getID() + ") current has no crop to spray chemical");
                 }
             }
             else {
-                System.out.println("Select a Field");
+                System.out.println("Select a field");
+                showErrorPopup("Select a field");
             }
         });
 
@@ -350,10 +359,12 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 fertilizerRate = Double.parseDouble(fertilizerInput.getText());
             } catch(Exception b){
                 System.out.println("Invalid fertilizer rate");
+                showErrorPopup("Invalid fertilizer rate");
             }
 
             if (sprayDate.getValue() == null){
                 System.out.println("Need to pick a spraying date");
+                showErrorPopup("Need to pick a spraying date");
             } else {
                 if (fertilizerRate != -1.0){
                     fieldController.addChemical(chemFieldID.getText(), fertilizerRate,
@@ -463,6 +474,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 stage.setScene(cropScene);
             } else {
                 System.out.println("Select a field");
+                showErrorPopup("Select a field");
             }
         });
 
@@ -492,6 +504,13 @@ public class FieldView extends StackPane implements ModelSubscriber {
         fieldScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
     }
 
+    private void showErrorPopup(String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("ERROR");
+        alert.setHeaderText("ERROR MESSAGE");
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 
     @Override
     public void modelChanged() {
