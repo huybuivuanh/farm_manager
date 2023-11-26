@@ -61,6 +61,14 @@ public class UITest extends Application {
         btasks.setOnAction(e -> stage.setScene(taskScene));
 
 
+        // graph page
+        GraphView graphPage = new GraphView();
+        Scene graphScene = new Scene(graphPage,300,250);
+        graphPage.setStageMenu(stage, MenuScene, graphScene);
+
+        Button bgraph = new Button();
+        bgraph.setText("Graph");
+        bgraph.setOnAction(e -> stage.setScene(graphScene));
 
         // user page
         UserView userPage = new UserView();
@@ -72,7 +80,7 @@ public class UITest extends Application {
         busers.setOnAction(e -> stage.setScene(userScene));
 
         // add all pages buttons to main menu
-        taskSelector.getChildren().addAll(btasks,bfield,bbins,busers);
+        taskSelector.getChildren().addAll(btasks,bfield,bbins,busers,bgraph);
         taskSelector.setAlignment(Pos.CENTER);
 
         // main menu background image
