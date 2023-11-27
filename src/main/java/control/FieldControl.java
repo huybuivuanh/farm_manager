@@ -29,7 +29,8 @@ public class FieldControl {
     public ObservableList<String> cropType;
 
     public FieldControl(){
-        fieldList = FXCollections.observableArrayList();
+
+        fieldList = dataManager.initializeFieldsFromDB();
         yearList = FXCollections.observableArrayList();
         cropType = FXCollections.observableArrayList();
     }
