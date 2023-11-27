@@ -35,7 +35,7 @@ public class TaskControl {
      * constructor
      */
     public TaskControl(){
-        taskList = FXCollections.observableArrayList();
+        taskList = dataManager.initializeTasksFromDB();
         finishedTaskList=  FXCollections.observableArrayList();
     }
 

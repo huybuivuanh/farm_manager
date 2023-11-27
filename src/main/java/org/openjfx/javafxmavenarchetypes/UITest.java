@@ -50,7 +50,6 @@ public class UITest extends Application {
         bbins.setText("Bins");
         bbins.setOnAction(e -> stage.setScene(sceneBins));
 
-
         // task page
         TaskView taskPage = new TaskView();
         Scene taskScene = new Scene(taskPage,300,250);

@@ -28,7 +28,7 @@ public class UserControl {
      * constructor
      */
     public UserControl(){
-        allEmployees = FXCollections.observableArrayList();
+        allEmployees = dataManager.initializeUsersFromDB();
         owners =  FXCollections.observableArrayList();
     }
 
