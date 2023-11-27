@@ -23,6 +23,10 @@ public class ChemicalRecord implements DatabaseInterface<ChemicalRecord> {
                 "\nChemical Group: " + chemical.getChemicalGroup().get(0) +  "\nSpraying Date: " + date;
     }
 
+    public String getData(){
+        return chemical.getChemicalName() + " | " + getDate();
+    }
+
     public Chemical getChemical(){ return this.chemical; }
     public LocalDate getDate(){ return this.date; }
 

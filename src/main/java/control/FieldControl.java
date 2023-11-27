@@ -15,22 +15,23 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.time.LocalDate.now;
-
-
-// need to see history of crop planted
-// need to record what crop planted when finished planting
 public class FieldControl {
 
 
     public ObservableList<Field> fieldList;
 
+    public ObservableList<Year> yearList;
+
+
     private dataManager dataManager = new dataManager();
 
 
+    public ObservableList<String> cropType;
 
     public FieldControl(){
         fieldList = FXCollections.observableArrayList();
+        yearList = FXCollections.observableArrayList();
+        cropType = FXCollections.observableArrayList();
     }
 
     public void addField(String field_id, String field_name, double field_size, String field_location)
@@ -102,6 +103,14 @@ public class FieldControl {
             }
         }
         if (deleted != null){
+            ArrayList<Year> fieldYears = new ArrayList<>(deleted.getYears());
+            yearList.removeIf(y -> {
+                if (fieldYears.contains(y)) {
+                    dataManager.removeClass(y);
+                    return true;
+                }
+                return false;
+            });
             dataManager.removeClass(deleted);
             fieldList.remove(deleted);
         }
@@ -121,12 +130,13 @@ public class FieldControl {
         if (fieldSearched != null){
             if (fieldSearched.getCurrent_Year() == null){
                 Year cropYear = new Year(null, LocalDate.now().getYear(), LocalDate.now());
-                Year dbYear = new dataManager().saveClass(cropYear);
+                Year dbYear = dataManager.saveClass(cropYear);
                 dbYear.setCrop(crop);
                 dbYear.setSeeding_rate(seedingRate);
                 dbYear.setSeeding_date(seedingDate);
                 fieldSearched.setCurrentYear(dbYear);
                 fieldSearched.addYear(dbYear);
+                addToYearList();
             }
             else {
                 System.out.println("Farm is currently full of crop");
@@ -159,9 +169,7 @@ public class FieldControl {
     }
     public Crop makeCrop(ObjectId dbid,String cropType, String cropVariety, double bushelWeight){
         Crop baseCrop = new Crop(dbid, cropType, cropVariety, bushelWeight);
-        Crop dbCrop = dataManager.saveClass(baseCrop);
-        return dbCrop;
-
+        return dataManager.saveClass(baseCrop);
     }
     public void addChemical(String fieldID, double fertilizerRate, String chemicalSprayed, String chemicalGroup, LocalDate sprayingDate){
         Field searchedField = null;
@@ -187,6 +195,29 @@ public class FieldControl {
             }
         } else {
             System.out.println("Can't find field with ID (" + fieldID + ")");
+        }
+    }
+
+    private void addToYearList(){
+        yearList.clear();
+        for (Field field : fieldList){
+            yearList.addAll(field.getYears());
+        }
+    }
+
+
+    public void addCropType(String crop_type){
+        boolean existed = false;
+        for (String type : cropType){
+            if (type.equals(crop_type)){
+                existed = true;
+                break;
+            }
+        }
+        if (!existed){
+            cropType.add(crop_type);
+        } else {
+            System.out.println("Crop type already existed");
         }
     }
 }

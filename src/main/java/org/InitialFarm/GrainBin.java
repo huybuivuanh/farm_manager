@@ -84,21 +84,14 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
      * @param tough: whether grain is moist enough for it to cause issues or not.
      */
     public void addCrop(Crop cropToBeAdded, int grain, boolean inputBushels, boolean clean, boolean tough){
-//        if (isEmpty() && cropToBeAdded != currentCrop){
-//            if (this.currentCrop != null) {
-//                this.lastCrop = this.currentCrop;
-//            }
-//            this.currentCrop = cropToBeAdded;
-//        }else if (cropToBeAdded != this.currentCrop){
-//            //TODO throw exception
-//        }
-        if (isEmpty() && !currentCropType.equals(cropToBeAdded.getCropType())){
-            if (this.currentCrop != null){
+        if (isEmpty() && cropToBeAdded != currentCrop){
+            if (this.currentCrop != null) {
                 this.lastCrop = this.currentCrop;
             }
             this.currentCrop = cropToBeAdded;
             this.currentCropType = currentCrop.getCropType();
-        } else if (!currentCropType.equals(cropToBeAdded.getCropType())){
+        }else if (cropToBeAdded != this.currentCrop){
+            // TODO throw exception
             System.out.println("Can't add different crop type to bin when bin is not empty");
             return;
         }
@@ -112,7 +105,7 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
     }
 
     private void fillLbs( int lbs){
-        if (cropBushels + lbsToBushels(lbs) > binSize){
+        if (lbs > binSize){
             //TODO throw exception
             System.out.println("Capacity Exceeded");
             return;
@@ -140,8 +133,6 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
     }
 
     public void clearBin(){
-        lastCrop = currentCrop;
-        currentCrop = null;
         cropBushels = (double) 0;
         cropLbs = (double) 0;
     }

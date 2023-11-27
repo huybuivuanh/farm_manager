@@ -391,6 +391,14 @@ public class dataManager {
            else{
                 newYear.setSeeding_rate(0);
             }
+
+            if (objectDoc.getString("fieldName") != null) {
+                newYear.setFieldName(objectDoc.getString("fieldName"));
+            }
+            else{
+                newYear.setFieldName("");
+            }
+
             if (objectDoc.getDouble("fertilizerRate") != null) {
                 newYear.setFertilizer_rate(objectDoc.getDouble("fertilizerRate"));
             }
