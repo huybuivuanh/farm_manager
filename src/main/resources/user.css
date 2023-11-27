@@ -50,6 +50,10 @@
     -fx-border-color: #7f8c8d; /* Darker border color on hover */
 }
 
+.table-cell {
+    -fx-alignment: CENTER;
+}
+
 
 .page-label {
     -fx-font-family: "Quicksand", sans-serif; /* Stylish font family */
