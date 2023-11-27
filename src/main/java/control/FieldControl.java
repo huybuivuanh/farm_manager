@@ -206,6 +206,22 @@ public class FieldControl {
             System.out.println("Can't find field with ID (" + fieldID + ")");
         }
     }
+
+    public void addCropType(String crop_type){
+        boolean existed = false;
+        for (String type : cropType){
+            if (type.equals(crop_type)){
+                existed = true;
+                break;
+            }
+        }
+        if (!existed){
+            cropType.add(crop_type);
+        } else {
+            System.out.println("Crop type already existed");
+        }
+    }
+
     private void addToYearList(){
         yearList.clear();
         for (Field field : fieldList){
