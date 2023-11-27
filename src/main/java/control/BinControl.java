@@ -2,6 +2,7 @@ package control;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import org.InitialFarm.Crop;
 import org.InitialFarm.GrainBin;
 import org.InitialFarm.dataManager;
@@ -77,7 +78,7 @@ public class BinControl {
             }
         }
         if (binSearched != null){
-            if (binSearched.getCurrentCrop() != null) {
+            if (!binSearched.isEmpty()) {
                 binSearched.clearBin();
                 binSearched = dataManager.updateClass(binSearched);
             } else {
@@ -114,6 +115,7 @@ public class BinControl {
 
             if (grainWeight + binSearched.getCropBushels() > binSearched.getBinSize()){
                 System.out.println("Maximum Capacity Exceeded");
+                showErrorPopup("Maximum Capacity Exceeded");
             } else {
                 Crop baseCrop = new Crop(dbid, cropType, cropVariety, bushelWeight);
                 dbCrop = dataManager.saveClass(baseCrop);
@@ -156,6 +158,14 @@ public class BinControl {
 
     private Double lbsToBushels(double lbs, double bushelWeight){
         return (lbs/bushelWeight);
+    }
+
+    private void showErrorPopup(String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Message");
+        alert.setHeaderText("INVALID");
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
 }
