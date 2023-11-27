@@ -98,7 +98,7 @@ public class UITest extends Application implements Runnable {
         UITest UItest = new UITest();
         Thread t1 = new Thread(test);
         Thread t2 = new Thread(UItest);
-        t1.start(); t2.start();
+        t2.start(); t1.start();
 
 
     }
