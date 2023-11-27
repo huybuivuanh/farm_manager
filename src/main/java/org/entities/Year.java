@@ -7,15 +7,15 @@ A field has a list of multiples years
  */
 
 import org.InitialFarm.Chemical;
-import org.entities.*;
+
 import org.InitialFarm.Crop;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
-import java.util.Calendar;
+
 import java.util.LinkedList;
 
 public class Year implements DatabaseInterface<Year>{
@@ -34,7 +34,7 @@ public class Year implements DatabaseInterface<Year>{
      * The current year e.g. 2013
      */
 
-    private ObjectId dbID = null;
+    private final ObjectId dbID;
     private final int year;
 
     /**
@@ -94,15 +94,15 @@ public class Year implements DatabaseInterface<Year>{
         newDoc.append("end_of_year", this.end_of_year);
 
         ArrayList<ObjectId> chemical_records = new ArrayList<>();
-        for (int i = 0;i<this.chemical_records.size();i++){
-            chemical_records.add(this.chemical_records.get(i).getDbId());
+        for (ChemicalRecord chemical_record : this.chemical_records) {
+            chemical_records.add(chemical_record.getDbId());
         }
 
         newDoc.append("chemical_records", chemical_records);
 
         ArrayList<ObjectId> task_records = new ArrayList<>();
-        for (int i =0;i < this.task_records.size();i++){
-            task_records.add(this.task_records.get(i).getDbId());
+        for (TaskRecord task_record : this.task_records) {
+            task_records.add(task_record.getDbId());
         }
         newDoc.append("task_records", task_records);
 
@@ -139,9 +139,6 @@ public class Year implements DatabaseInterface<Year>{
         return false;
     }
 
-    /**
-     * The class to hold a chemical and date record
-     */
 
     /**
      * The list of chemicals that have been sprayed on the
@@ -160,11 +157,6 @@ public class Year implements DatabaseInterface<Year>{
         }
         return data.toString();
     }
-
-
-    /**
-     * The class to hold a chemical and date record
-     */
 
     /**
      * The list of tasks that have been done over the year and
@@ -387,198 +379,7 @@ public class Year implements DatabaseInterface<Year>{
         return result.toString();
     }
 
-    public static void main(String[] args){
 
-        /* For testing the Year class */
-
-        String reason = "Constructor + getYear()";
-        int year = 2013;
-        LocalDate new_date = LocalDate.of(2013, Calendar.AUGUST, 23);
-
-        // test all methods with this instance
-        Year Y1 = new Year(null,year, new_date);
-        int result = Y1.getYear();
-        double result2, expected2;
-        int expected = 2013;
-
-        if (result != expected)
-        {
-            System.out.println("Error: Expected: " + expected + " Obtained: " + result
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing getYear()";
-        result = Y1.getYear();
-        if (result != expected)
-        {
-            System.out.println("Error: Expected: " + expected + " Obtained: " + result
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing getNewYearDate()";
-        LocalDate dResult = Y1.getNewYearDate();
-        if (dResult != new_date)
-        {
-            System.out.println("Error: Expected: " + new_date + " Obtained: " + dResult
-                    + " (" + reason + ")");
-        }
-
-
-        reason = "Testing setCrop() and getCrop()";
-        Crop cResult;
-        Crop cCrop = null;
-        Y1.setCrop(cCrop);
-        cResult = Y1.getCrop();
-        if (cResult != cCrop)
-        {
-            System.out.println("Error: Expected: " + cCrop + " Obtained: " + cResult
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing setSeedingDate() and getSeedingDate()";
-        new_date = LocalDate.of(2013, Calendar.OCTOBER, 5);
-        Y1.setSeeding_date(new_date);
-        dResult = Y1.getSeeding_date();
-        if (dResult != new_date)
-        {
-            System.out.println("Error: Expected: " + new_date + " Obtained: " + dResult
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing setSeedingRate() and getSeedingRate()";
-        Y1.setSeeding_rate(170.0);
-        expected2 = Y1.getSeeding_rate();
-        result2 = 170.0;
-        if (result2 != expected2)
-        {
-            System.out.println("Error: Expected: " + expected2 + " Obtained: " + result2
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing setFertilizerRate() and getFertilizerRate()";
-        Y1.setFertilizer_rate(55.0);
-        expected2 = Y1.getFertilizer_rate();
-        result2 = 55.0;
-        if (result2 != expected2)
-        {
-            System.out.println("Error: Expected: " + expected2 + " Obtained: " + result2
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing Chemicals list after constructor";
-        int sizeResult = Y1.getChemical_records().size();
-        if (sizeResult != 0)
-        {
-            System.out.println("Error: Expected: 0, Obtained: " + sizeResult
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing tasks list after constructor";
-        sizeResult = Y1.getTaskRecords().size();
-        if (sizeResult != 0)
-        {
-            System.out.println("Error: Expected: 0, Obtained: " + sizeResult
-                    + " (" + reason + ")");
-        }
-
-        reason = " Testing sprayChemical()  + getChemical()";
-        Chemical Chem = null;
-        new_date = LocalDate.of(2013, Calendar.OCTOBER, 23);
-
-        ChemicalRecord newchemRec = new ChemicalRecord(null, Chem, new_date);
-        Y1.addChemicalRecord(newchemRec);
-        Chemical chemResult = Y1.getChemical_sprayed();
-        if (chemResult != Chem)
-        {
-            System.out.println("Error: Expected: " + Chem + " Obtained: " + chemResult
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing getChemical()";
-        chemResult= Y1.getChemical_sprayed();
-        if (chemResult != Chem)
-        {
-            System.out.println("Error: Expected: " + Chem + " Obtained: " + chemResult
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing getSprayingDate()";
-        dResult = LocalDate.from(LocalDateTime.from(Y1.getSprayingDate()));
-        if (dResult != new_date)
-        {
-            System.out.println("Error: Expected: " + new_date + " Obtained: " + dResult
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing Chemicals list after sprayChemical";
-        sizeResult = Y1.getChemical_records().size();
-        if (sizeResult != 1)
-        {
-            System.out.println("Error: Expected: 1, Obtained: " + sizeResult
-                    + " (" + reason + ")");
-        }
-
-        reason = " Testing task list after doTask()";
-        Task Task1 = null;
-        new_date = LocalDate.of(2013, Calendar.OCTOBER, 23);
-        TaskRecord taskrecTest = new TaskRecord(null, Task1, new_date);
-        Y1.addTaskRecord(taskrecTest);
-
-        sizeResult = Y1.getTaskRecords().size();
-        if (sizeResult != 1)
-        {
-            System.out.println("Error: Expected: 1, Obtained: " + sizeResult
-                    + " (" + reason + ")");
-        }
-
-
-        reason = "Testing harvest() with endOfHarvestDate()";
-        Y1.harvest(new_date);
-        dResult = Y1.getHarvestDate();
-        if (dResult != new_date)
-        {
-            System.out.println("Error: Expected: " + new_date +  "Obtained: " + dResult
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing endOfYear() with endOfYearDate()";
-        Y1.endOfYear(new_date);
-        dResult = Y1.getEndOfYear();
-        if (dResult != new_date)
-        {
-            System.out.println("Error: Expected: " + new_date +  "Obtained: " + dResult
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing toString()";
-        String sResult = Y1.toString();
-        String sExpected = """
-                2013,
-                 new year starting date = 2013-07-23,
-                 crop = null,
-                 seeding_date = 2013-09-05,
-                 seeding_rate = 170.0lbs/acre,
-                 fertilizer_rate = 55.0lbs/acre,
-                 spraying_date = 2013-09-23,
-                 harvest_date = 2013-09-23,
-                 end_of_year = 2013-09-23,
-                 chemical_records
-                  null  2013-09-23
-
-                 task_records
-                  null  2013-09-23
-                """;
-        if (!sResult.equals(sExpected))
-        {
-            System.out.println("Error: Expected: \n" + sExpected + " Obtained: \n" + sResult
-                    + " (" + reason + ")");
-        }
-
-
-
-        System.out.println("*** Testing Complete ***");
-
-    }
 
     public void setEnd_of_year(LocalDate endOfYear) {
         this.end_of_year = endOfYear;

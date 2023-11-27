@@ -3,21 +3,22 @@ package org.entities;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
+
 
 public interface DatabaseInterface<T> {
-    public Document classToDoc();
+    Document classToDoc();
 
-    public Document docToClass();
+    Document docToClass();
 
 
 
-    public void save();
+    void save();
 
-    public void sync();
+    void sync();
+
     //changed below to getDbId bcz other classes have ID and getID methods was leading to class
-     public ObjectId getDbId();
+    ObjectId getDbId();
 
 
-    public boolean isDatabase();
+    boolean isDatabase();
 }

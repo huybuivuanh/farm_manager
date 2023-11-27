@@ -9,7 +9,7 @@ public class TaskRecord implements DatabaseInterface<TaskRecord>{
     Task task;
     LocalDate date;
 
-    ObjectId dbId = null;
+    ObjectId dbId;
 
     public TaskRecord(ObjectId dbid,Task _task, LocalDate _date){
         dbId = dbid;
