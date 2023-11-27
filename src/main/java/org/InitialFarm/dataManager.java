@@ -329,6 +329,12 @@ public class dataManager {
             else{
                 newGrainBin.setLastCrop(null);
             }
+            if (objectDoc.getString("currentCropType") != null){
+                newGrainBin.setCurrentCropType(objectDoc.getString("currentCropType"));
+            }
+            else{
+                newGrainBin.setCurrentCropType("");
+            }
 
             if (objectDoc.getDouble("cropBushels") != null) {
                 newGrainBin.setCropBushels(objectDoc.getDouble("cropBushels"));
@@ -385,6 +391,14 @@ public class dataManager {
            else{
                 newYear.setSeeding_rate(0);
             }
+
+            if (objectDoc.getString("fieldName") != null) {
+                newYear.setFieldName(objectDoc.getString("fieldName"));
+            }
+            else{
+                newYear.setFieldName("");
+            }
+
             if (objectDoc.getDouble("fertilizerRate") != null) {
                 newYear.setFertilizer_rate(objectDoc.getDouble("fertilizerRate"));
             }

@@ -58,6 +58,10 @@
     -fx-padding: 10 0; /* Padding to add space around the title */
 }
 
+.table-cell {
+    -fx-alignment: CENTER;
+}
+
 .root {
     -fx-background-color: #F2FFE9; /* Subtle light gray background */
 }

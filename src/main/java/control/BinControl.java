@@ -2,6 +2,7 @@ package control;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import org.InitialFarm.Crop;
 import org.InitialFarm.GrainBin;
 import org.InitialFarm.dataManager;
@@ -61,6 +62,7 @@ public class BinControl {
         }
         if (binSearched != null){
             binSearched.addCrop(cropType, grain, inputBushels, clean, tough);
+            binSearched = dataManager.updateClass(binSearched);
         }
         else {
             System.out.println("Can't find bin with ID (" + bin_id + ")");
@@ -76,9 +78,12 @@ public class BinControl {
             }
         }
         if (binSearched != null){
-            binSearched.clearBin();
-            binSearched = dataManager.updateClass(binSearched);
-
+            if (!binSearched.isEmpty()) {
+                binSearched.clearBin();
+                binSearched = dataManager.updateClass(binSearched);
+            } else {
+                System.out.println("Bin is empty!");
+            }
         }
         else{
             System.out.println("Cant find bin with ID (" + bin_id + ")");
@@ -93,11 +98,32 @@ public class BinControl {
      * @param bushelWeight
      * @return
      */
-    public Crop makeCrop(ObjectId dbid,String cropType, String cropVariety, double bushelWeight){
-        Crop baseCrop = new Crop(dbid, cropType, cropVariety, bushelWeight);
-        Crop dbCrop = dataManager.saveClass(baseCrop);
-        return dbCrop;
+    public Crop makeCrop(ObjectId binID, int grain, boolean inputBushels, ObjectId dbid,String cropType, String cropVariety, double bushelWeight){
+        GrainBin binSearched = null;
+        for (GrainBin bin : binList){
+            if (bin.getDbId().equals(binID)){
+                binSearched = bin;
+                break;
+            }
+        }
+        double grainWeight = grain;
+        Crop dbCrop = null;
+        if (binSearched != null){
+            if (!inputBushels){
+                grainWeight = lbsToBushels(grain, bushelWeight);
+            }
 
+            if (grainWeight + binSearched.getCropBushels() > binSearched.getBinSize()){
+                System.out.println("Maximum Capacity Exceeded");
+                showErrorPopup("Maximum Capacity Exceeded");
+            } else {
+                Crop baseCrop = new Crop(dbid, cropType, cropVariety, bushelWeight);
+                dbCrop = dataManager.saveClass(baseCrop);
+            }
+        } else{
+            System.out.println("Cant find bin with ID (" + binID + ")");
+        }
+        return dbCrop;
     }
     public void addCropType(String crop_type){
         boolean existed = false;
@@ -113,4 +139,33 @@ public class BinControl {
             System.out.println("Crop type already existed");
         }
     }
+
+    public void unload(ObjectId binID, int grain, boolean isBushel){
+        GrainBin binSearched = null;
+        for (GrainBin bin : binList){
+            if (bin.getDbId().equals(binID)){
+                binSearched = bin;
+                break;
+            }
+        }
+        if (binSearched != null){
+            binSearched.unloadBin(grain, isBushel);
+            binSearched = dataManager.updateClass(binSearched);
+        } else{
+            System.out.println("Cant find bin with ID (" + binID + ")");
+        }
+    }
+
+    private Double lbsToBushels(double lbs, double bushelWeight){
+        return (lbs/bushelWeight);
+    }
+
+    private void showErrorPopup(String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Message");
+        alert.setHeaderText("INVALID");
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
 }

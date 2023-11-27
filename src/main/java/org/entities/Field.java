@@ -386,5 +386,8 @@ public class Field implements DatabaseInterface<Field>
 
     public void setCurrentYear(Year input) {
         current_Year = input;
+        if (input != null){
+            input.setFieldName(name);
+        }
     }
 }

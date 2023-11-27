@@ -20,6 +20,16 @@ import java.util.LinkedList;
 
 public class Year implements DatabaseInterface<Year>{
 
+    private String fieldName;
+
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
     /**
      * The current year e.g. 2013
      */
@@ -61,6 +71,7 @@ public class Year implements DatabaseInterface<Year>{
     public Document classToDoc() {
 
         Document newDoc = new Document();
+        newDoc.append("fieldName", this.fieldName);
         newDoc.append("year", this.year);
         newDoc.append("new_year", this.new_year);
         if (this.crop != null) {
@@ -138,6 +149,18 @@ public class Year implements DatabaseInterface<Year>{
      */
     // bookmark
     private final LinkedList<ChemicalRecord> chemical_records;
+
+    public String getChemicalRecordData(LinkedList<ChemicalRecord> chemicalRecords) {
+        StringBuilder data = new StringBuilder();
+        for (ChemicalRecord chemicalRecord : chemicalRecords) {
+            if (!data.isEmpty()) {
+                data.append("\n");
+            }
+            data.append(chemicalRecord.getData());
+        }
+        return data.toString();
+    }
+
 
     /**
      * The class to hold a chemical and date record
