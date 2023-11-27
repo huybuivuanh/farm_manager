@@ -136,9 +136,10 @@ public class FieldControl {
                 dbYear.setCrop(crop);
                 dbYear.setSeeding_rate(seedingRate);
                 dbYear.setSeeding_date(seedingDate);
-                dataManager.updateClass(dbYear);
+                dbYear = dataManager.updateClass(dbYear);
                 fieldSearched.setCurrentYear(dbYear);
                 fieldSearched.addYear(dbYear);
+                fieldSearched = dataManager.updateClass(fieldSearched);
                 addToYearList();
             }
             else {
@@ -193,6 +194,7 @@ public class FieldControl {
 
                 searchedField.getCurrent_Year().setFertilizer_rate(fertilizerRate);
                 searchedField.getCurrent_Year().addChemicalRecord(dbChemRec);
+                searchedField = dataManager.updateClass(searchedField);
             } else {
                 System.out.println("Field with ID (" + fieldID + ") is already harvested or no crop is planted.");
             }
