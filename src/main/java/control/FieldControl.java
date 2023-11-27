@@ -87,7 +87,7 @@ public class FieldControl {
                 edited.setName(new_field_name);
                 edited.setSize(new_field_size);
                 edited.setLocation(new_field_location);
-                edited = dataManager.updateClass(edited);
+                dataManager.updateClass(edited);
             }
             else{
                 System.out.println("The suggested new Field ID is already in use.");
@@ -136,10 +136,10 @@ public class FieldControl {
                 dbYear.setCrop(crop);
                 dbYear.setSeeding_rate(seedingRate);
                 dbYear.setSeeding_date(seedingDate);
-                dbYear = dataManager.updateClass(dbYear);
                 fieldSearched.setCurrentYear(dbYear);
                 fieldSearched.addYear(dbYear);
-                fieldSearched = dataManager.updateClass(fieldSearched);
+                dataManager.updateClass(dbYear);
+                dataManager.updateClass(fieldSearched);
                 addToYearList();
             }
             else {
@@ -163,7 +163,7 @@ public class FieldControl {
             if (searchedField.getCurrent_Year() != null) {
                 searchedField.getCurrent_Year().harvest(LocalDate.now());
                 searchedField.setCurrentYear(null);
-                searchedField = dataManager.updateClass(searchedField);
+                dataManager.updateClass(searchedField);
             } else {
                 System.out.println("Field with ID (" + fieldID + ") is already harvested or no crop is planted.");
             }
@@ -194,7 +194,7 @@ public class FieldControl {
 
                 searchedField.getCurrent_Year().setFertilizer_rate(fertilizerRate);
                 searchedField.getCurrent_Year().addChemicalRecord(dbChemRec);
-                searchedField = dataManager.updateClass(searchedField);
+                dataManager.updateClass(searchedField);
             } else {
                 System.out.println("Field with ID (" + fieldID + ") is already harvested or no crop is planted.");
             }
