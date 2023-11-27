@@ -15,6 +15,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.InitialFarm.Crop;
 import org.bson.types.ObjectId;
 import org.entities.ChemicalRecord;
@@ -574,6 +575,68 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 bushelWeightCol2, seedingRateCol2, seedingDateCol2, fertilizerRateCol2, chemicalRecordCol2, harvestDateCol2);
 
 
+        // Map to store colors for each crop type
+        Map<String, String> cropTypeColors = new HashMap<>();
+        // Custom row factory to set the background color based on crop type
+        yearTable.setRowFactory(new Callback<TableView<Year>, TableRow<Year>>() {
+            @Override
+            public TableRow<Year> call(TableView<Year> param) {
+                return new TableRow<Year>() {
+                    @Override
+                    protected void updateItem(Year item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (item == null || empty) {
+                            setStyle(""); // Reset style for empty cells
+                        } else {
+                            String cropType = item.getCrop().getCropType();
+
+                            // Check if the color is already assigned for this crop type
+                            if (!cropTypeColors.containsKey(cropType)) {
+                                // If not, generate a random color and store it in the map
+                                String randomColor = generateRandomColor();
+                                cropTypeColors.put(cropType, randomColor);
+                            }
+
+                            // Set the background color based on the stored color for this crop type
+                            setStyle("-fx-background-color: " + cropTypeColors.get(cropType) + ";");
+                        }
+                    }
+                };
+            }
+        });
+
+//        // Custom cell factory to set the background color based on crop type
+//        cropTypeCol.setCellFactory(new Callback<TableColumn<Year, String>, TableCell<Year, String>>() {
+//            @Override
+//            public TableCell<Year, String> call(TableColumn<Year, String> param) {
+//                return new TableCell<Year, String>() {
+//                    @Override
+//                    protected void updateItem(String item, boolean empty) {
+//                        super.updateItem(item, empty);
+//
+//                        if (item == null || empty) {
+//                            setText(null);
+//                            setStyle(""); // Reset style for empty cells
+//                        } else {
+//                            setText(item);
+//
+//                            // Check if the color is already assigned for this crop type
+//                            if (!cropTypeColors.containsKey(item)) {
+//                                // If not, generate a random color and store it in the map
+//                                String randomColor = generateRandomColor();
+//                                cropTypeColors.put(item, randomColor);
+//                            }
+//
+//                            // Set the background color based on the stored color for this crop type
+//                            setStyle("-fx-background-color: " + cropTypeColors.get(item) + ";");
+//                        }
+//                    }
+//                };
+//            }
+//        });
+
+
         cropPage.getChildren().addAll(cropBackToField, cropPageTitle, currentYearLabel, currentYearTable, cropHistoryLabel, yearTable);
 
 
@@ -613,6 +676,19 @@ public class FieldView extends StackPane implements ModelSubscriber {
         alert.setHeaderText("CONFIRM MESSAGE");
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    // Method to generate a random color in hexadecimal format
+    private String generateRandomColor() {
+        int minThreshold = 300;
+        int r, g, b;
+        Random random = new Random();
+        do {
+            r = random.nextInt(256);
+            g = random.nextInt(256);
+            b = random.nextInt(256);
+        } while (r + g + b < minThreshold);
+        return String.format("#%02x%02x%02x", r, g, b);
     }
 
     @Override
