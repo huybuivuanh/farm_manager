@@ -657,6 +657,32 @@ public class dataManager {
         return binList;
     }
 
+    public ObservableList<Year> initializeYearsFromDB(){
+
+        ObservableList<Year> yearList = FXCollections.observableArrayList();;
+
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            MongoDatabase database =  mongoClient.getDatabase("FarmData");
+            MongoCollection<Document> col = database.getCollection("year_list");
+            // get all entries
+            FindIterable<Document> entries = col.find();
+            System.out.println(entries);
+            // loop through entries and instantiate them into java objects.
+            try (MongoCursor<Document> cursor = entries.iterator()){
+                while (cursor.hasNext()){
+                    Document doc = cursor.next();
+                    yearList.add(fetchObject("Year", doc));
+                }
+            }
+            mongoClient.close();
+            System.out.println("Successfully added all contents of the database years collection.");
+        }
+        catch (Exception e){
+            System.out.println("failed to load all contents of the database years collection.");
+        }
+        return yearList;
+    }
+
 
 //    public static void initializeFromDB(){
 //        //Todo: need to go through database collections in order
