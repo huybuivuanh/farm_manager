@@ -47,5 +47,6 @@
 
 .root {
     -fx-background-color: #F2FFE9;
+    -fx-padding: 5;
 }
 
