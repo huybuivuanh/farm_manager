@@ -705,112 +705,14 @@ public class dataManager {
 //            }
 //        }
 //    }
-    public ObservableList<Task> initializeTasksFromDB(){
-        //Todo: need to go through database task collection
-        // build all tasks and add them to an Observable list
-        // return the observable list => this will be used to initialize the controller's list of tasks
-
-            ObservableList<Task> taskList = FXCollections.observableArrayList();;
-
-            try (MongoClient mongoClient = MongoClients.create(uri)) {
-                MongoDatabase database =  mongoClient.getDatabase("FarmData");
-                MongoCollection<Document> col = database.getCollection("task_list");
-                // get all entries
-                FindIterable<Document> entries = col.find();
-                // loop through entries and instantiate them into java objects.
-                try (MongoCursor<Document> cursor = entries.iterator()){
-                    while (cursor.hasNext()){
-                        Document doc = cursor.next();
-                        taskList.add(fetchObject("Task", doc));
-                    }
-                }
-                mongoClient.close();
-                System.out.println("Successfully added all contents of the database tasks collection.");
-            }
-            catch (Exception e){
-                System.out.println("failed to load all contents of the database tasks collection.");
-            }
-            return taskList;
-        }
 
 
-    public ObservableList<User> initializeUsersFromDB(){
 
-        ObservableList<User> userList = FXCollections.observableArrayList();;
 
-        try (MongoClient mongoClient = MongoClients.create(uri)) {
-            MongoDatabase database =  mongoClient.getDatabase("FarmData");
-            MongoCollection<Document> col = database.getCollection("employee_list");
-            // get all entries
-            FindIterable<Document> entries = col.find();
-            System.out.println(entries);
-            // loop through entries and instantiate them into java objects.
-            try (MongoCursor<Document> cursor = entries.iterator()){
-                while (cursor.hasNext()){
-                    Document doc = cursor.next();
-                    userList.add(fetchObject("Employee", doc));
-                }
-            }
-            mongoClient.close();
-            System.out.println("Successfully added all contents of the database users collection.");
-        }
-        catch (Exception e){
-            System.out.println("failed to load all contents of the database users collection.");
-        }
-        return userList;
-    }
 
-    public ObservableList<Field> initializeFieldsFromDB(){
 
-        ObservableList<Field> fieldList = FXCollections.observableArrayList();;
 
-        try (MongoClient mongoClient = MongoClients.create(uri)) {
-            MongoDatabase database =  mongoClient.getDatabase("FarmData");
-            MongoCollection<Document> col = database.getCollection("field_list");
-            // get all entries
-            FindIterable<Document> entries = col.find();
-            System.out.println(entries);
-            // loop through entries and instantiate them into java objects.
-            try (MongoCursor<Document> cursor = entries.iterator()){
-                while (cursor.hasNext()){
-                    Document doc = cursor.next();
-                    fieldList.add(fetchObject("Field", doc));
-                }
-            }
-            mongoClient.close();
-            System.out.println("Successfully added all contents of the database fields collection.");
-        }
-        catch (Exception e){
-            System.out.println("failed to load all contents of the database fields collection.");
-        }
-        return fieldList;
-    }
 
-    public ObservableList<GrainBin> initializeGrainBinsFromDB(){
-
-        ObservableList<GrainBin> binList = FXCollections.observableArrayList();;
-
-        try (MongoClient mongoClient = MongoClients.create(uri)) {
-            MongoDatabase database =  mongoClient.getDatabase("FarmData");
-            MongoCollection<Document> col = database.getCollection("grain_bin_list");
-            // get all entries
-            FindIterable<Document> entries = col.find();
-            System.out.println(entries);
-            // loop through entries and instantiate them into java objects.
-            try (MongoCursor<Document> cursor = entries.iterator()){
-                while (cursor.hasNext()){
-                    Document doc = cursor.next();
-                    binList.add(fetchObject("GrainBin", doc));
-                }
-            }
-            mongoClient.close();
-            System.out.println("Successfully added all contents of the database bins collection.");
-        }
-        catch (Exception e){
-            System.out.println("failed to load all contents of the database bins collection.");
-        }
-        return binList;
-    }
 
 
 //    public static void initializeFromDB(){
