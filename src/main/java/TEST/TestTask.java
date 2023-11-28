@@ -1,7 +1,6 @@
 package TEST;
 
 import javafx.collections.ObservableList;
-import org.entities.Employee;
 import org.entities.User;
 import org.entities.Owner;
 import org.entities.Task;
@@ -19,12 +18,11 @@ public class TestTask {
     }
 
 
-    public static void main(String[] args) {
+    public static void main() {
 
         int count = 0, failed = 0;
 
         LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY, 2);
-        LocalDate specificDate = LocalDate.of(2111, Month.JANUARY, 1);
 
         Owner staff1 = new Owner(null, "ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob);
         Owner staff2 = new Owner(null, "ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob);

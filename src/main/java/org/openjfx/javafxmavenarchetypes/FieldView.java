@@ -680,14 +680,16 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
     // Method to generate a random color in hexadecimal format
     private String generateRandomColor() {
-        int minThreshold = 300;
+        int minThreshold = 600;
         int r, g, b;
         Random random = new Random();
+        int sum;
         do {
-            r = random.nextInt(256);
-            g = random.nextInt(256);
-            b = random.nextInt(256);
-        } while (r + g + b < minThreshold);
+            r = random.nextInt(180,256);
+            g = random.nextInt(180,256);
+            b = random.nextInt(180,256);
+            sum = r + g + b;
+        } while (sum < minThreshold);
         return String.format("#%02x%02x%02x", r, g, b);
     }
 

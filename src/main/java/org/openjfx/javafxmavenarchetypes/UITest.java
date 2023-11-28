@@ -1,5 +1,6 @@
 package org.openjfx.javafxmavenarchetypes;
 
+import TEST.TestAll;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,7 +13,7 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
-public class UITest extends Application {
+public class UITest extends Application implements Runnable {
 
     @Override
     public void start(Stage stage) {
@@ -93,6 +94,20 @@ public class UITest extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args);
+        TestAll test = new TestAll();
+        UITest UItest = new UITest();
+        Thread t1 = new Thread(test);
+        Thread t2 = new Thread(UItest);
+        t2.start(); t1.start();
+
+
+    }
+
+    /**
+     * Runs this operation.
+     */
+    @Override
+    public void run() {
+        launch();
     }
 }

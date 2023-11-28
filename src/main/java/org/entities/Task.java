@@ -5,13 +5,8 @@ import javafx.collections.ObservableList;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 public class Task implements DatabaseInterface<Task>{
     /**
@@ -22,7 +17,7 @@ public class Task implements DatabaseInterface<Task>{
     /**
      * The unique ID of the Task for the DataBase
      */
-    private ObjectId dbID;
+    private final ObjectId dbID;
 
     /**
      * task name
@@ -48,7 +43,7 @@ public class Task implements DatabaseInterface<Task>{
     /**
      * list of staffs working on this task
      */
-    private ObservableList<User> staffList;
+    private final ObservableList<User> staffList;
 
     private boolean isCompleted = false;
     private LocalDateTime completionDate;
@@ -216,17 +211,18 @@ public class Task implements DatabaseInterface<Task>{
         if (staff != null){
             boolean found = false;
             // make sure task is not already assigned to user
-            // I would have used list.contains but i am concerned about it not being the same object when db does things, it would be identical details but not same object instance
+            // I would have used list.contains, but I am concerned about it not being the same object when db does things, it would be identical details but not same object instance
             for (User staffIter : staffList) {
                 if (staffIter.getID().equals(staff.getID())) {
-//                    System.out.println("The staff member "+staff.getFirstName() + " " + staff.getLastName() + " is already assigned to the task '"+ this.taskName+ "' ! \n Here is the current stafflist: " + staffList);
+//                    System.out.println("The staff member "+staff.getFirstName() + " " + staff.getLastName() + " is already assigned to the task '"+ this.taskName+ "' ! \n Here is the current staff list: " + staffList);
                     found = true;
+                    break;
                 }
             }
             if (!found) {
                 staffList.add(staff);
                 staff.addTask(this);
-//                System.out.println("Staff member " + staff.getFirstName() + " " + staff.getLastName() + " successfully added to the task '"+ this.taskName+ "' ! \n Here is the current stafflist: " + staffList);
+//                System.out.println("Staff member " + staff.getFirstName() + " " + staff.getLastName() + " successfully added to the task '"+ this.taskName+ "' ! \n Here is the current staff list: " + staffList);
             }
         }
         else {
@@ -282,17 +278,11 @@ public class Task implements DatabaseInterface<Task>{
 
 
     public void setStatus(String status){
-        if (status.equals("Completed")){
-            markAsCompleted(true);
-        }
-        else if (status.equals("Paused")) {
-            pauseTask(true);
-        }
-        else if (status.equals("Incomplete")){
-            markAsCompleted(false);
-        }
-        else{
-            System.out.println("Status parameter must be (Completed/Paused/In Progress/Incomplete");
+        switch (status) {
+            case "Completed" -> markAsCompleted(true);
+            case "Paused" -> pauseTask(true);
+            case "Incomplete" -> markAsCompleted(false);
+            default -> System.out.println("Status parameter must be (Completed/Paused/In Progress/Incomplete");
         }
     }
 
@@ -333,12 +323,9 @@ public class Task implements DatabaseInterface<Task>{
     public Document classToDoc() {
 
 
-        String taskID = this.getID();
-
-
 
         Document newDoc = new Document();
-        ArrayList<ObjectId> staffList = new ArrayList<ObjectId>();
+        ArrayList<ObjectId> staffList = new ArrayList<>();
         for (User staff : this.getStaffList()) {
             staffList.add(staff.getDbId());
         }
@@ -378,76 +365,4 @@ public class Task implements DatabaseInterface<Task>{
         return false;
     }
 
-    /**
-     * testing
-     * @param args args
-     */
-    public static void main(String[] args){
-        Task task = new Task(null,"1", "task 1", "task 1 description", LocalDateTime.now());
-        LocalDate dob = LocalDate.of(2002, Calendar.FEBRUARY, 2);
-        User staff1 = new User(null,"ID_1", "John1@gmail.com", "pass1", "John1", "Josh1", dob, true);
-        User staff2 = new User(null,"ID_2", "John2@gmail.com", "pass2", "John2", "Josh2", dob, true);
-        task.addStaff(staff1);
-        task.addStaff(staff2);
-
-        // testing getters
-        System.out.println("Testing getters\n");
-        System.out.println("Task ID: " + task.getID());
-        System.out.println("Task DBID: " + task.getDbId());
-        System.out.println("Task name :" + task.getTaskName());
-        System.out.println("Task Description: " + task.getDescription());
-        System.out.println("Created: " + task.getDate());
-        System.out.println("Due Date: " + task.getDueDate());
-        System.out.println("Is overdue: " + task.isOverDue());
-        System.out.println("Completed: " + task.isCompleted());
-        System.out.println("Paused: " + task.isPaused());
-
-
-        StringBuilder result = new StringBuilder();
-        for (User staff : task.getStaffList()) {
-            result.append(staff.getFirstName()).append(", ");
-        }
-        System.out.println("Staff List: [" + result + "]\n");
-
-
-
-
-        // testing setters
-        System.out.println("Testing setters\n");
-        User staff3 = new User(null,"ID_3", "John3@gmail.com", "pass3", "John3", "Josh3", dob, false);
-        LocalDateTime specificDate = LocalDateTime.of(2012, Month.JANUARY, 2, 0, 32, 43);
-
-        task.setID("2");
-        task.setTaskName("task 2");
-        task.setDescription("task 2 description");
-        task.setDueDate(specificDate);
-
-        task.pauseTask(true);
-        task.markAsCompleted(true);
-        task.addStaff(staff3);
-        task.removeStaff(staff2.getID());
-//        task.removeAllStaffs();
-
-        System.out.println("Task ID: " + task.getID());
-        System.out.println("Task name: " + task.getTaskName());
-        System.out.println("Task Description: " + task.getDescription());
-        System.out.println("Created: " + task.getDate());
-        System.out.println("Due Date: " + task.getDueDate());
-        System.out.println("Is overdue: " + task.isOverDue());
-        System.out.println("Completed: " + task.isCompleted());
-        System.out.println("Paused: " + task.isPaused());
-
-
-        StringBuilder result2 = new StringBuilder();
-        for (User staff : task.getStaffList()) {
-            result2.append(staff.getFirstName()).append(", ");
-        }
-        System.out.println("Staff List: [" + result2 + "]\n");
-
-
-        task.removeAllStaff();
-        System.out.println("Staff List: " + task.getStaffList());
-        System.out.println(task);
-
-    }
 }

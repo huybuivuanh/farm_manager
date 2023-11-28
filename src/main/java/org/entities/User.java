@@ -7,7 +7,6 @@ import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class User implements DatabaseInterface<User>{
 
@@ -206,6 +205,7 @@ public class User implements DatabaseInterface<User>{
                 if (taskIter.getID().equals(task.getID())){
 //                    System.out.println("The task "+ task.getTaskName() + " is already assigned to the user! \n Here is the current tasklist: " + taskList);
                     found = true;
+                    break;
                 }
             }
             if (!found){
@@ -265,11 +265,6 @@ public class User implements DatabaseInterface<User>{
         return result.toString();
     }
 
-
-    /**
-     * @param
-     * @return
-     */
     @Override
     public Document classToDoc() {
         Document newDoc= new Document();
@@ -283,7 +278,7 @@ public class User implements DatabaseInterface<User>{
         Boolean owner= this.getOwner();
 
 
-        ArrayList<ObjectId> taskList = new ArrayList<ObjectId>();
+        ArrayList<ObjectId> taskList = new ArrayList<>();
         for (Task task : this.getTaskList()) {
             taskList.add(task.getDbId());
         }
@@ -301,7 +296,7 @@ public class User implements DatabaseInterface<User>{
     }
 
     /**
-     * @return
+     * @return null
      */
     @Override
     public Document docToClass() {
@@ -325,7 +320,7 @@ public class User implements DatabaseInterface<User>{
     }
 
     /**
-     * @return
+     * @return the database ID
      */
     @Override
     public ObjectId getDbId() {
@@ -333,14 +328,14 @@ public class User implements DatabaseInterface<User>{
     }
 
     /**
-     * @return
+     * @param id the Object's ID
      */
     public void setDbId(ObjectId id) {
         this.dbID= id;
     }
 
     /**
-     * @return
+     * @return false
      */
     @Override
     public boolean isDatabase() {

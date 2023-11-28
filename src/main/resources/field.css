@@ -41,11 +41,12 @@
     -fx-font-size: 28px;
     -fx-font-weight: bold;
     -fx-text-fill: #3498db;
-    -fx-padding: 10 0;
+    /*-fx-padding: 10 0;*/
 }
 
 
 .root {
     -fx-background-color: #F2FFE9;
+    -fx-padding: 5;
 }
 

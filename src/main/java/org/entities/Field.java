@@ -10,7 +10,6 @@ import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -25,7 +24,7 @@ public class Field implements DatabaseInterface<Field>
     /**
      * The unique ID of the field to link to the DataBase
      */
-    private ObjectId dbID = null;
+    private final ObjectId dbID;
 
     /**
      * The name of the field
@@ -161,148 +160,6 @@ public class Field implements DatabaseInterface<Field>
                 year + "\n";
     }
 
-    public static void main(String[] args){
-
-        /* For testing the Field class */
-
-        String reason = "Constructor + getName()";
-        String ID = "F123";
-        String fName = "Field1";
-        String location = "Northwest";
-        double size = 123;
-
-        // test all methods with this instance
-        Field Field1 = new Field(null,ID ,fName, size, location);
-        String result = Field1.getName();
-        double result2, expected2;
-        String expected = "Field1";
-
-        if (!result.equals(expected))
-        {
-            System.out.println("Error: Expected: " + expected + " Obtained: " + result
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing getName()";
-        result = Field1.getName();
-        expected = fName;
-        if (!result.equals(expected))
-        {
-            System.out.println("Error: Expected: " + expected + " Obtained: " + result
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing getID()";
-        result = Field1.getID();
-        expected = ID;
-        if (!result.equals(expected))
-        {
-            System.out.println("Error: Expected: " + expected + " Obtained: " + result
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing getSize()";
-        result2 = Field1.getSize();
-        expected2 = size;
-        if (result2 != expected2)
-        {
-            System.out.println("Error: Expected: " + expected2 + " Obtained: " + result2
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing getLocation()";
-        result = Field1.getLocation();
-        expected = location;
-        if (!result.equals(expected))
-        {
-            System.out.println("Error: Expected: " + expected + " Obtained: " + result
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing setName()";
-        expected = "Field2";
-        Field1.setName(expected);
-        result = Field1.getName();
-        if (!result.equals(expected))
-        {
-            System.out.println("Error: Expected: " + expected + " Obtained: " + result
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing setSize()";
-        expected2 = 233;
-        Field1.setSize(expected2);
-        result2 = Field1.getSize();
-        if (result2 != expected2)
-        {
-            System.out.println("Error: Expected: " + expected2 + " Obtained: " + result2
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing years list after constructor";
-        int yearResult = Field1.getYears().size();
-        if (yearResult != 0)
-        {
-            System.out.println("Error: Expected: 0, Obtained: " + yearResult
-                    + " (" + reason + ")");
-        }
-
-
-        reason = "Testing getCurrent_year() with  newYear()";
-        int year = 2013;
-        LocalDate new_date = LocalDate.of(2013, Calendar.AUGUST, 23);
-        Field1.newYear(year, new_date);
-        int test_year = Field1.getCurrent_Year().getYear();
-        if (test_year != year)
-        {
-            System.out.println("Error: Expected: " +year+ ", Obtained: " + test_year
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing years list after newYear()";
-        yearResult = Field1.getYears().size();
-        if (yearResult != 1)
-        {
-            System.out.println("Error: Expected: 1, Obtained: " + yearResult
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing getYears()";
-        yearResult = Field1.getCurrent_Year().getYear();
-        if (yearResult != year)
-        {
-            System.out.println("Error: Expected: " + year + ", Obtained: " + yearResult
-                    + " (" + reason + ")");
-        }
-
-        reason = "Testing toString(year)";
-        result = Field1.toString(Field1.getCurrent_Year());
-        expected = """
-                Name = Field2  ID = F123  Location = Northwest  Size = 233.0 acres.
-                Year = 2013,
-                 new year starting date = 2013-07-23,
-                 crop = null,
-                 seeding_date = null,
-                 seeding_rate = 0.0lbs/acre,
-                 fertilizer_rate = 0.0lbs/acre,
-                 spraying_date = null,
-                 harvest_date = null,
-                 end_of_year = null,
-                 chemical_records
-                 \s
-                 task_records
-                 \s
-                """;
-        if (!result.equals(expected))
-        {
-            System.out.println("Error: Expected: \n" + expected + " Obtained: \n" + result
-                    + " (" + reason + ")");
-        }
-
-        System.out.println("*** Testing Complete ***");
-
-    }
-
     /**
      * Translates an object into a JSON Document representation of itself.
      * @return : a document representation of the field object being passed.
@@ -318,7 +175,7 @@ public class Field implements DatabaseInterface<Field>
         // not sure how to include year below
 
 
-        ArrayList<ObjectId> yearList = new ArrayList<ObjectId>();
+        ArrayList<ObjectId> yearList = new ArrayList<>();
         for (Year year : this.getYears()) {
             yearList.add(year.getDbId());
         }
@@ -345,7 +202,7 @@ public class Field implements DatabaseInterface<Field>
 
 
     /**
-     * @return
+     * @return null
      */
     @Override
     public Document docToClass() {
@@ -369,7 +226,7 @@ public class Field implements DatabaseInterface<Field>
     }
 
     /**
-     * @return
+     * @return the database ID
      */
     @Override
     public ObjectId getDbId() {
@@ -377,13 +234,14 @@ public class Field implements DatabaseInterface<Field>
     }
 
     /**
-     * @return
+     * @return false
      */
     @Override
     public boolean isDatabase() {
         return false;
     }
 
+    // this seemingly repeats what new year already does.
     public void setCurrentYear(Year input) {
         current_Year = input;
         if (input != null){

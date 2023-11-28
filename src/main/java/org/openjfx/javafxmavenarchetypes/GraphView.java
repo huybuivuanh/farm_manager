@@ -10,10 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -191,7 +188,12 @@ public class GraphView extends StackPane implements ModelSubscriber {
 
         barchart.setTitle("Yearly growth");
 
-        graphPage.getChildren().addAll(comboBox,barchart);
+        Button graphToMain = new Button("Back To Main");
+        graphToMain.setOnMouseClicked(event -> {
+            stage.setScene(MenuScene);
+        });
+
+        graphPage.getChildren().addAll(graphToMain ,comboBox,barchart);
         this.getChildren().add(graphPage);
     }
 

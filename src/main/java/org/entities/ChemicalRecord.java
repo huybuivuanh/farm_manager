@@ -10,7 +10,7 @@ public class ChemicalRecord implements DatabaseInterface<ChemicalRecord> {
     Chemical chemical;
     LocalDate date;
 
-    ObjectId dbID = null;
+    ObjectId dbID;
 
     public ChemicalRecord(ObjectId dbid, Chemical _chemical, LocalDate _date){
         dbID = dbid;
