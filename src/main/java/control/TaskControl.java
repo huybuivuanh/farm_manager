@@ -199,7 +199,11 @@ public class TaskControl {
     }
 
 
-
+    /**
+     * Returns a string value of the task to be viewed .
+     * @param id: The id of the task to which a user is to be unassigned
+     * @return returned: a string representation of the task to be viewed.
+     */
     public String viewTask (String id)
     {
         Task viewed = null;
