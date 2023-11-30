@@ -209,10 +209,6 @@ public class GraphView extends StackPane implements ModelSubscriber {
         this.getChildren().add(graphPage);
     }
 
-
-    public void update() {
-    }
-
     public void setStageMenu(Stage stage, Scene MenuScene, Scene graphScene){
         this.stage = stage;
         this.MenuScene = MenuScene;
