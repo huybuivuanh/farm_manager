@@ -84,6 +84,14 @@ public class TestBinControl {
         result2 = BinController.binList.get(1).getCropBushels();
         if (result2 != 17.0) { failed ++ ;System.out.println(error_message(reason6, "17.0", String.valueOf(result2)));}
 
+        /*
+            to ensure a clean slate after testing, delete all bins added during testing.
+         */
+        BinController.deleteBin(BinController.binList.get(0).getDbId());
+        BinController.deleteBin(BinController.binList.get(1).getDbId());
+        BinController.deleteBin(BinController.binList.get(2).getDbId());
+
+
         String[] reasons = {reason1, reason2, reason3, reason4, reason5, reason6};
         System.out.println("*** GrainBin Class Testing  ***\n");
         for (String reason : reasons) {
