@@ -71,7 +71,7 @@ public class UITest extends Application implements Runnable {
         bgraph.setOnAction(e ->{
             graphPage.updateGraph();
                 graphPage.updateGraph();
-                    stage.setScene(graphScene);
+                stage.setScene(graphScene);
                 });
 
         // user page
