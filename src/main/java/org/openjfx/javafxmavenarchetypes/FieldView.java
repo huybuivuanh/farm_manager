@@ -89,15 +89,28 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
 
 
-        VBox addFieldBox = new VBox(30);
+        VBox addFieldBox = new VBox(15);
         Scene addFieldScene = new Scene(addFieldBox,300,250);
 
         Label addFieldPageTitle = new Label("Add New Field");
         addFieldPageTitle.getStyleClass().add("page-label");
-        TextField fieldIDInput = new TextField("Field ID");
-        TextField fieldNameInput = new TextField("Field Name");
-        TextField fieldSizeInput = new TextField("Field Size (acre) ei: 20");
-        TextField fieldLocation = new TextField("Field Location");
+
+        Label fieldIDInputLabel = new Label("Field ID:");
+        fieldIDInputLabel.getStyleClass().add("text-field-label");
+        TextField fieldIDInput = new TextField();
+
+        Label fieldNameInputLabel = new Label("Field Name:");
+        fieldNameInputLabel.getStyleClass().add("text-field-label");
+        TextField fieldNameInput = new TextField();
+
+        Label fieldSizeInputLabel = new Label("Field Size (number): ");
+        fieldSizeInputLabel.getStyleClass().add("text-field-label");
+        TextField fieldSizeInput = new TextField();
+
+        Label fieldLocationInputLabel = new Label("Field Location:");
+        fieldLocationInputLabel.getStyleClass().add("text-field-label");
+        TextField fieldLocation = new TextField();
+
         Button submitFieldInfo = new Button("Submit");
         Button addFieldCancel = new Button("Cancel");
         addFieldCancel.setOnMouseClicked(event -> {
@@ -108,7 +121,8 @@ public class FieldView extends StackPane implements ModelSubscriber {
         HBox submitAndCancelBox1 = new HBox(submitFieldInfo, space1, addFieldCancel);
 
 
-        addFieldBox.getChildren().addAll(addFieldPageTitle, fieldIDInput, fieldNameInput, fieldSizeInput, fieldLocation, submitAndCancelBox1);
+        addFieldBox.getChildren().addAll(addFieldPageTitle, fieldIDInputLabel, fieldIDInput, fieldNameInputLabel,
+                fieldNameInput, fieldSizeInputLabel, fieldSizeInput, fieldLocationInputLabel, fieldLocation, submitAndCancelBox1);
         Button addField = new Button("Add Field");
         addField.setOnMouseClicked(e ->{
             stage.setScene(addFieldScene);
@@ -128,7 +142,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
             }
         });
 
-        VBox fieldEditBox = new VBox(30);
+        VBox fieldEditBox = new VBox(15);
         Scene editFieldScene = new Scene(fieldEditBox,300,250);
 
         Button editField = new Button("Edit Field");
@@ -138,10 +152,23 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
 
         Label editFieldPageTitle = new Label();
+
+        Label editFieldIDInputLabel = new Label("Field ID:");
+        editFieldIDInputLabel.getStyleClass().add("text-field-label");
         TextField idInputEdit = new TextField();
+
+        Label editFieldNameInputLabel = new Label("Field Name:");
+        editFieldNameInputLabel.getStyleClass().add("text-field-label");
         TextField fieldNameFEdit = new TextField();
+
+        Label editFieldSizeInputLabel = new Label("Field Size (number): ");
+        editFieldSizeInputLabel.getStyleClass().add("text-field-label");
         TextField fieldSizeEdit = new TextField();
+
+        Label editFieldLocationInputLabel = new Label("Field Location:");
+        editFieldLocationInputLabel.getStyleClass().add("text-field-label");
         TextField locationEdit = new TextField();
+
         Button submitFieldEdit = new Button("Submit");
         Button editFieldCancel = new Button("Cancel");
         editFieldCancel.setOnMouseClicked(event -> {
@@ -152,7 +179,8 @@ public class FieldView extends StackPane implements ModelSubscriber {
         HBox submitAndCancelBox2 = new HBox(submitFieldEdit, space2, editFieldCancel);
 
 
-        fieldEditBox.getChildren().addAll(editFieldPageTitle, idInputEdit, fieldNameFEdit, fieldSizeEdit, locationEdit,submitAndCancelBox2);
+        fieldEditBox.getChildren().addAll(editFieldPageTitle, editFieldIDInputLabel, idInputEdit, editFieldNameInputLabel,
+                fieldNameFEdit, editFieldSizeInputLabel, fieldSizeEdit, editFieldLocationInputLabel, locationEdit,submitAndCancelBox2);
         submitFieldEdit.setOnMouseClicked(e ->{
             double fieldSize = -1.0;
             try {
@@ -205,7 +233,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
         });
 
 
-        VBox addCropBox = new VBox(30);
+        VBox addCropBox = new VBox(15);
         Scene addCropScene = new Scene(addCropBox,300,250);
 
         Label addCropPageTitle = new Label();
@@ -321,7 +349,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
 
 
-        VBox addChemPage = new VBox(30);
+        VBox addChemPage = new VBox(15);
         Scene addChemScene = new Scene(addChemPage,300,250);
 
 

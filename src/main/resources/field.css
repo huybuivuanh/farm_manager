@@ -44,6 +44,11 @@
     /*-fx-padding: 10 0;*/
 }
 
+.text-field-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
 
 .root {
     -fx-background-color: #F2FFE9;
