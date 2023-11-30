@@ -2,7 +2,6 @@ package TEST;
 
 import control.BinControl;
 import org.InitialFarm.Crop;
-import org.InitialFarm.GrainBin;
 import org.InitialFarm.dataManager;
 
 public class TestBinControl {
@@ -36,10 +35,6 @@ public class TestBinControl {
 
         BinControl BinController = new BinControl();
         dataManager manager = new dataManager();
-
-        GrainBin newBin = new GrainBin(null,binName,binLocation,binSize,hopper,fan);
-        GrainBin newBin2 = new GrainBin(null,binName2,binLocation2,binSize2,hopper2,fan2);
-        GrainBin newBin3 = new GrainBin(null, binName3, binLocation3, binSize3, hopper3, fan3);
 
         Crop newCrop1 = new Crop(null,"corn","yellow corn", 50.0);
         Crop newCrop1db = manager.saveClass(newCrop1);
