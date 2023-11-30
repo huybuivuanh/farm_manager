@@ -73,25 +73,25 @@ public class Year implements DatabaseInterface<Year>{
         Document newDoc = new Document();
         newDoc.append("fieldName", this.fieldName);
         newDoc.append("year", this.year);
-        newDoc.append("new_year", this.new_year);
+        newDoc.append("newYear", this.new_year);
         if (this.crop != null) {
             newDoc.append("crop", this.crop.getDbId());
         }
         else{
             newDoc.append("crop", null);
         }
-        newDoc.append("seeding_date", this.seeding_date);
-        newDoc.append("seeding_rate", this.seeding_rate);
-        newDoc.append("fertilizer_rate", this.fertilizer_rate);
+        newDoc.append("seedingDate", this.seeding_date);
+        newDoc.append("seedingRate", this.seeding_rate);
+        newDoc.append("fertilizerRate", this.fertilizer_rate);
         if (this.chemical_sprayed != null) {
-            newDoc.append("chemical_sprayed", this.chemical_sprayed.getDbId());
+            newDoc.append("chemicalSprayed", this.chemical_sprayed.getDbId());
         }
         else{
-            newDoc.append("chemical_sprayed", null);
+            newDoc.append("chemicalSprayed", null);
         }
-        newDoc.append("spraying_date", this.spraying_date);
-        newDoc.append("harvest_date", this.harvest_date);
-        newDoc.append("end_of_year", this.end_of_year);
+        newDoc.append("sprayingDate", this.spraying_date);
+        newDoc.append("harvestDate", this.harvest_date);
+        newDoc.append("endOfYear", this.end_of_year);
 
         ArrayList<ObjectId> chemical_records = new ArrayList<>();
         for (ChemicalRecord chemical_record : this.chemical_records) {

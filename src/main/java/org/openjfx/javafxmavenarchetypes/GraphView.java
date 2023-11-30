@@ -82,6 +82,7 @@ public class GraphView extends StackPane implements ModelSubscriber {
 
     public void updateGraph(){
         fieldList = FXCollections.observableArrayList(graphController.getAllFields());
+        comboBox.setItems(fieldList);
     }
     public GraphView() {
 
@@ -142,13 +143,6 @@ public class GraphView extends StackPane implements ModelSubscriber {
             System.out.println("Field");
         });
 
-        //How to change the combobox because its final
-
-//        comboBox.getItems().addAll(
-//                "Option 4",
-//                "Option 5",
-//                "Option 6"
-//        );
 
         comboBox.getSelectionModel().selectFirst();
         if (comboBox.getValue() != null){
@@ -157,7 +151,6 @@ public class GraphView extends StackPane implements ModelSubscriber {
 
         comboBox.setOnAction(e -> {
             this.selectedField = (Field) comboBox.getValue();
-            System.out.println(selectedField.getName());
 
             dataSeries1.getData().clear();
 
@@ -183,7 +176,9 @@ public class GraphView extends StackPane implements ModelSubscriber {
         dataSeries1 = new XYChart.Series();
         barchart.setAnimated(false);
         if (selectedField != null){
-            dataSeries1.getData().add(new XYChart.Data((selectedField.getCurrent_Year().getYear() + " " + selectedField.getCurrent_Year().getCrop().getCropType()),selectedField.getCurrent_Year().getCrop().getBushelWeight()));
+            if (selectedField.getCurrent_Year() != null) {
+                dataSeries1.getData().add(new XYChart.Data((selectedField.getCurrent_Year().getYear() + " " + selectedField.getCurrent_Year().getCrop().getCropType()), selectedField.getCurrent_Year().getCrop().getBushelWeight()));
+            }
             for (int x = 0;x < selectedField.getYears().size();x++){
                 System.out.println(selectedField.getYears().get(x).getYear());
                 System.out.println(selectedField.getYears().get(x).getCrop().getBushelWeight());
