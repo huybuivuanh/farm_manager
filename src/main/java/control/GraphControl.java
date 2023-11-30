@@ -20,6 +20,7 @@ public class GraphControl {
     }
 
     public ObservableList<Field> getAllFields() {
+        allFields = dataManager.initializeFieldsFromDB();
         return allFields;
     }
     public ArrayList<Year> getYears(Field field) {
