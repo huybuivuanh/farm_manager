@@ -15,6 +15,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.time.LocalDate.now;
+
+
+// need to see history of crop planted
+// need to record what crop planted when finished planting
 public class FieldControl {
 
 
@@ -173,7 +178,9 @@ public class FieldControl {
     }
     public Crop makeCrop(ObjectId dbid,String cropType, String cropVariety, double bushelWeight){
         Crop baseCrop = new Crop(dbid, cropType, cropVariety, bushelWeight);
-        return dataManager.saveClass(baseCrop);
+        Crop dbCrop = dataManager.saveClass(baseCrop);
+        return dbCrop;
+
     }
     public void addChemical(String fieldID, double fertilizerRate, String chemicalSprayed, String chemicalGroup, LocalDate sprayingDate){
         Field searchedField = null;
@@ -203,14 +210,6 @@ public class FieldControl {
         }
     }
 
-    private void addToYearList(){
-        yearList.clear();
-        for (Field field : fieldList){
-            yearList.addAll(field.getYears());
-        }
-    }
-
-
     public void addCropType(String crop_type){
         boolean existed = false;
         for (String type : cropType){
@@ -223,6 +222,13 @@ public class FieldControl {
             cropType.add(crop_type);
         } else {
             System.out.println("Crop type already existed");
+        }
+    }
+
+    private void addToYearList(){
+        yearList.clear();
+        for (Field field : fieldList){
+            yearList.addAll(field.getYears());
         }
     }
 }

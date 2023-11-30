@@ -706,6 +706,37 @@ public class dataManager {
 //        }
 //    }
 
+
+
+
+
+
+
+
+
+
+//    public static void initializeFromDB(){
+//        //Todo: need to go through database collections in order
+//        // build all items and add them to controller as you go
+//        // recreate their connections after all is individual pieces are built
+//        ArrayList<String> collectionNames = new ArrayList<String>(List.of("task_list", "employee_list"));
+//
+//        for (String collection: collectionNames) {
+//            try (MongoClient mongoClient = MongoClients.create(uri)) {
+//                MongoDatabase database =  mongoClient.getDatabase("FarmData");
+//                MongoCollection<Document> col = database.getCollection(collection);
+//                FindIterable<Document> entry = col.find();
+//                // choose type of object to make by passing in the object type as a string ArrayList<>
+//
+//                mongoClient.close();
+//                System.out.println("Removed all contents of the collection: "+ collection + " from the database successfully");
+//            }
+//            catch (Exception e){
+//            System.out.println("failed to load all contents of the collection: "+ collection + " from the database.");
+//            }
+//        }
+//    }
+
     public static void main(String[] args) throws NoSuchFieldException {
 
 
