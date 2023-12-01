@@ -171,6 +171,7 @@ public class FieldControl {
                 for (Year year : yearList){
                     if (year.getDbId().equals(currentYear.getDbId())){
                         year = currentYear;
+                        break;
                     }
                 }
                 dataManager.updateClass(searchedField.getCurrent_Year());
