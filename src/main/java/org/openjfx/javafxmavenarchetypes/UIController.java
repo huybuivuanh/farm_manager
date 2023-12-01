@@ -21,7 +21,7 @@ public class UIController extends Application implements Runnable {
         stage.setTitle("Farm Manager");
         stage.setWidth(1200);
         stage.setHeight(700);
-        stage.getIcons().add(new Image("farm_icon.png"));
+        stage.getIcons().add(new Image("farm_icon_1.png"));
 
         // menu scene
         VBox taskSelector = new VBox(30);
