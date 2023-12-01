@@ -150,6 +150,7 @@ public class BinView extends StackPane {
                     showErrorPopup("Maximum bin capacity is 20 bushels");
                 } else {
                     binController.addBin(binNameInput.getText(), binSize, binLocation.getText(), hopperInput.isSelected(), fanInput.isSelected() );
+                    showPopup("Added Bin");
                     stage.setScene(binScene);
                 }
             }
@@ -236,6 +237,14 @@ public class BinView extends StackPane {
                     addCropBinID.setText(selectedData.getDbId().toString());
                     addCropPageTitle.setText("Add Crop to bin named (" + selectedData.getBinName() + ")");
                     addCropPageTitle.getStyleClass().add("page-label");
+                    Crop currentCrop = selectedData.getCurrentCrop();
+                    if (currentCrop != null){
+                        cropTypeInput.setValue(currentCrop.getCropType());
+                        bushelWeight.setText(String.valueOf(currentCrop.getBushelWeight()));
+                        cropVarietyInput.setValue(currentCrop.getCropVariety());
+                        bushelWeight.setText(String.valueOf(currentCrop.getBushelWeight()));
+                    }
+                    showPopup("Added Crop");
                     stage.setScene(addCropScene);
                 } else {
                     System.out.println("Bin is full");
@@ -339,6 +348,7 @@ public class BinView extends StackPane {
             if (selectedData != null){
                 if (!selectedData.isEmpty()){
                     binController.clearBin(binTable.getSelectionModel().getSelectedItem().getDbId());
+                    showPopup("Bin Cleared");
                     binTable.refresh();
                 } else {
                     System.out.println("Bin is empty");
@@ -384,7 +394,7 @@ public class BinView extends StackPane {
         lastCropLabel.getStyleClass().add("page-label");
 
         TableColumn<Crop, ObjectId> lastCropIDCol = new TableColumn<Crop, ObjectId>("Crop ID");
-        lastCropIDCol.setMinWidth(70);
+        lastCropIDCol.setPrefWidth(70);
         lastCropIDCol.setCellValueFactory(
                 new PropertyValueFactory<Crop, ObjectId>("DbId"));
 
@@ -460,7 +470,9 @@ public class BinView extends StackPane {
 
         Label unloadCropPageTitle = new Label();
         TextField unloadBinID = new TextField();
-        TextField unloadGrainInput = new TextField("Grain");
+        Label unloadGranInputLabel = new Label("How much grain to unload?");
+        unloadGranInputLabel.getStyleClass().add("text-field-label");
+        TextField unloadGrainInput = new TextField();
         CheckBox unloadInputBushels = new CheckBox("Crop is in bushels?");
         Button submitUnloadInfo = new Button("Submit");
         Button cancelUnloadCrop = new Button("Cancel");
@@ -481,8 +493,10 @@ public class BinView extends StackPane {
             }
             if (grain != -1) {
                 binController.unload(new ObjectId(unloadBinID.getText()), Integer.parseInt(unloadGrainInput.getText()), unloadInputBushels.isSelected());
+                showPopup("Crop Unloaded");
                 stage.setScene(binScene);
                 unloadGrainInput.setText("");
+                unloadInputBushels.setSelected(false);
                 binTable.refresh();
                 stage.setScene(binScene);
             }
@@ -495,8 +509,7 @@ public class BinView extends StackPane {
                 if (!selectedData.isEmpty()){
                     unloadBinID.setText(selectedData.getDbId().toString());
                     unloadCropPageTitle.setText("Unload crop from bin named (" + selectedData.getBinName() + ")");
-                    unloadCropPageTitle.setFont(new Font("Arial", 20));
-                    unloadCropPageTitle.setStyle("-fx-font-weight: bold;");
+                    unloadCropPageTitle.getStyleClass().add("page-label");
                     stage.setScene(unloadScene);
                 } else {
                     System.out.println("Bin is empty");
@@ -508,7 +521,7 @@ public class BinView extends StackPane {
             }
         });
 
-        unloadPage.getChildren().addAll(unloadCropPageTitle, unloadGrainInput, unloadInputBushels, submitAndCancelBox3);
+        unloadPage.getChildren().addAll(unloadCropPageTitle, unloadGranInputLabel, unloadGrainInput, unloadInputBushels, submitAndCancelBox3);
 
         HBox binFunctionBar = new HBox();
         binFunctionBar.getChildren().addAll(addBin, deleteBin, addCrop, viewBin, unload, clearBin, binsBackToMain);
@@ -555,5 +568,16 @@ public class BinView extends StackPane {
 
     private Double lbsToBushels(double lbs, double bushelWeight){
         return (lbs/bushelWeight);
+    }
+    private void showPopup(String content) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("MESSAGE");
+        alert.setHeaderText("CONFIRM MESSAGE");
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+    @Override
+    public void modelChanged() {
+
     }
 }

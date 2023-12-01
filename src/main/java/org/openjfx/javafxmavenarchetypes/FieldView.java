@@ -175,6 +175,7 @@ public class FieldView extends StackPane {
             }
             if (fieldSize != -1.0){
                 fieldController.addField(fieldIDInput.getText(),fieldNameInput.getText(), fieldSize, fieldLocation.getText());
+                showPopup("Added Field!");
                 fieldIDInput.setText("");
                 fieldNameInput.setText("");
                 fieldSizeInput.setText("");
@@ -234,6 +235,7 @@ public class FieldView extends StackPane {
                 fieldController.editField(fieldTable.getSelectionModel().getSelectedItem().getID(),
                         idInputEdit.getText(), fieldNameFEdit.getText(), fieldSize,
                         locationEdit.getText());
+                showPopup("Field Edited");
                 stage.setScene(fieldScene);
                 fieldTable.refresh();
             }
@@ -265,6 +267,7 @@ public class FieldView extends StackPane {
         deleteField.setOnAction(event -> {
             if (fieldTable.getSelectionModel().getSelectedItem() != null){
                 fieldController.deleteField(fieldTable.getSelectionModel().getSelectedItem().getID());
+                showPopup("Field Deleted");
                 fieldTable.refresh();
             }
             else {
@@ -455,6 +458,7 @@ public class FieldView extends StackPane {
                     chemFieldID.setText(selectedData.getID());
                     addChemPageTitle.setText("Add Chemical to Field named (" + selectedData.getName() + ")");
                     addChemPageTitle.getStyleClass().add("page-label");
+                    showPopup("Added Crop");
                     stage.setScene(addChemScene);
                 } else {
                     System.out.println("Field with ID (" + selectedData.getID() + ") current has no crop to spray chemical");
