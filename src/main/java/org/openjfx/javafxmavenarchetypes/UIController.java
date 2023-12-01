@@ -82,7 +82,7 @@ public class UIController extends Application implements Runnable {
         userPage.setStageMenuUser(stage, MenuScene, userScene);
 
         Button busers= new Button();
-        busers.setText("Users");
+        busers.setText("Employees");
         busers.setOnAction(e -> stage.setScene(userScene));
 
         // add all pages buttons to main menu

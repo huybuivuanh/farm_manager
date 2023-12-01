@@ -30,7 +30,9 @@
     -fx-alignment: CENTER;
 }
 
-
+.label {
+    -fx-alignment: CENTER;
+}
 .page-label {
     -fx-font-family: "Quicksand", sans-serif;
     -fx-font-size: 28px;
@@ -38,6 +40,8 @@
     -fx-text-fill: #3498db;
     -fx-padding: 10 0;
 }
+
+
 
 
 .function-bar {

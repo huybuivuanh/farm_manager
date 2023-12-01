@@ -6,6 +6,8 @@ import control.TaskControl;
 import control.UserControl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -75,10 +77,12 @@ public class TaskView extends StackPane {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         VBox userBox = new VBox(15);
         Scene addUserScene = new Scene(userBox,300,250);
-
+        HBox titleBox = new HBox();
 
         Label addTaskLabel = new Label("Add New Task");
         addTaskLabel.getStyleClass().add("page-label");
+        titleBox.getChildren().add(addTaskLabel);
+        titleBox.alignmentProperty().set(Pos.CENTER);
 
         Label idInputLabel = new Label("Task ID (optional):");
         idInputLabel.getStyleClass().add("text-field-label");
@@ -103,8 +107,10 @@ public class TaskView extends StackPane {
             stage.setScene(taskScene);
         });
 
-        userBox.getChildren().addAll(addTaskLabel, idInputLabel, idInput, taskNameFLabel, taskNameF, descriptionLabel,descriptionF,
+        userBox.getChildren().addAll(titleBox, idInputLabel, idInput, taskNameFLabel, taskNameF, descriptionLabel,descriptionF,
                 dueDateLabel,dueDate, submitCancelBox);
+        userBox.setPadding(new Insets(10));
+
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Todo 2: Task Addition (done)
@@ -151,6 +157,9 @@ public class TaskView extends StackPane {
 
         Label editTaskLabel = new Label();
         editTaskLabel.getStyleClass().add("page-label");
+        HBox taskEditTitle = new HBox();
+        taskEditTitle.getChildren().add(editTaskLabel);
+        taskEditTitle.setAlignment(Pos.CENTER);
 
         Label idInputEditLable = new Label("Task ID:");
         idInputEditLable.getStyleClass().add("text-field-label");
@@ -175,7 +184,7 @@ public class TaskView extends StackPane {
             stage.setScene(taskScene);
         });
 
-        userEditBox.getChildren().addAll(editTaskLabel, idInputEditLable, idInputEdit, taskNameFEditLabel,taskNameFEdit,
+        userEditBox.getChildren().addAll(taskEditTitle, idInputEditLable, idInputEdit, taskNameFEditLabel,taskNameFEdit,
                 descriptionEditLabel, descriptionFEdit, dueDateEditLabel,dueDateEdit, submitCancelEditBox);
         submitTaskEdit.setOnMouseClicked(e ->{
             taskController.editTask(taskTable.getSelectionModel().getSelectedItem().getID(),

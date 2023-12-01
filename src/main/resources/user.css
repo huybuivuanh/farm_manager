@@ -40,6 +40,7 @@
     -fx-font-size: 28px;
     -fx-font-weight: bold;
     -fx-text-fill: #3498db;
+    -fx-background-color: GREEN;
     -fx-padding: 10 0;
 }
 
@@ -60,6 +61,14 @@
     -fx-background-color: #34495e;
 }
 
+.center-label {
+    -fx-alignment: CENTER;
+    -fx-background-color: LIGHTYELLOW;
+}
+
+.pad-label {
+    -fx-padding: 0 25;
+}
 
 .root {
     -fx-background-color: #F2FFE9;
