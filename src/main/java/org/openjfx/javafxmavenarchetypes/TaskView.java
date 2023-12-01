@@ -345,6 +345,23 @@ public class TaskView extends StackPane {
 
         });
 
+        taskTable.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 ){
+                taskUserData= taskTable.getSelectionModel().getSelectedItem().getStaffList();
+                taskUsersTable.setItems(taskUserData);
+                String taskName = taskTable.getSelectionModel().getSelectedItem().getTaskName();
+                taskNameLabel.setText("Task Name: " + taskName);
+                taskTable.refresh();
+                allTasksInUserViewTable.refresh();
+                userTasksTable.refresh();
+                CompletedTaskTable.refresh();
+                taskUsersTable.refresh();
+                allUsersInTaskViewTable.refresh();
+                userTable.refresh();
+                stage.setScene(taskEmployeesScene);
+            }
+        });
+
         Button taskAddEmployees = new Button("Assign Employee");
         taskAddEmployees.setOnMouseClicked(e->{
             //taskTable.getSelectionModel().getSelectedItem().addStaff(allUsersInTaskViewTable.getSelectionModel().getSelectedItem());

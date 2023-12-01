@@ -459,6 +459,24 @@ public class BinView extends StackPane {
         viewBin.setOnMouseClicked(event -> {
             GrainBin selectedData = binTable.getSelectionModel().getSelectedItem();
             if (selectedData != null) {
+                if (selectedData.getCurrentCrop() != null){
+                    currentCropData.clear();
+                    currentCropData.add(selectedData.getCurrentCrop());
+                } else {
+                    currentCropData.clear();
+                }
+                if (selectedData.getLastCrop() != null){
+                    lastCropData.clear();
+                    lastCropData.add(selectedData.getLastCrop());
+                } else {
+                    lastCropData.clear();
+                }
+                currentCropTable.setItems(currentCropData);
+                currentCropTable.refresh();
+
+                lastCropTable.setItems(lastCropData);
+                lastCropTable.refresh();
+
                 stage.setScene(binCropScene);
             } else {
                 System.out.println("Select a Bin");
