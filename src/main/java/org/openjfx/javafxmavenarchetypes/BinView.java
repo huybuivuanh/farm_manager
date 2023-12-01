@@ -523,7 +523,7 @@ public class BinView extends StackPane {
 
         unloadPage.getChildren().addAll(unloadCropPageTitle, unloadGranInputLabel, unloadGrainInput, unloadInputBushels, submitAndCancelBox3);
 
-        // boxes for css styling
+        // boxes for css styling :(
         HBox binFunctionBar = new HBox();
         binFunctionBar.getStyleClass().add("function-bar");
         HBox.setHgrow(binFunctionBar, Priority.ALWAYS);
