@@ -734,6 +734,11 @@ public class FieldView extends StackPane implements ModelSubscriber {
         fieldScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
     }
 
+
+    /**
+     * A function that throws the content of the string passed to it as an error message.
+     * @param content: The content of the error message popup
+     */
     private void showErrorPopup(String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("ERROR");
