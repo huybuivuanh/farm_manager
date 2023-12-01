@@ -61,14 +61,22 @@ public class GraphView extends StackPane implements ModelSubscriber {
         topRow.getChildren().addAll(getLabel("Name :","bold"),getLabel(field.getName(),"normal"), getLabel("Acres :","bold"),getLabel(field.getSize()+"","normal"));
         HBox bottomRow = new HBox();
         bottomRow.setSpacing(5);
-        bottomRow.getChildren().addAll(getLabel("Current Crop :","bold"),getLabel(field.getCurrent_Year().getCrop().getCropType(),"normal"));
+        if (field.getCurrent_Year() != null) {
+            bottomRow.getChildren().addAll(getLabel("Current Crop :", "bold"), getLabel(field.getCurrent_Year().getCrop().getCropType(), "normal"));
+        }
         layout.getChildren().addAll(topRow, bottomRow);
 
         HBox pane = new HBox();
         pane.setAlignment(Pos.CENTER_LEFT);
         pane.setSpacing(5);
         pane.setPadding(new Insets(2));
-        Label num = new Label(field.getCurrent_Year().getYear()+"");
+        Label num;
+        if (field.getCurrent_Year() != null) {
+            num = new Label(field.getCurrent_Year().getYear() + "");
+        }
+        else{
+            num = new Label("");
+        }
         num.setStyle("-fx-font-size:20px;-fx-font-weight:bold;-fx-text-fill:black;");
         pane.getChildren().addAll(num,layout);
         return pane;
@@ -156,7 +164,9 @@ public class GraphView extends StackPane implements ModelSubscriber {
 
 
             dataSeries1.setName(selectedField.getName() + "");
-            dataSeries1.getData().add(new XYChart.Data((selectedField.getCurrent_Year().getYear() + " " + selectedField.getCurrent_Year().getCrop().getCropType()),selectedField.getCurrent_Year().getCrop().getBushelWeight()));
+            if (selectedField.getCurrent_Year() != null) {
+                dataSeries1.getData().add(new XYChart.Data((selectedField.getCurrent_Year().getYear() + " " + selectedField.getCurrent_Year().getCrop().getCropType()), selectedField.getCurrent_Year().getCrop().getBushelWeight()));
+            }
             for (int x = 0;x < selectedField.getYears().size();x++){
                 System.out.println(selectedField.getYears().get(x).getYear());
                 System.out.println(selectedField.getYears().get(x).getCrop().getBushelWeight());
