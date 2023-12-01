@@ -15,7 +15,7 @@ public class TestUserControl {
                 ". Returned: " + result + " instead. :(";
     }
 
-    public static void main(String[] args) throws NoSuchFieldException {
+    public static void main() throws NoSuchFieldException {
 
         int count = 0, failed = 0;
 
@@ -94,7 +94,7 @@ public class TestUserControl {
         }
 
         String reason5 = "Testing promoteUser()";
-        UserController.promoteUser(user_id);
+        UserController.promoteUser(user_id2);
         boolean ownerResult = UserController.allEmployees.get(0).getOwner();
         if (!ownerResult) {
             failed++;

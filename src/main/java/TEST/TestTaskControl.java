@@ -14,7 +14,7 @@ public class TestTaskControl {
                 ". Returned: " + result + " instead. :(";
     }
 
-    public static void main(String[] args) throws NoSuchFieldException {
+    public static void main() throws NoSuchFieldException {
 
         int count = 0, failed = 0;
 
