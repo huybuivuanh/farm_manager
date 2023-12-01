@@ -16,7 +16,7 @@ Every project is different, so consider which of these sections apply to yours. 
 - [Kamal Zrein](https://www.linkedin.com/in/kamalzrein/)
 - [Shawn](https://www.linkedin.com/)
 - [Theodore Buckley](https://www.linkedin.com/)
-- [Uche](https://www.linkedin.com/)
+- [Uchechukwu UDENZE](https://www.linkedin.com/in/udenzeuchechukwu/)
 
 ## Description
 This project was built to allow for a comprehensive management of a farm. It is an application that allows the user to log and monitor a multitude of farm operations.
