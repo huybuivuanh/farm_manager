@@ -167,6 +167,13 @@ public class FieldControl {
         if (searchedField != null){
             if (searchedField.getCurrent_Year() != null) {
                 searchedField.getCurrent_Year().harvest(LocalDate.now());
+                Year currentYear = searchedField.getCurrent_Year();
+                for (Year year : yearList){
+                    if (year.getDbId().equals(currentYear.getDbId())){
+                        year = currentYear;
+                        break;
+                    }
+                }
                 dataManager.updateClass(searchedField.getCurrent_Year());
                 searchedField.setCurrentYear(null);
                 dataManager.updateClass(searchedField);
