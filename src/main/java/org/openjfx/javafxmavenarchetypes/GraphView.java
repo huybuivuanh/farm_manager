@@ -219,7 +219,13 @@ public class GraphView extends StackPane {
             stage.setScene(MenuScene);
         });
 
-        graphPage.getChildren().addAll(graphToMain ,comboBox,barchart);
+        HBox topBar = new HBox();
+        graphToMain.getStyleClass().add("back-button");
+        topBar.getStyleClass().add("top-bar");
+        HBox.setHgrow(graphToMain, Priority.ALWAYS);
+        topBar.alignmentProperty().set(Pos.CENTER_RIGHT);
+        topBar.getChildren().add(graphToMain);
+        graphPage.getChildren().addAll(topBar ,comboBox,barchart);
         this.getChildren().add(graphPage);
     }
 
