@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class TaskView extends StackPane implements ModelSubscriber {
+public class TaskView extends StackPane {
 
     private VBox taskPage = new VBox();
     private Stage stage;
@@ -38,7 +38,6 @@ public class TaskView extends StackPane implements ModelSubscriber {
     public TableView<Task> CompletedTaskTable = initer.getCompletedTaskTable();
     public ObservableList<Task> taskData = initer.getTaskData();
     public ObservableList<Task> CompletedTaskData = initer.getCompletedTaskData();
-    public TableView<TaskBar> bars = initer.getBars();
 
     // Todo: User tables and data (Need to implement user tasks view)
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -507,8 +506,4 @@ public class TaskView extends StackPane implements ModelSubscriber {
         taskScene.getStylesheets().add(getClass().getClassLoader().getResource("task.css").toExternalForm());
     }
 
-    @Override
-    public void modelChanged() {
-
-    }
 }

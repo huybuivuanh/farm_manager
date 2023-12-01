@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
-public class UITest extends Application implements Runnable {
+public class UIController extends Application implements Runnable {
 
     @Override
     public void start(Stage stage) {
@@ -99,7 +99,7 @@ public class UITest extends Application implements Runnable {
 
     public static void main(String[] args) {
         TestAll test = new TestAll();
-        UITest UItest = new UITest();
+        UIController UItest = new UIController();
         Thread t1 = new Thread(test);
         Thread t2 = new Thread(UItest);
         t2.start(); t1.start();

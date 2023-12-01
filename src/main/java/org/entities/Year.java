@@ -67,6 +67,7 @@ public class Year implements DatabaseInterface<Year>{
      */
     private LocalDate spraying_date;
 
+    private double yield;
     @Override
     public Document classToDoc() {
 
@@ -83,6 +84,7 @@ public class Year implements DatabaseInterface<Year>{
         newDoc.append("seedingDate", this.seeding_date);
         newDoc.append("seedingRate", this.seeding_rate);
         newDoc.append("fertilizerRate", this.fertilizer_rate);
+        newDoc.append("yield",this.yield);
         if (this.chemical_sprayed != null) {
             newDoc.append("chemicalSprayed", this.chemical_sprayed.getDbId());
         }
@@ -383,5 +385,13 @@ public class Year implements DatabaseInterface<Year>{
 
     public void setEnd_of_year(LocalDate endOfYear) {
         this.end_of_year = endOfYear;
+    }
+
+    public void setYield(Double yield) {
+        this.yield = yield;
+    }
+
+    public double getYield(){
+        return this.yield;
     }
 }

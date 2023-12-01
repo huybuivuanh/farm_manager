@@ -41,7 +41,7 @@
           <execution>
             <id>default-cli</id>
             <configuration>
-              <mainClass>org.openjfx.javafxmavenarchetypes.UITest</mainClass>
+              <mainClass>org.openjfx.javafxmavenarchetypes.UIController</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>

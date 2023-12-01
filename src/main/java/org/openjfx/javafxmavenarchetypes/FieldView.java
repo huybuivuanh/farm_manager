@@ -26,7 +26,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 
-public class FieldView extends StackPane implements ModelSubscriber {
+public class FieldView extends StackPane {
 
     private Stage stage;
     private Scene MenuScene ;
@@ -34,6 +34,9 @@ public class FieldView extends StackPane implements ModelSubscriber {
     private VBox cropPage = new VBox();
     private Scene cropScene = new Scene(cropPage);
 
+    private VBox harvestPage = new VBox(15);
+
+    private Scene harvestScene = new Scene(harvestPage);
     private VBox fieldPage = new VBox();
 
     // field functions bar
@@ -127,6 +130,40 @@ public class FieldView extends StackPane implements ModelSubscriber {
         addField.setOnMouseClicked(e ->{
             stage.setScene(addFieldScene);
         });
+
+        //Harvest page
+
+
+        Label harvestlabel = new Label("Please enter harvest information in pounds");
+        harvestlabel.getStyleClass().add("page-label");
+        TextField harvestInput = new TextField("Enter in pounds (lb) ex: 15 000");
+        harvestInput.getStyleClass().add("text-field-label");
+        Button submitHarvest = new Button("Submit");
+        Button cancelHarvest = new Button("Cancel");
+        cancelHarvest.setOnMouseClicked(event -> {
+            stage.setScene(fieldScene);
+        });
+        submitHarvest.setOnMouseClicked(event -> {
+            Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
+            if (selectedData != null){
+                try {
+                    fieldController.harvest(selectedData.getID(), Double.parseDouble(harvestInput.getText()));
+                    showPopup("Harvested field (" + selectedData.getName() + ") successfully");
+                    yearTable.refresh();
+                } catch (Exception e){
+                    System.out.println("Invalid harvest input");
+                    showErrorPopup("Invalid harvest input");
+                }
+            }
+            else {
+                System.out.println("Select a field");
+                showErrorPopup("Select a field");
+            }
+            stage.setScene(fieldScene);
+        });
+        HBox buttonBox = new HBox(15,submitHarvest, cancelHarvest);
+        harvestPage.getChildren().addAll(harvestlabel,harvestInput,buttonBox);
+
 
         submitFieldInfo.setOnMouseClicked(e ->{
             double fieldSize = -1.0;
@@ -359,12 +396,21 @@ public class FieldView extends StackPane implements ModelSubscriber {
         harvest.setOnMouseClicked(event ->{
             Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
             if (selectedData != null){
-                fieldController.harvest(selectedData.getID());
-                showPopup("Harvested field (" + selectedData.getName() + ") successfully");
+                if (selectedData.getCurrent_Year() != null){
+                    if (selectedData.getCurrent_Year().getCrop() != null){
+                        stage.setScene(harvestScene);
+                    }
+                    else{
+                        showErrorPopup("Error, we do not have a current crop");
+                    }
+                }
+                else{
+                    showErrorPopup("Error, we do not have a current crop");
+                }
+
             }
-            else {
-                System.out.println("Select a field");
-                showErrorPopup("Select a field");
+            else{
+                showErrorPopup("Error, we do not have a current crop");
             }
         });
 
@@ -558,6 +604,12 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 new SimpleStringProperty(cellData.getValue().getChemicalRecordData(cellData.getValue().getChemical_records()))
         );
 
+        TableColumn<Year,Double> harvestYieldCol = new TableColumn<>("Harvest Yield (lbs)");
+        harvestYieldCol.setMinWidth(100);
+        harvestYieldCol.setCellValueFactory(
+                new PropertyValueFactory<Year, Double>("yield")
+        );
+
         TableColumn<Year, LocalDate> harvestDateCol = new TableColumn<Year, LocalDate>("Harvest Date");
         harvestDateCol.setMinWidth(100);
         harvestDateCol.setCellValueFactory(
@@ -566,7 +618,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
         yearTable.setItems(yearData);
         yearTable.getColumns().addAll(fieldNameCol2, yearIDCol, yearCol, cropTypeCol, cropVarietyCol,
-                bushelWeightCol, seedingRateCol, seedingDateCol, fertilizerRateCol, chemicalRecordCol, harvestDateCol);
+                bushelWeightCol, seedingRateCol, seedingDateCol, fertilizerRateCol, chemicalRecordCol,harvestYieldCol, harvestDateCol);
 
 
         // current year table columns
@@ -714,6 +766,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
         addChemScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
         addCropScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
         cropScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
+        harvestScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
         this.getChildren().addAll(fieldPage);
     }
 
@@ -770,8 +823,4 @@ public class FieldView extends StackPane implements ModelSubscriber {
         return String.format("#%02x%02x%02x", r, g, b);
     }
 
-    @Override
-    public void modelChanged() {
-
-    }
 }

@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
 import org.entities.Task;
 import org.entities.User;
-import org.openjfx.javafxmavenarchetypes.TaskBar;
 
 public class TableViewsAndDataInitializer {
 
@@ -29,7 +28,6 @@ public class TableViewsAndDataInitializer {
     public TableView<Task> CompletedTaskTable = new TableView<Task>();
     public ObservableList<Task> taskData = taskController.taskList;
     public ObservableList<Task> CompletedTaskData = taskController.finishedTaskList;
-    public TableView<TaskBar> bars = new TableView<TaskBar>();
 
     // Todo: User tables and data (Need to implement user tasks view)
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -77,9 +75,6 @@ public class TableViewsAndDataInitializer {
         return CompletedTaskData;
     }
 
-    public TableView<TaskBar> getBars() {
-        return bars;
-    }
 
     public TableView<User> getUserTable() {
         return userTable;

@@ -310,7 +310,7 @@ public class dataManager {
 
             BsonArray test = objectDoc.toBsonDocument().getArray("tasklist");
             for (int i = 0; i < test.size();i++){
-                ObjectId output = test.get(0).asObjectId().getValue();
+                ObjectId output = test.get(i).asObjectId().getValue();
                 Task newTask = (Task) fetchObjectById("Task",output);
                 newEmployee.addTask(newTask);
             }
@@ -368,7 +368,7 @@ public class dataManager {
             }
             BsonArray test2 = objectDoc.toBsonDocument().getArray("task_records");
             for (int i = 0; i < test2.size();i++){
-                ObjectId outputTask = test2.get(0).asObjectId().getValue();
+                ObjectId outputTask = test2.get(i).asObjectId().getValue();
                 TaskRecord newTaskRecord =  fetchObjectById("TaskRecord",outputTask);
                 newYear.addTaskRecord(newTaskRecord);
             }
@@ -387,6 +387,9 @@ public class dataManager {
 
             if (objectDoc.getDouble("seedingRate") != null) {
                 newYear.setSeeding_rate(objectDoc.getDouble("seedingRate"));
+            }
+            if (objectDoc.getDouble("yield") != null){
+                newYear.setYield(objectDoc.getDouble("yield"));
             }
            else{
                 newYear.setSeeding_rate(0);
@@ -461,7 +464,7 @@ public class dataManager {
                 newField.setCurrentYear(null);
             }
             for (int i = 0; i < test.size();i++){
-                ObjectId output = test.get(0).asObjectId().getValue();
+                ObjectId output = test.get(i).asObjectId().getValue();
                 Year newYear = fetchObjectById("Year",output);
                 newField.addYear(newYear);
             }
@@ -496,7 +499,7 @@ public class dataManager {
 
             BsonArray test = objectDoc.toBsonDocument().getArray("stafflist");
             for (int i = 0; i < test.size();i++){
-                ObjectId output = test.get(0).asObjectId().getValue();
+                ObjectId output = test.get(i).asObjectId().getValue();
                 Employee newEmployee = (Employee) fetchObjectById("Employee",output);
                 newTask.addStaff(newEmployee);
             }
