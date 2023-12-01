@@ -1,9 +1,7 @@
 package control;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-import org.entities.Employee;
 import org.entities.Task;
 import org.entities.User;
 
@@ -11,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.InitialFarm.DataFetch;
 import org.InitialFarm.dataManager;
 
 public class TaskControl {

@@ -101,7 +101,7 @@ public class TestUserControl {
             System.out.println(error_message(reason5, "true" , String.valueOf(false)));
         }
 
-        String reason6 = "Testing promoteUser()";
+        String reason6 = "Testing assign User ()";
         Task task = new Task(null, "taskID", "plant lentils", " make sure to plant them well", LocalDateTime.now());
         Task task1db = manager.saveClass(task);
         UserController.assignTask(user_id, task1db);
