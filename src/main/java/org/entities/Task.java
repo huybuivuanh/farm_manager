@@ -17,7 +17,7 @@ public class Task implements DatabaseInterface<Task>{
     /**
      * The unique ID of the Task for the DataBase
      */
-    private final ObjectId dbID;
+    private  ObjectId dbID;
 
     /**
      * task name
@@ -358,6 +358,10 @@ public class Task implements DatabaseInterface<Task>{
     @Override
     public ObjectId getDbId() {
         return dbID;
+    }
+
+    public void setDbIDToNull(){
+        dbID =null;
     }
 
     @Override

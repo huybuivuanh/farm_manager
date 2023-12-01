@@ -204,6 +204,13 @@ public class TaskView extends StackPane implements ModelSubscriber {
 
         Button taskBackToMain = new Button("Back To Main");
         taskBackToMain.setOnMouseClicked(e ->{
+            taskTable.refresh();
+            allTasksInUserViewTable.refresh();
+            userTasksTable.refresh();
+            CompletedTaskTable.refresh();
+            taskUsersTable.refresh();
+            allUsersInTaskViewTable.refresh();
+            userTable.refresh();
             stage.setScene(MenuScene);
         });
 

@@ -8,6 +8,7 @@ import org.entities.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.InitialFarm.DataFetch;
 import org.InitialFarm.dataManager;
@@ -41,7 +42,7 @@ public class TaskControl {
      */
     public TaskControl(){
         taskList = dataManager.initializeTasksFromDB();
-        finishedTaskList=  FXCollections.observableArrayList();
+        finishedTaskList= dataManager.initializeFinishedTasksFromDB();
     }
 
     /**
@@ -136,9 +137,24 @@ public class TaskControl {
         else{
             completed.markAsCompleted(true);
             //completed.setInProgress(false);
-            finishedTaskList.add(completed);
+
+            List<User> employeeList = new ArrayList<>();
+            for (User iter: completed.getStaffList())
+            {
+                employeeList.add(iter);
+            }
+            for(User s2ndIter: employeeList){
+                s2ndIter.removeTask(completed.getID());
+                s2ndIter= dataManager.updateClass(s2ndIter);
+            }
+
+            // remove the task from the list of uncompleted tasks
             taskList.remove(completed);
             dataManager.removeClass(completed);
+
+            // add the task to the list of completed tasks and save it to db
+            completed = dataManager.saveFinishedTask(completed);
+            finishedTaskList.add(completed);
         }
     }
 
