@@ -719,7 +719,14 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
 
 
-
+    /**
+     * Sets the primary stage and scenes of the application. Specifically handles the
+     * menu and field scenes. Additionally, applies a stylesheet to the field scene.
+     *
+     * @param stage The primary JavaFX stage where scenes will be displayed.
+     * @param main The scene representing the application's main menu.
+     * @param field The scene representing the field view of the application and to which the style sheet is to be applied.
+     */
     public void setStageMainField(Stage stage, Scene main, Scene field){
         this.stage = stage;
         this.MenuScene = main;

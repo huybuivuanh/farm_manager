@@ -577,6 +577,56 @@ public class dataManager {
             }
             return taskList;
         }
+    public ObservableList<Task> initializeFinishedTasksFromDB(){
+        //Todo: need to go through database task collection
+        // build all tasks and add them to an Observable list
+        // return the observable list => this will be used to initialize the controller's list of tasks
+
+        ObservableList<Task> taskList = FXCollections.observableArrayList();;
+
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            MongoDatabase database =  mongoClient.getDatabase("FarmData");
+            MongoCollection<Document> col = database.getCollection("task_record_list");
+            // get all entries
+            FindIterable<Document> entries = col.find();
+            // loop through entries and instantiate them into java objects.
+            try (MongoCursor<Document> cursor = entries.iterator()){
+                while (cursor.hasNext()){
+                    Document doc = cursor.next();
+                    taskList.add(fetchObject("Task", doc));
+                }
+            }
+            mongoClient.close();
+            System.out.println("Successfully added all contents of the database finished task record collection.");
+        }
+        catch (Exception e){
+            System.out.println("failed to load all contents of the database finished task record collection.");
+        }
+        return taskList;
+    }
+
+    public Task saveFinishedTask(Task finished){
+        // set all to null to insure all information is properly initialized by proper code segments.
+        ObjectId newID = null;
+        Document newDoc= null;
+        String classType = null;
+        finished.setDbIDToNull();
+        // if the object isn't already in the database
+        if (finished.getDbId() == null){
+            Document doc=  finished.classToDoc();
+            try{
+                newID=  insertDoc(doc, "FarmData","task_record_list");
+                newDoc= grabByID("FarmData", "task_record_list", newID);
+                classType = "Task";
+            }
+            catch (Exception e){
+                System.out.println("issue adding the task to finished task list.");
+            }
+        }
+        assert classType != null;
+        assert newDoc != null;
+        return fetchObject(classType, newDoc);
+    }
 
 
     public ObservableList<User> initializeUsersFromDB(){

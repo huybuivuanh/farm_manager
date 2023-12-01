@@ -204,6 +204,15 @@ public class GraphView extends StackPane implements ModelSubscriber {
         this.getChildren().add(graphPage);
     }
 
+    /**
+     * Sets the primary stage and scenes of the application. Specifically handles the
+     * menu and graph scenes. Additionally, applies a stylesheet to the graph scene.
+     *
+     * @param stage The primary JavaFX stage where scenes will be displayed.
+     * @param MenuScene The scene representing the application's main menu.
+     * @param graphScene The scene representing the graph view of the application and to which the style sheet is to be applied.
+     *
+     */
     public void setStageMenu(Stage stage, Scene MenuScene, Scene graphScene){
         this.stage = stage;
         this.MenuScene = MenuScene;
