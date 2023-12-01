@@ -2,9 +2,7 @@ package TEST;
 
 import control.FieldControl;
 import org.InitialFarm.Crop;
-import  org.InitialFarm.Chemical;
 import org.InitialFarm.dataManager;
-import org.entities.Field;
 
 import java.time.LocalDate;
 
