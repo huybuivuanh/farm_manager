@@ -150,8 +150,8 @@ public class BinView extends StackPane {
                     showErrorPopup("Maximum bin capacity is 20 bushels");
                 } else {
                     binController.addBin(binNameInput.getText(), binSize, binLocation.getText(), hopperInput.isSelected(), fanInput.isSelected() );
-                    showPopup("Added Bin");
                     stage.setScene(binScene);
+                    showPopup("Added Bin");
                 }
             }
             binNameInput.setText("");
@@ -244,7 +244,6 @@ public class BinView extends StackPane {
                         cropVarietyInput.setValue(currentCrop.getCropVariety());
                         bushelWeight.setText(String.valueOf(currentCrop.getBushelWeight()));
                     }
-                    showPopup("Added Crop");
                     stage.setScene(addCropScene);
                 } else {
                     System.out.println("Bin is full");
@@ -309,6 +308,7 @@ public class BinView extends StackPane {
                         binTable.setItems(grainBinData);
                         binTable.refresh();
                         stage.setScene(binScene);
+                        showPopup("Added Crop");
                     } else {
                         System.out.println("Maximum capacity exceeded");
                         showErrorPopup("Maximum capacity exceeded");
@@ -328,6 +328,7 @@ public class BinView extends StackPane {
                             binTable.setItems(grainBinData);
                             binTable.refresh();
                             stage.setScene(binScene);
+                            showPopup("Added Crop");
                         } else {
                             System.out.println("Maximum capacity exceeded");
                             showErrorPopup("Maximum capacity exceeded");
@@ -493,12 +494,12 @@ public class BinView extends StackPane {
             }
             if (grain != -1) {
                 binController.unload(new ObjectId(unloadBinID.getText()), Integer.parseInt(unloadGrainInput.getText()), unloadInputBushels.isSelected());
-                showPopup("Crop Unloaded");
                 stage.setScene(binScene);
                 unloadGrainInput.setText("");
                 unloadInputBushels.setSelected(false);
                 binTable.refresh();
                 stage.setScene(binScene);
+                showPopup("Crop Unloaded");
             }
         });
 

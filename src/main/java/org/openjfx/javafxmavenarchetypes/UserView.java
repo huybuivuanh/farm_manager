@@ -142,7 +142,6 @@ public class UserView extends StackPane {
                 throw new RuntimeException(ex);
             }
             if (dob.getValue() != null){
-                showPopup("Added User");
                 stage.setScene(userScene);
                 taskTable.refresh();
                 allTasksInUserViewTable.refresh();
@@ -151,6 +150,7 @@ public class UserView extends StackPane {
                 taskUsersTable.refresh();
                 allUsersInTaskViewTable.refresh();
                 userTable.refresh();
+                showPopup("Added User");
             }
         });
 
@@ -244,8 +244,8 @@ public class UserView extends StackPane {
             taskUsersTable.refresh();
             allUsersInTaskViewTable.refresh();
             userTable.refresh();
-            showPopup("Added User");
             stage.setScene(userScene);
+            showPopup("Added User");
         });
 
         editUser.setOnMouseClicked(e-> {

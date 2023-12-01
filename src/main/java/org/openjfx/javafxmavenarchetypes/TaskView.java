@@ -14,6 +14,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.controlsfx.glyphfont.Glyph;
 import org.entities.Task;
 import org.entities.User;
 
@@ -72,31 +73,44 @@ public class TaskView extends StackPane {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Todo 1 : Making the add task window pop up (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        VBox userBox = new VBox(30);
+        VBox userBox = new VBox(15);
         Scene addUserScene = new Scene(userBox,300,250);
 
 
-        TextField idInput = new TextField("Input ID (optional)");
-        TextField taskNameF = new TextField("Input taskName");
-        TextField descriptionF = new TextField("Input task description");
+        Label addTaskLabel = new Label("Add New Task");
+        addTaskLabel.getStyleClass().add("page-label");
+
+        Label idInputLabel = new Label("Task ID (optional):");
+        idInputLabel.getStyleClass().add("text-field-label");
+        TextField idInput = new TextField();
+
+        Label taskNameFLabel = new Label("Task Name:");
+        taskNameFLabel.getStyleClass().add("text-field-label");
+        TextField taskNameF = new TextField();
+
+        Label descriptionLabel = new Label("Task Description:");
+        descriptionLabel.getStyleClass().add("text-field-label");
+        TextField descriptionF = new TextField();
+
+        Label dueDateLabel = new Label("Due Date");
+        dueDateLabel.getStyleClass().add("text-field-label");
         DatePicker dueDate = new DatePicker();
+
         Button submitTask = new Button("Submit");
         Button cancelAddTask = new Button("Cancel");
+        HBox submitCancelBox = new HBox(15, submitTask, cancelAddTask);
         cancelAddTask.setOnMouseClicked(event -> {
             stage.setScene(taskScene);
         });
 
-        userBox.getChildren().addAll(idInput,taskNameF,descriptionF,dueDate,submitTask, cancelAddTask);
+        userBox.getChildren().addAll(addTaskLabel, idInputLabel, idInput, taskNameFLabel, taskNameF, descriptionLabel,descriptionF,
+                dueDateLabel,dueDate, submitCancelBox);
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Todo 2: Task Addition (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Button addTask = new Button("Add Task");
         addTask.setOnMouseClicked(e ->{
-            idInput.setText("Input ID (optional)");
-            taskNameF.setText("Input taskName");
-            descriptionF.setText("Input task description");
-            dueDate.setValue(null);
             stage.setScene(addUserScene);
         });
 
@@ -108,6 +122,7 @@ public class TaskView extends StackPane {
                     taskController.addTask(idInput.getText(),taskNameF.getText(),descriptionF.getText(),dueDate.getValue().atTime(LocalTime.now()));
                 } else {
                     System.out.println("Please Select Due Date");
+                    showErrorPopup("Please Select Due Date");
                 }
 
             } catch (NoSuchFieldException ex) {
@@ -121,8 +136,8 @@ public class TaskView extends StackPane {
                 taskUsersTable.refresh();
                 allUsersInTaskViewTable.refresh();
                 userTable.refresh();
-
                 stage.setScene(taskScene);
+                showPopup("Task Added");
             }
         });
 
@@ -131,20 +146,37 @@ public class TaskView extends StackPane {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         Button editTask = new Button("Edit Task");
-        VBox userEditBox = new VBox(30);
+        VBox userEditBox = new VBox(15);
         Scene editUserScene = new Scene(userEditBox,300,250);
 
+        Label editTaskLabel = new Label();
+        editTaskLabel.getStyleClass().add("page-label");
+
+        Label idInputEditLable = new Label("Task ID:");
+        idInputEditLable.getStyleClass().add("text-field-label");
         TextField idInputEdit = new TextField();
+
+        Label taskNameFEditLabel = new Label("Task Name:");
+        taskNameFEditLabel.getStyleClass().add("text-field-label");
         TextField taskNameFEdit = new TextField();
+
+        Label descriptionEditLabel = new Label("Task Description:");
+        descriptionEditLabel.getStyleClass().add("text-field-label");
         TextField descriptionFEdit = new TextField();
+
+        Label dueDateEditLabel = new Label("Due Date");
+        dueDateEditLabel.getStyleClass().add("text-field-label");
         DatePicker dueDateEdit = new DatePicker();
+
         Button submitTaskEdit = new Button("Submit");
         Button cancelEditTask = new Button("Cancel");
+        HBox submitCancelEditBox = new HBox(15, submitTaskEdit, cancelEditTask);
         cancelEditTask.setOnMouseClicked(event -> {
             stage.setScene(taskScene);
         });
 
-        userEditBox.getChildren().addAll(idInputEdit,taskNameFEdit,descriptionFEdit,dueDateEdit,submitTaskEdit, cancelEditTask);
+        userEditBox.getChildren().addAll(editTaskLabel, idInputEditLable, idInputEdit, taskNameFEditLabel,taskNameFEdit,
+                descriptionEditLabel, descriptionFEdit, dueDateEditLabel,dueDateEdit, submitCancelEditBox);
         submitTaskEdit.setOnMouseClicked(e ->{
             taskController.editTask(taskTable.getSelectionModel().getSelectedItem().getID(),
                     idInputEdit.getText(), taskNameFEdit.getText(), descriptionFEdit.getText(),
@@ -157,12 +189,12 @@ public class TaskView extends StackPane {
             taskUsersTable.refresh();
             allUsersInTaskViewTable.refresh();
             userTable.refresh();
-
             stage.setScene(taskScene);
         });
 
         editTask.setOnMouseClicked(e ->{
             if (taskTable.getSelectionModel().getSelectedItem() != null){
+                editTaskLabel.setText("Editing Task Named (" + taskTable.getSelectionModel().getSelectedItem().getTaskName() + ")");
                 idInputEdit.setText(taskTable.getSelectionModel().getSelectedItem().getID());
                 taskNameFEdit.setText(taskTable.getSelectionModel().getSelectedItem().getTaskName());
                 descriptionFEdit.setText(taskTable.getSelectionModel().getSelectedItem().getDescription());
@@ -177,6 +209,7 @@ public class TaskView extends StackPane {
                 stage.setScene(editUserScene);
             } else {
                 System.out.println("Need to select a task");
+                showErrorPopup("Need to select a task");
             }
 
         });
@@ -196,8 +229,10 @@ public class TaskView extends StackPane {
                 taskUsersTable.refresh();
                 allUsersInTaskViewTable.refresh();
                 userTable.refresh();
+                showPopup("Task marked completed");
             } else {
                 System.out.println("Need to select a task");
+                showErrorPopup("Need to select a task");
             }
 
         });
@@ -217,7 +252,7 @@ public class TaskView extends StackPane {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Todo 5: the view of completed tasks
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        VBox completedTaskBox = new VBox(30);
+        VBox completedTaskBox = new VBox(15);
         Scene completedTaskScene = new Scene(completedTaskBox,300,250);
 
         Button viewCompleted = new Button("Completed Tasks");
@@ -230,7 +265,7 @@ public class TaskView extends StackPane {
             stage.setScene(taskScene);
         });
 
-        Label completedTaskLabel = new Label("Completed Task Popup");
+        Label completedTaskLabel = new Label("Completed Task Page");
         completedTaskLabel.getStyleClass().add("page-label");
 
         TableColumn<Task, String> completedTaskIDCol = new TableColumn<Task, String>("Task ID");
@@ -271,9 +306,9 @@ public class TaskView extends StackPane {
         // Todo 6: Task Employees view
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        VBox taskEmployeesBox = new VBox(30);
+        VBox taskEmployeesBox = new VBox(15);
         Scene taskEmployeesScene = new Scene(taskEmployeesBox,300,250);
-        Label taskEmployeesLabel = new Label("Task Employees Popup view");
+        Label taskEmployeesLabel = new Label("Task Employees Page");
         taskEmployeesLabel.getStyleClass().add("page-label");
         Label taskNameLabel = new Label();
         taskNameLabel.getStyleClass().add("page-label");
@@ -437,7 +472,7 @@ public class TaskView extends StackPane {
         // todo 6.4:  creating top bar for the view of employee view inside of task and adding buttons to it (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        HBox topTaskAddUserBar= new HBox();
+        HBox topTaskAddUserBar= new HBox(15);
         topTaskAddUserBar.getChildren().addAll(taskAddEmployees, taskRemoveEmployees, taskEmployeesBackToTask);
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -515,6 +550,22 @@ public class TaskView extends StackPane {
         this.MenuScene = MenuScene;
         this.taskScene = taskScene;
         taskScene.getStylesheets().add(getClass().getClassLoader().getResource("task.css").toExternalForm());
+    }
+
+    private void showPopup(String content) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("MESSAGE");
+        alert.setHeaderText("CONFIRM MESSAGE");
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    private void showErrorPopup(String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Message");
+        alert.setHeaderText("INVALID");
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
 }
