@@ -62,7 +62,7 @@ public class BinControl {
         }
         if (binSearched != null){
             binSearched.addCrop(cropType, grain, inputBushels, clean, tough);
-            binSearched = dataManager.updateClass(binSearched);
+            dataManager.updateClass(binSearched);
         }
         else {
             System.out.println("Can't find bin with ID (" + bin_id + ")");
@@ -80,7 +80,7 @@ public class BinControl {
         if (binSearched != null){
             if (!binSearched.isEmpty()) {
                 binSearched.clearBin();
-                binSearched = dataManager.updateClass(binSearched);
+                dataManager.updateClass(binSearched);
             } else {
                 System.out.println("Bin is empty!");
             }
@@ -150,7 +150,7 @@ public class BinControl {
         }
         if (binSearched != null){
             binSearched.unloadBin(grain, isBushel);
-            binSearched = dataManager.updateClass(binSearched);
+            dataManager.updateClass(binSearched);
         } else{
             System.out.println("Cant find bin with ID (" + binID + ")");
         }

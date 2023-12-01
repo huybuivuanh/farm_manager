@@ -275,10 +275,10 @@ public class BinView extends StackPane {
                 binController.addCropType(newCropTypeInput.getText());
             }
             String cropType;
-            if (cropTypeInput.getValue() != null) {
-                cropType = cropTypeInput.getValue();
-            } else {
+            if (!newCropTypeInput.getText().isEmpty()) {
                 cropType = newCropTypeInput.getText();
+            } else {
+                cropType = cropTypeInput.getValue();
             }
 
             if (grain != -1 && bWeight != -1.0) {
