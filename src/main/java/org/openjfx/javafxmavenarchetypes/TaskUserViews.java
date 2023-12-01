@@ -26,7 +26,7 @@ import java.time.LocalTime;
 import static java.lang.Boolean.parseBoolean;
 
 
-public class TaskUserViews extends StackPane implements ModelSubscriber{
+public class TaskUserViews extends StackPane{
 
     private VBox userPage = new VBox();
     private Stage stage;
@@ -48,7 +48,6 @@ public class TaskUserViews extends StackPane implements ModelSubscriber{
     private ObservableList<Task> taskData = taskController.taskList;
     private ObservableList<Task> CompletedTaskData = taskController.finishedTaskList;
 
-    private TableView<TaskBar> bars = new TableView<TaskBar>();
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Todo: User tables and data (Need to implement user tasks view)
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -740,11 +739,6 @@ public class TaskUserViews extends StackPane implements ModelSubscriber{
         this.MenuScene = MenuScene;
         this.userScene = userScene;
         userScene.getStylesheets().add(getClass().getClassLoader().getResource("user.css").toExternalForm());
-    }
-
-    @Override
-    public void modelChanged() {
-
     }
 
 }

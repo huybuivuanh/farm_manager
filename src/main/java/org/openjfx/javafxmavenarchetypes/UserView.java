@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 
 import static java.lang.Boolean.parseBoolean;
 
-public class UserView extends StackPane implements ModelSubscriber {
+public class UserView extends StackPane {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Todo: User tables and data (Need to implement user tasks view)
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,7 +42,6 @@ public class UserView extends StackPane implements ModelSubscriber {
     public TableView<Task> CompletedTaskTable = initer.getCompletedTaskTable();
     public ObservableList<Task> taskData = initer.getTaskData();
     public ObservableList<Task> CompletedTaskData = initer.getCompletedTaskData();
-    public TableView<TaskBar> bars = initer.getBars();
 
     // Todo: User tables and data (Need to implement user tasks view)
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -470,8 +469,4 @@ public class UserView extends StackPane implements ModelSubscriber {
         userScene.getStylesheets().add(getClass().getClassLoader().getResource("user.css").toExternalForm());
     }
 
-    @Override
-    public void modelChanged() {
-
-    }
 }

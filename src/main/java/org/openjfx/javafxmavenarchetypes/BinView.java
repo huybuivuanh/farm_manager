@@ -17,7 +17,7 @@ import org.InitialFarm.GrainBin;
 import org.bson.types.ObjectId;
 
 
-public class BinView extends StackPane implements ModelSubscriber {
+public class BinView extends StackPane {
 
     private VBox binPage = new VBox();
     private Scene MenuScene ;

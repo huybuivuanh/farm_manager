@@ -156,7 +156,7 @@ public class FieldControl {
         }
     }
 
-    public void harvest(String fieldID){
+    public void harvest(String fieldID,Double yield){
         Field searchedField = null;
         for (Field field : fieldList) {
             if (field.getID().equals(fieldID)) {
@@ -167,6 +167,8 @@ public class FieldControl {
         if (searchedField != null){
             if (searchedField.getCurrent_Year() != null) {
                 searchedField.getCurrent_Year().harvest(LocalDate.now());
+                searchedField.getCurrent_Year().setYield(yield);
+
                 Year currentYear = searchedField.getCurrent_Year();
                 for (Year year : yearList){
                     if (year.getDbId().equals(currentYear.getDbId())){
