@@ -31,14 +31,13 @@ import static org.InitialFarm.DataFetch.*;
  */
 public class dataManager {
 
+
     /**
-     * Used to fetch object by:
-     * 1) grabbing object details => parse through;
-     * 2) build it using constructor;
-     * 3) return it;
+     * A function that updates an entry in the Database. This is done by swapping
+     * out the existing document with a matching id for the one being passed.
+     *
+     * @param test: an instance of an object that is to be updated. It implements the DatabaseInterface class.
      */
-
-
     public  <T extends DatabaseInterface<T>> T updateClass(T test){
 
         if ( test instanceof Employee) {
@@ -77,6 +76,11 @@ public class dataManager {
     }
 
 
+    /**
+     * A function that removes an entry from the Database. This is done by using the remove function.
+     *
+     * @param test: an instance of an object that is to be deleted. It implements the DatabaseInterface class.
+     */
     public <T extends DatabaseInterface<T>>  void removeClass (T test){
         if ( test instanceof Employee) {
 
@@ -112,11 +116,19 @@ public class dataManager {
         }
 
     }
+
+
     // Initialize a class  Does this have an ID yes or no?
     // No it doesn't. Okay re-initalize this class inside the database. Pull out what the database Makes as a new class
     // construct of same and return back to the developer. They should set their class as this new class.
     // IF it does exist (ID is not null). THen we need update that ID position with whatever information it has.
     //
+
+    /**
+     * A function that saves an entry into the Database. This is done by using insertDoc, grabByID, and fetchObject
+     *
+     * @param test: an instance of an object that is to be deleted. It implements the DatabaseInterface class.
+     */
     public <T extends DatabaseInterface<T>> T saveClass(T test){
         ObjectId newID = null;
         Document newDoc= null;
@@ -213,15 +225,12 @@ public class dataManager {
 
 
 
-    // old fetch object
-//    public static dummy fetchObject(String classType, String classInfo1, String classInfo2) throws NoSuchFieldException {
-//        Document doc=  grab("FarmData", "farm_list", classType, classInfo1);
-//        //ObjectId id = new ObjectId(doc.getString("fieldName"), doc.get("_id", Document.class).getString("$oid"));
-//        // the id is a special case in mongodb and needs to be put into an ObjectId, it cant be cast to string right away
-//        ObjectId id = doc.getObjectId("_id");
-//        return new dummy( 31, doc.getString("fieldName"),  id);
-//    }
-
+    /**
+     * A function that fetches objects from the Database using the dataBase internal ID. This is done by using the grabByID and fetchObject functions.
+     *
+     * @param classType: a string representing the type of data being fetched.
+     * @param id: the internal id within the MongoDB database.
+     */
     public <T extends DatabaseInterface<T>> T fetchObjectById(String classType, ObjectId id){
 
         Object newObj = null;
@@ -280,23 +289,15 @@ public class dataManager {
 
 
 
-//        newDoc.append("taskID",this.getID());
-//        newDoc.append("task_name",this.getTaskName());
-//        newDoc.append("task_description",this.getDescription());
-//        newDoc.append("task_dueDate",this.getDueDate());
-//        newDoc.append("task_date",this.getDate());
-//        newDoc.append("stafflist",staffList);
-//        return newDoc;
-//    }
-
-
-
         return null;
     }
 
 
     /**
      * Given the type of class, the object document, and its id, return the object itself.
+     *
+     * @param classType: a string representing the type of data being fetched
+     * @param objectDoc: a Document containing the inner details of the object!
      */
     public  <T extends DatabaseInterface<T>> T fetchObject(String classType, Document objectDoc){
 
@@ -515,7 +516,8 @@ public class dataManager {
 
 
     /**
-    * Translates an object into a JSON Document representation of itself.
+    * Translates a dummy object into a JSON Document representation of itself.
+     * @param dum: is a dummy class created in the early stages to be able to better plan for future classes.
     */
     public static Document translateToDoc ( dummy dum)
     {
@@ -533,7 +535,11 @@ public class dataManager {
         return newDoc;
     }
 
-    // method2:
+
+    /**
+     * A function that served as a prototype for the update function
+     * @param dum: is a dummy class created in the early stages to be able to better plan for future classes.
+     */
     public static void sync (dummy dum){
         Document synced = translateToDoc(dum);
         ObjectId id = synced.getObjectId("_id");
@@ -550,6 +556,13 @@ public class dataManager {
 
     }
 
+
+    /**
+     * A function that initializes the Model with Task Data pulled from a specific section of the Database.
+     * this function is called in the Task controller's constructor to populate the model data.
+     *
+     * @return : An observable list containing the tasks stored in the database
+     */
     public ObservableList<Task> initializeTasksFromDB(){
         //Todo: need to go through database task collection
         // build all tasks and add them to an Observable list
@@ -577,6 +590,13 @@ public class dataManager {
             }
             return taskList;
         }
+
+    /**
+     * A function that initializes the Model with finished Task Data pulled from the specific section of the Database.
+     * this function is called in the Task controller's constructor to populate the model data.
+     *
+     * @return : An observable list containing the completed tasks stored in the database
+     */
     public ObservableList<Task> initializeFinishedTasksFromDB(){
         //Todo: need to go through database task collection
         // build all tasks and add them to an Observable list
@@ -605,6 +625,11 @@ public class dataManager {
         return taskList;
     }
 
+    /**
+     * A function specialized to handling the saving of finished tasks into the appropriate Database location
+     * this function is called in the Task controller
+     * @param finished : The task to be saved to the MongoDB collection of Finished Tasks
+     */
     public Task saveFinishedTask(Task finished){
         // set all to null to insure all information is properly initialized by proper code segments.
         ObjectId newID = null;
@@ -628,7 +653,12 @@ public class dataManager {
         return fetchObject(classType, newDoc);
     }
 
-
+    /**
+     * A function that initializes the Model with User Data pulled from a specific section of the Database.
+     * this function is called in the User controller's constructor to populate the model data.
+     *
+     * @return : An observable list containing the users stored in the database
+     */
     public ObservableList<User> initializeUsersFromDB(){
 
         ObservableList<User> userList = FXCollections.observableArrayList();;
@@ -655,6 +685,12 @@ public class dataManager {
         return userList;
     }
 
+    /**
+     * A function that initializes the Model with Field Data pulled from a specific section of the Database.
+     * this function is called in the Field controller's constructor to populate the model data.
+     *
+     * @return : An observable list containing the fields stored in the database
+     */
     public ObservableList<Field> initializeFieldsFromDB(){
 
         ObservableList<Field> fieldList = FXCollections.observableArrayList();;
@@ -681,6 +717,12 @@ public class dataManager {
         return fieldList;
     }
 
+    /**
+     * A function that initializes the Model with Bin Data pulled from a specific section of the Database.
+     * this function is called in the Bin controller's constructor to populate the model data.
+     *
+     * @return : An observable list containing the bins stored in the database
+     */
     public ObservableList<GrainBin> initializeGrainBinsFromDB(){
 
         ObservableList<GrainBin> binList = FXCollections.observableArrayList();;
@@ -707,6 +749,12 @@ public class dataManager {
         return binList;
     }
 
+    /**
+     * A function that initializes the Model with Year Data pulled from a specific section of the Database.
+     * this function is called in the Year controller's constructor to populate the model data.
+     *
+     * @return : An observable list containing the years stored in the database
+     */
     public ObservableList<Year> initializeYearsFromDB(){
 
         ObservableList<Year> yearList = FXCollections.observableArrayList();;
@@ -734,58 +782,7 @@ public class dataManager {
     }
 
 
-//    public static void initializeFromDB(){
-//        //Todo: need to go through database collections in order
-//        // build all items and add them to controller as you go
-//        // recreate their connections after all is individual pieces are built
-//        ArrayList<String> collectionNames = new ArrayList<String>(List.of("task_list", "employee_list"));
-//
-//        for (String collection: collectionNames) {
-//            try (MongoClient mongoClient = MongoClients.create(uri)) {
-//                MongoDatabase database =  mongoClient.getDatabase("FarmData");
-//                MongoCollection<Document> col = database.getCollection(collection);
-//                FindIterable<Document> entry = col.find();
-//                // choose type of object to make by passing in the object type as a string ArrayList<>
-//
-//                mongoClient.close();
-//                System.out.println("Removed all contents of the collection: "+ collection + " from the database successfully");
-//            }
-//            catch (Exception e){
-//            System.out.println("failed to load all contents of the collection: "+ collection + " from the database.");
-//            }
-//        }
-//    }
 
-
-
-
-
-
-
-
-
-
-//    public static void initializeFromDB(){
-//        //Todo: need to go through database collections in order
-//        // build all items and add them to controller as you go
-//        // recreate their connections after all is individual pieces are built
-//        ArrayList<String> collectionNames = new ArrayList<String>(List.of("task_list", "employee_list"));
-//
-//        for (String collection: collectionNames) {
-//            try (MongoClient mongoClient = MongoClients.create(uri)) {
-//                MongoDatabase database =  mongoClient.getDatabase("FarmData");
-//                MongoCollection<Document> col = database.getCollection(collection);
-//                FindIterable<Document> entry = col.find();
-//                // choose type of object to make by passing in the object type as a string ArrayList<>
-//
-//                mongoClient.close();
-//                System.out.println("Removed all contents of the collection: "+ collection + " from the database successfully");
-//            }
-//            catch (Exception e){
-//            System.out.println("failed to load all contents of the collection: "+ collection + " from the database.");
-//            }
-//        }
-//    }
 
     public static void main(String[] args) throws NoSuchFieldException {
 
