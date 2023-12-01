@@ -2,6 +2,7 @@ package control;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import org.entities.Employee;
 import org.entities.Task;
 import org.entities.User;
@@ -178,6 +179,7 @@ public class TaskControl {
         if (task == null)
         {
             System.out.println("Task you are trying to assign a user to wasn't in the list of tasks!");
+            showErrorPopup("Task you are trying to assign a user to wasn't in the list of tasks!");
         }
         else{
             task.addStaff(user);
@@ -241,6 +243,14 @@ public class TaskControl {
             returned = viewed.toString();
         }
         return returned;
+    }
+
+    private void showErrorPopup(String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Message");
+        alert.setHeaderText("INVALID");
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
 }

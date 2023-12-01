@@ -308,7 +308,7 @@ public class UserView extends StackPane {
         VBox employeeTasksBox = new VBox(15);
         Scene employeeTasksScene = new Scene(employeeTasksBox,300,250);
         Label employeeTasksLabel = new Label("Employee Tasks Popup view");
-        employeeTasksLabel.getStyleClass().add("text-field-label");
+        employeeTasksLabel.getStyleClass().add("page-label");
         Label employeeNameLabel = new Label();
         employeeNameLabel.getStyleClass().add("text-field-label");
 
@@ -357,30 +357,41 @@ public class UserView extends StackPane {
 
         Button employeeAddTasks = new Button("Add Task");
         employeeAddTasks.setOnMouseClicked(e->{
-            //userTable.getSelectionModel().getSelectedItem().addTask(allTasksInUserViewTable.getSelectionModel().getSelectedItem());
-            userController.assignTask(userTable.getSelectionModel().getSelectedItem().getID(),allTasksInUserViewTable.getSelectionModel().getSelectedItem() );
-            taskTable.refresh();
-            allTasksInUserViewTable.refresh();
-            userTasksTable.refresh();
-            CompletedTaskTable.refresh();
-            taskUsersTable.refresh();
-            allUsersInTaskViewTable.refresh();
-            userTable.refresh();
-            System.out.println( "the add task button has been clicked");
+            if (allTasksInUserViewTable.getSelectionModel().getSelectedItem() != null) {
+                //userTable.getSelectionModel().getSelectedItem().addTask(allTasksInUserViewTable.getSelectionModel().getSelectedItem());
+                userController.assignTask(userTable.getSelectionModel().getSelectedItem().getID(), allTasksInUserViewTable.getSelectionModel().getSelectedItem());
+                taskTable.refresh();
+                allTasksInUserViewTable.refresh();
+                userTasksTable.refresh();
+                CompletedTaskTable.refresh();
+                taskUsersTable.refresh();
+                allUsersInTaskViewTable.refresh();
+                userTable.refresh();
+                showPopup("Task Added");
+                System.out.println("the add task button has been clicked");
+            } else {
+                showErrorPopup("No task to be added");
+            }
         });
 
         Button employeeRemoveTasks = new Button("Remove Task");
         employeeRemoveTasks.setOnMouseClicked(e->{
             //userTable.getSelectionModel().getSelectedItem().removeTask(userTasksTable.getSelectionModel().getSelectedItem().getID());
-            userController.unAssignTask( userTable.getSelectionModel().getSelectedItem().getID(), userTasksTable.getSelectionModel().getSelectedItem());
-            taskTable.refresh();
-            allTasksInUserViewTable.refresh();
-            userTasksTable.refresh();
-            CompletedTaskTable.refresh();
-            taskUsersTable.refresh();
-            allUsersInTaskViewTable.refresh();
-            userTable.refresh();
-            System.out.println( "the remove task button has been clicked");
+            if (userTasksTable.getSelectionModel().getSelectedItem() != null){
+                userController.unAssignTask( userTable.getSelectionModel().getSelectedItem().getID(), userTasksTable.getSelectionModel().getSelectedItem());
+                taskTable.refresh();
+                allTasksInUserViewTable.refresh();
+                userTasksTable.refresh();
+                CompletedTaskTable.refresh();
+                taskUsersTable.refresh();
+                allUsersInTaskViewTable.refresh();
+                userTable.refresh();
+                showPopup("Task removed");
+                System.out.println( "the remove task button has been clicked");
+            } else {
+                showErrorPopup("No task to be removed");
+            }
+
         });
 
         Button employeeTasksBackToMain = new Button("Back");
@@ -454,7 +465,7 @@ public class UserView extends StackPane {
 
         Label taskLabelWithinEmployeeTasks = new Label("All tasks:");
         taskLabelWithinEmployeeTasks.getStyleClass().add("page-label");
-        HBox topUserAddTaskBar= new HBox();
+        HBox topUserAddTaskBar= new HBox(15);
         topUserAddTaskBar.getChildren().addAll( employeeAddTasks, employeeRemoveTasks ,employeeTasksBackToMain);
 
 
