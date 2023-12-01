@@ -301,7 +301,6 @@ public class dataManager {
     public  <T extends DatabaseInterface<T>> T fetchObject(String classType, Document objectDoc){
 
         Object newObj = null;
-        System.out.println("inside fetch test" + objectDoc.getObjectId("_id"));
 
         if (classType.equals("Employee"))
         {
@@ -313,7 +312,6 @@ public class dataManager {
             for (int i = 0; i < test.size();i++){
                 ObjectId output = test.get(0).asObjectId().getValue();
                 Task newTask = (Task) fetchObjectById("Task",output);
-                System.out.println(newTask);
                 newEmployee.addTask(newTask);
             }
             newObj = newEmployee;
@@ -364,16 +362,14 @@ public class dataManager {
             Year newYear = new Year(objectDoc.getObjectId("_id"),objectDoc.getInteger("year"),objectDoc.getDate("newYear").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             BsonArray test = objectDoc.toBsonDocument().getArray("chemical_records");
             for (int i = 0; i < test.size();i++){
-                ObjectId output = test.get(0).asObjectId().getValue();
+                ObjectId output = test.get(i).asObjectId().getValue();
                 ChemicalRecord newChemRecord =  fetchObjectById("ChemicalRecord",output);
-                System.out.println(newChemRecord);
                 newYear.addChemicalRecord(newChemRecord);
             }
             BsonArray test2 = objectDoc.toBsonDocument().getArray("task_records");
             for (int i = 0; i < test2.size();i++){
                 ObjectId outputTask = test2.get(0).asObjectId().getValue();
                 TaskRecord newTaskRecord =  fetchObjectById("TaskRecord",outputTask);
-                System.out.println(newTaskRecord);
                 newYear.addTaskRecord(newTaskRecord);
             }
             if (objectDoc.getObjectId("crop") != null) {
@@ -467,7 +463,6 @@ public class dataManager {
             for (int i = 0; i < test.size();i++){
                 ObjectId output = test.get(0).asObjectId().getValue();
                 Year newYear = fetchObjectById("Year",output);
-                System.out.println(newYear);
                 newField.addYear(newYear);
             }
             newObj = newField;
@@ -503,7 +498,6 @@ public class dataManager {
             for (int i = 0; i < test.size();i++){
                 ObjectId output = test.get(0).asObjectId().getValue();
                 Employee newEmployee = (Employee) fetchObjectById("Employee",output);
-                System.out.println(newEmployee);
                 newTask.addStaff(newEmployee);
             }
             newObj = newTask;
