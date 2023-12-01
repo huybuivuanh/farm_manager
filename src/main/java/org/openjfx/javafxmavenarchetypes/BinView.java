@@ -4,12 +4,12 @@ import control.BinControl;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.InitialFarm.Crop;
@@ -523,10 +523,22 @@ public class BinView extends StackPane {
 
         unloadPage.getChildren().addAll(unloadCropPageTitle, unloadGranInputLabel, unloadGrainInput, unloadInputBushels, submitAndCancelBox3);
 
+        // boxes for css styling :(
         HBox binFunctionBar = new HBox();
-        binFunctionBar.getChildren().addAll(addBin, deleteBin, addCrop, viewBin, unload, clearBin, binsBackToMain);
+        binFunctionBar.getStyleClass().add("function-bar");
+        HBox.setHgrow(binFunctionBar, Priority.ALWAYS);
+        HBox.setHgrow(binsBackToMain, Priority.ALWAYS);
+        binFunctionBar.getChildren().addAll(addBin, deleteBin, addCrop, viewBin, unload, clearBin);
+        HBox topBar = new HBox();
+        binsBackToMain.getStyleClass().add("back-button");
+        topBar.getStyleClass().add("top-bar");
+        topBar.getChildren().addAll(binFunctionBar, binsBackToMain);
 
-        binPage.getChildren().addAll(binFunctionBar, binTable);
+        VBox binTableContainer = new VBox();
+        binTableContainer.getStyleClass().add("table-container");
+        binTableContainer.getChildren().add(binTable);
+        binPage.getChildren().addAll(topBar, binTableContainer);
+
 
         //css
         addBinScene.getStylesheets().add(getClass().getClassLoader().getResource("bin.css").toExternalForm());

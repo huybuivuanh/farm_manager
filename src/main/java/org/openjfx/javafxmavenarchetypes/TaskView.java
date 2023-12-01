@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -449,7 +450,14 @@ public class TaskView extends StackPane {
         // Todo 7: Task view formatting (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         HBox topBar= new HBox();
-        topBar.getChildren().addAll(addTask,editTask,markComplete,viewCompleted,taskEmployees ,taskBackToMain);
+        HBox taskFunctionBar = new HBox();
+        taskFunctionBar.getStyleClass().add("function-bar");
+        taskBackToMain.getStyleClass().add("back-button");
+        topBar.getStyleClass().add("top-bar");
+        HBox.setHgrow(taskFunctionBar, Priority.ALWAYS);
+        HBox.setHgrow(taskBackToMain, Priority.ALWAYS);
+        taskFunctionBar.getChildren().addAll(addTask,editTask,markComplete,viewCompleted,taskEmployees);
+        topBar.getChildren().addAll(taskFunctionBar, taskBackToMain);
 
         TableColumn<Task, String> taskIDCol = new TableColumn<Task, String>("Task ID");
 
@@ -480,7 +488,10 @@ public class TaskView extends StackPane {
         taskTable.setItems(taskData);
         taskTable.setEditable(true);
         taskTable.getColumns().addAll(taskIDCol,taskName,taskDescription,taskDueDate);
-        taskPage.getChildren().addAll(topBar,taskTable);
+        VBox taskTableContainer = new VBox();
+        taskTableContainer.getStyleClass().add("table-container");
+        taskTableContainer.getChildren().add(taskTable);
+        taskPage.getChildren().addAll(topBar,taskTableContainer);
 
         //css
         addUserScene.getStylesheets().add(getClass().getClassLoader().getResource("task.css").toExternalForm());

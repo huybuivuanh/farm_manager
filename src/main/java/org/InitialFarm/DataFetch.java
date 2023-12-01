@@ -18,12 +18,13 @@ public class DataFetch {
 
     /**
      * grabs and return a string of values.
-     * @param databaseName a string containing the database name you want to query
-     * @param collectionFind  a string containing the actual field you want to query
-     * @param fieldName the data you want to look for in string context
-     * @param fieldValue the actual value you want to look far in a string
+     * @param databaseName: a string containing the database name you want to query
+     * @param collectionFind:  a string containing the actual field you want to query
+     * @param fieldName: the data you want to look for in string context
+     * @param fieldValue: the actual value you want to look far in a string
      * Make sure to look at mongodb for reference to the database and what you want to find.
-     * @return
+     *
+     * @return : a Documnent representation of an entry within the DB that was grabbed based on the given input
      */
 
     public static Document grab(String databaseName, String collectionFind, String fieldName, String fieldValue) throws NoSuchFieldException {
@@ -44,11 +45,12 @@ public class DataFetch {
 
 
     /**
+     * A function that uses the database, collection name, and internal DB ID to find and return an entry
+     * @param databaseName: a string containing the database name you want to grab from
+     * @param collectionFind:a string of the collection of the database you want to grab from
+     * @param newdata: the internal Id of the document within MongoDB
      *
-     * @param databaseName
-     * @param collectionFind
-     * @param newdata
-     * @return
+     * @return : a Document containing the information representing the database entry grabbed.
      */
     public static Document grabByID(String databaseName, String collectionFind,ObjectId newdata){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
@@ -60,11 +62,15 @@ public class DataFetch {
 
         }
     }
+
+
     /**
      * Adds a document to the database
-     * @param input A Document containing the input data you want to send to the database
-     * @param databaseName a string containing the database name you wanty to add the document to
-     * @param collection a string of the collection of the database you want to add to.
+     * @param input: A Document containing the input data you want to send to the database
+     * @param databaseName: a string containing the database name you want to add the document to
+     * @param collection: a string of the collection of the database you want to add to.
+     *
+     * @return :  The newly generated internal MongoDB Id upon document insertion
      */
 
     public static ObjectId insertDoc(Document input,String databaseName,String collection) {
@@ -81,6 +87,16 @@ public class DataFetch {
         }
     }
 
+
+    /**
+     * Replaces an already existing document in the database with another one.
+     * @param id  the internal Id of the document within MongoDB
+     * @param input A Document containing the input data you want to send to the database
+     * @param databaseName a string containing the database name you wanty to add the document to
+     * @param collection a string of the collection of the database you want to add to.
+     *
+     * @return :  The newly generated internal MongoDB Id upon document insertion
+     */
     public static  ObjectId replaceDoc(ObjectId id, Document input, String databaseName, String collection) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
@@ -99,12 +115,13 @@ public class DataFetch {
     }
 
     /**
+     *A prototype function for insertDoc
      *
-     * @param key
-     * @param newdata
-     * @param newId
-     * @param databaseName
-     * @param collections
+     * @param key :
+     * @param newdata :
+     * @param newId :
+     * @param databaseName :
+     * @param collections :
      */
     public static void addID(String key, Object newdata, ObjectId newId,String databaseName,String collections){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
@@ -125,11 +142,12 @@ public class DataFetch {
     }
 
     /**
+     *A prototype function for replace
      *
      * @param docy a document containing ONLY key and values that you  want to modify
-     * @param newId
-     * @param databaseName
-     * @param collections
+     * @param newId : the internal database ID of the entry
+     * @param databaseName : the name of the database
+     * @param collections : the name of the collection within the database
      */
     public static void modifyID(Document docy, ObjectId newId,String databaseName,String collections){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
@@ -147,10 +165,10 @@ public class DataFetch {
     }
 
     /**
-     *
-     * @param newId
-     * @param databaseName
-     * @param collections
+     *A function that removes entries from a collection in the database using its internal DB ID
+     * @param newId : the internal database ID of the entry
+     * @param databaseName : the name of the database to remove the entry from
+     * @param collections : the name of the collection within the database to remove the entry from
      */
     public static void remove(ObjectId newId,String databaseName,String collections){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
@@ -163,7 +181,7 @@ public class DataFetch {
         }
     }
     /**
-     * Checks to see if a document is contained in a collection/database
+     * Checks to see if a document is contained in a collection/database using the document itself
      * @param input the document you want to check if it existys (Document)
      * @param databaseName the database you want to check (String)
      * @param collections the collection you want to check (String)
@@ -180,6 +198,15 @@ public class DataFetch {
         }
         return false;
     }
+
+    /**
+     * Checks to see if a document is contained in a collection within a database using its internal ID
+     * @param idcheck the document you want to check if it existys (Document)
+     * @param databaseName the database you want to check (String)
+     * @param collections the collection you want to check (String)
+     *
+     * @return true or false depending on if the document exists (Boolean)
+     */
     public static boolean existsID(ObjectId idcheck,String databaseName,String collections){
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
