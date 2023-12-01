@@ -56,8 +56,6 @@
 .top-bar{
     -fx-background-color: #3498db;
     -fx-padding: 0 0 1 0;
-
-    -fx-alignment: LEFT;
 }
 
 .back-button{
