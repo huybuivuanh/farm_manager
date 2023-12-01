@@ -361,7 +361,7 @@ public class dataManager {
             newObj = newGrainBin;
         }
         else if (classType.equals("Year")){
-            Year newYear = new Year(objectDoc.getObjectId("_id"),objectDoc.getInteger("year"),objectDoc.getDate("new_year").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            Year newYear = new Year(objectDoc.getObjectId("_id"),objectDoc.getInteger("year"),objectDoc.getDate("newYear").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             BsonArray test = objectDoc.toBsonDocument().getArray("chemical_records");
             for (int i = 0; i < test.size();i++){
                 ObjectId output = test.get(0).asObjectId().getValue();
@@ -382,15 +382,15 @@ public class dataManager {
             else{
                 newYear.setCrop(null);
             }
-            if (objectDoc.getDate("seedDate") != null) {
-                newYear.setSeeding_date(objectDoc.getDate("seedDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            if (objectDoc.getDate("seedingDate") != null) {
+                newYear.setSeeding_date(objectDoc.getDate("seedingDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             }
             else{
                 newYear.setSeeding_date(null);
             }
 
-            if (objectDoc.getDouble("seedRate") != null) {
-                newYear.setSeeding_rate(objectDoc.getDouble("seedRate"));
+            if (objectDoc.getDouble("seedingRate") != null) {
+                newYear.setSeeding_rate(objectDoc.getDouble("seedingRate"));
             }
            else{
                 newYear.setSeeding_rate(0);
@@ -415,8 +415,8 @@ public class dataManager {
             else{
                 newYear.setChemical_sprayed(null);
             }
-            if (objectDoc.getDate("sprayDate") != null) {
-                newYear.setSpraying_date(objectDoc.getDate("sprayDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            if (objectDoc.getDate("sprayingDate") != null) {
+                newYear.setSpraying_date(objectDoc.getDate("sprayingDate").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             }
             else{
                 newYear.setSpraying_date(null);
@@ -682,6 +682,37 @@ public class dataManager {
         }
         return yearList;
     }
+
+
+//    public static void initializeFromDB(){
+//        //Todo: need to go through database collections in order
+//        // build all items and add them to controller as you go
+//        // recreate their connections after all is individual pieces are built
+//        ArrayList<String> collectionNames = new ArrayList<String>(List.of("task_list", "employee_list"));
+//
+//        for (String collection: collectionNames) {
+//            try (MongoClient mongoClient = MongoClients.create(uri)) {
+//                MongoDatabase database =  mongoClient.getDatabase("FarmData");
+//                MongoCollection<Document> col = database.getCollection(collection);
+//                FindIterable<Document> entry = col.find();
+//                // choose type of object to make by passing in the object type as a string ArrayList<>
+//
+//                mongoClient.close();
+//                System.out.println("Removed all contents of the collection: "+ collection + " from the database successfully");
+//            }
+//            catch (Exception e){
+//            System.out.println("failed to load all contents of the collection: "+ collection + " from the database.");
+//            }
+//        }
+//    }
+
+
+
+
+
+
+
+
 
 
 //    public static void initializeFromDB(){

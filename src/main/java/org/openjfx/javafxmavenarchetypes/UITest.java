@@ -68,7 +68,11 @@ public class UITest extends Application implements Runnable {
 
         Button bgraph = new Button();
         bgraph.setText("Graph");
-        bgraph.setOnAction(e -> stage.setScene(graphScene));
+        bgraph.setOnAction(e ->{
+            graphPage.updateGraph();
+                graphPage.updateGraph();
+                stage.setScene(graphScene);
+                });
 
         // user page
         UserView userPage = new UserView();

@@ -24,11 +24,16 @@ public class TaskControl {
 
 
     /**
-     * list of tasks
+     * list of unifinished tasks
      */
     public ObservableList<Task> taskList;
+    /**
+     * list of finished tasks
+     */
     public ObservableList<Task> finishedTaskList;
-
+    /**
+     * instance of data manager class.
+     */
     public dataManager dataManager = new dataManager();
 
     /**
@@ -39,6 +44,13 @@ public class TaskControl {
         finishedTaskList=  FXCollections.observableArrayList();
     }
 
+    /**
+     * Adds a task into the system given its id, name, description, and duedate.
+     * @param id: the id of the task to be added.
+     * @param taskName: the name of the task to be added.
+     * @param description: the description of the task to be added.
+     * @param dueDate: the due date of the task to be added.
+     */
     public void addTask (String id, String taskName, String description, LocalDateTime dueDate) throws NoSuchFieldException {
         //check if task already exists
         boolean taskExists= false;
@@ -59,6 +71,14 @@ public class TaskControl {
         }
     }
 
+    /**
+     * Adds a task into the system given its id, name, description, and duedate.
+     * @param oldId: the old id of the task to be edited.
+     * @param newId: the potential new id of the task to be edited.
+     * @param newTaskName: the new name of the task to be edited.
+     * @param newDescription: the new description of the task to be added.
+     * @param newDueDate: the new due date of the task to be edited.
+     */
     public void editTask(String oldId, String newId, String newTaskName, String newDescription, LocalDateTime newDueDate){
         Task edited = null;
         boolean taskIdAlreadyExists = false;
@@ -97,13 +117,16 @@ public class TaskControl {
         }
     }
 
+    /**
+     * Marks a task as complete, removes it from the list of tasks, and adds it to list of completed tasks.
+     * @param id: The id of the task to be marked as complete
+     */
     public void completeTask(String id)
     {
         Task completed = null;
         for (Task task : taskList) {
             if (task.getID().equals(id)) {
                 completed = task;
-
             }
         }
         if (completed == null)
@@ -115,6 +138,7 @@ public class TaskControl {
             //completed.setInProgress(false);
             finishedTaskList.add(completed);
             taskList.remove(completed);
+            dataManager.removeClass(completed);
         }
     }
 

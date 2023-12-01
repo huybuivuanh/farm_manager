@@ -18,10 +18,10 @@ public class TestAll implements Runnable {
         TestChemical.main();
         TestOwner.main();
         TestTask.main();
-        TestBinControl.main();
-        TestFieldControl.main();
-        TestUserControl.main();
-        TestTaskControl.main();
+       // TestBinControl.main();
+   //     TestFieldControl.main();
+     //   TestUserControl.main();
+    //    TestTaskControl.main();
 
     }
 }

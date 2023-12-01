@@ -15,6 +15,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.time.LocalDate.now;
+
+
+// need to see history of crop planted
+// need to record what crop planted when finished planting
 public class FieldControl {
 
 
@@ -162,6 +167,7 @@ public class FieldControl {
         if (searchedField != null){
             if (searchedField.getCurrent_Year() != null) {
                 searchedField.getCurrent_Year().harvest(LocalDate.now());
+                dataManager.updateClass(searchedField.getCurrent_Year());
                 searchedField.setCurrentYear(null);
                 dataManager.updateClass(searchedField);
             } else {
@@ -173,7 +179,9 @@ public class FieldControl {
     }
     public Crop makeCrop(ObjectId dbid,String cropType, String cropVariety, double bushelWeight){
         Crop baseCrop = new Crop(dbid, cropType, cropVariety, bushelWeight);
-        return dataManager.saveClass(baseCrop);
+        Crop dbCrop = dataManager.saveClass(baseCrop);
+        return dbCrop;
+
     }
     public void addChemical(String fieldID, double fertilizerRate, String chemicalSprayed, String chemicalGroup, LocalDate sprayingDate){
         Field searchedField = null;
@@ -194,6 +202,7 @@ public class FieldControl {
 
                 searchedField.getCurrent_Year().setFertilizer_rate(fertilizerRate);
                 searchedField.getCurrent_Year().addChemicalRecord(dbChemRec);
+                dataManager.updateClass(searchedField.getCurrent_Year());
                 dataManager.updateClass(searchedField);
             } else {
                 System.out.println("Field with ID (" + fieldID + ") is already harvested or no crop is planted.");
@@ -202,14 +211,6 @@ public class FieldControl {
             System.out.println("Can't find field with ID (" + fieldID + ")");
         }
     }
-
-    private void addToYearList(){
-        yearList.clear();
-        for (Field field : fieldList){
-            yearList.addAll(field.getYears());
-        }
-    }
-
 
     public void addCropType(String crop_type){
         boolean existed = false;
@@ -223,6 +224,13 @@ public class FieldControl {
             cropType.add(crop_type);
         } else {
             System.out.println("Crop type already existed");
+        }
+    }
+
+    private void addToYearList(){
+        yearList.clear();
+        for (Field field : fieldList){
+            yearList.addAll(field.getYears());
         }
     }
 }
