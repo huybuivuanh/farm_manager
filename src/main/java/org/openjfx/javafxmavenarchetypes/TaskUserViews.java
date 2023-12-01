@@ -237,6 +237,13 @@ public class TaskUserViews extends StackPane{
         Scene employeeTasksScene = new Scene(employeeTasksBox,300,250);
         Label employeeTasksLabel = new Label("Employee Tasks Popup view");
         Label employeeNameLabel = new Label();
+        HBox employeeTasksLabelBox = new HBox();
+        employeeTasksLabelBox.getChildren().addAll(employeeTasksLabel);
+        employeeTasksLabelBox.setAlignment(Pos.CENTER);
+        HBox employeeNameLabelBox = new HBox();
+        employeeNameLabelBox.getChildren().addAll(employeeNameLabel);
+        employeeNameLabelBox.setAlignment(Pos.CENTER);
+
 
         Button employeeTasks = new Button("View Tasks");
         employeeTasks.setOnMouseClicked(e->{
@@ -332,11 +339,14 @@ public class TaskUserViews extends StackPane{
         allTasksInUserViewTable.getColumns().addAll(allTaskIDColInUser,allTaskNameColInUser, allTaskDescriptionColInUser, allTaskDueDateColInUser);
 
         Label taskLabelWithinEmployeeTasks = new Label("All tasks:");
+        HBox taskLabelWithinEmployeeTasksBox = new HBox();
+        taskLabelWithinEmployeeTasksBox.getChildren().addAll(taskLabelWithinEmployeeTasks);
+        taskLabelWithinEmployeeTasksBox.setAlignment(Pos.CENTER);
         HBox topUserAddTaskBar= new HBox();
         topUserAddTaskBar.getChildren().addAll( employeeAddTasks, employeeRemoveTasks ,employeeTasksBackToMain);
 
 
-        employeeTasksBox.getChildren().addAll(employeeTasksLabel, employeeNameLabel, topUserAddTaskBar, userTasksTable, taskLabelWithinEmployeeTasks, allTasksInUserViewTable);
+        employeeTasksBox.getChildren().addAll(employeeTasksLabelBox, employeeNameLabelBox, topUserAddTaskBar, userTasksTable, taskLabelWithinEmployeeTasksBox, allTasksInUserViewTable);
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Todo 4.3: User Table Formatting (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

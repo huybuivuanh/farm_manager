@@ -60,6 +60,13 @@
     -fx-background-color: #34495e;
 }
 
+.center-label {
+    -fx-alignment: CENTER;
+}
+
+.pad-label {
+    -fx-padding: 0 25;
+}
 
 .root {
     -fx-background-color: #F2FFE9;

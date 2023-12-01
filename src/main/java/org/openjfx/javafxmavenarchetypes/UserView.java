@@ -6,6 +6,7 @@ import control.TaskControl;
 import control.UserControl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -80,9 +81,13 @@ public class UserView extends StackPane {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         VBox userBox2 = new VBox(15);
         Scene addUserScene2 = new Scene(userBox2,300,250);
+        VBox adduserbox = new VBox(15);
 
         Label addUserLabel = new Label("Add New User");
         addUserLabel.getStyleClass().add("page-label");
+        HBox adduserlabelBox = new HBox();
+        adduserlabelBox.getStyleClass().add("center-label");
+        adduserlabelBox.getChildren().add(addUserLabel);
 
         Label userIDInputLabel = new Label("User ID:");
         userIDInputLabel.getStyleClass().add("text-field-label");
@@ -120,8 +125,11 @@ public class UserView extends StackPane {
             stage.setScene(userScene);
         });
 
-        userBox2.getChildren().addAll(addUserLabel, fNameInputLabel, fNameInput, lNameInputLabel,lNameInput,
-                ownerInput, userIDInputLabel, userIdInput, emailInpuLabel,emailInput, passwordInputLabel, passwordInput, dobLabel,dob, cancelSubmitBox);
+        adduserbox.getChildren().addAll(userIDInputLabel, userIdInput, emailInpuLabel,emailInput, passwordInputLabel, passwordInput, fNameInputLabel, fNameInput, lNameInputLabel,lNameInput, ownerInput, dobLabel, dob, cancelSubmitBox);
+        adduserbox.getStyleClass().add("pad-label");
+
+        userBox2.getChildren().addAll(adduserlabelBox, adduserbox);
+        //userBox2.getChildren().addAll(addUserLabel, fNameInputLabel, fNameInput, lNameInputLabel,lNameInput, ownerInput, userIDInputLabel, userIdInput, emailInpuLabel,emailInput, passwordInputLabel, passwordInput, dobLabel,dob, cancelSubmitBox);
 
         Button addUser = new Button("Add User");
         addUser.setOnMouseClicked(e ->{
@@ -192,34 +200,54 @@ public class UserView extends StackPane {
         VBox actualUserEditBox = new VBox(15);
         Scene actualUserEditScene = new Scene(actualUserEditBox,300,250);
 
+        VBox inputBox = new VBox(15);
+
+        HBox pagelabelBox = new HBox();
+        pagelabelBox.getStyleClass().add("center-label");
         Label editUserLabel = new Label();
+        pagelabelBox.getChildren().add(editUserLabel);
         editUserLabel.getStyleClass().add("page-label");
 
+        HBox textfieldlabelBox = new HBox();
         Label userIDEditLabel = new Label("User ID:");
+        textfieldlabelBox.getChildren().add(userIDEditLabel);
         userIDEditLabel.getStyleClass().add("text-field-label");
         TextField userIdEdit = new TextField("");
 
+        HBox emaillabelBox = new HBox();
         Label emailEditLabel = new Label("User Email:");
+        emaillabelBox.getChildren().add(emailEditLabel);
         emailEditLabel.getStyleClass().add("text-field-label");
         TextField emailEdit = new TextField("");
 
+        HBox passwordlabelBox = new HBox();
         Label passwordEditLabel = new Label("User Password:");
+        passwordlabelBox.getChildren().add(passwordEditLabel);
         passwordEditLabel.getStyleClass().add("text-field-label");
         TextField passwordEdit = new TextField("");
 
+        HBox firstnamelabelBox = new HBox();
         Label fNameEditLabel = new Label("First Name:");
+        firstnamelabelBox.getChildren().add(fNameEditLabel);
         fNameEditLabel.getStyleClass().add("text-field-label");
         TextField fNameEdit = new TextField("");
 
+        HBox lastnamelabelBox = new HBox();
         Label lNameEditLabel = new Label("Last Name:");
+        lastnamelabelBox.getChildren().add(lNameEditLabel);
         lNameEditLabel.getStyleClass().add("text-field-label");
         TextField lNameEdit = new TextField("");
 
+        HBox isownerlabelBox = new HBox();
         CheckBox ownerEdit = new CheckBox("Is user owner?");
+        isownerlabelBox.getChildren().add(ownerEdit);
         ownerEdit.getStyleClass().add("text-field-label");
 
+        HBox doblabelBox = new HBox();
         Label dobEditLabel = new Label("Date of Birth:");
+        doblabelBox.getChildren().add(dobEditLabel);
         dobEditLabel.getStyleClass().add("text-field-label");
+
         DatePicker dobEdit = new DatePicker();
         Button submitUserInfoEdit = new Button("Submit");
         Button cancelEditUser = new Button("Cancel");
@@ -228,8 +256,10 @@ public class UserView extends StackPane {
             stage.setScene(userScene);
         });
 
-        actualUserEditBox.getChildren().addAll(editUserLabel, fNameEditLabel ,fNameEdit, lNameEditLabel,lNameEdit,ownerEdit,
-                userIDEditLabel ,userIdEdit, emailEditLabel, emailEdit, passwordEditLabel, passwordEdit, dobEdit, cancelSubmitEditUser);
+        inputBox.getChildren().addAll(textfieldlabelBox, userIdEdit, firstnamelabelBox, fNameEdit, lastnamelabelBox, lNameEdit, emaillabelBox, emailEdit, passwordlabelBox, passwordEdit, isownerlabelBox,  doblabelBox, dobEdit, cancelSubmitEditUser);
+        inputBox.getStyleClass().add("pad-label");
+        actualUserEditBox.getChildren().addAll(pagelabelBox, inputBox);
+        //actualUserEditBox.getChildren().addAll(editUserLabel, fNameEditLabel ,fNameEdit, lNameEditLabel,lNameEdit,ownerEdit, userIDEditLabel ,userIdEdit, emailEditLabel, emailEdit, passwordEditLabel, passwordEdit, dobEdit, cancelSubmitEditUser);
         submitUserInfoEdit.setOnMouseClicked(e-> {
             userController.editUser(userTable.getSelectionModel().getSelectedItem().getID(),
                     userIdEdit.getText(), fNameEdit.getText(),lNameEdit.getText(),
@@ -306,10 +336,17 @@ public class UserView extends StackPane {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         VBox employeeTasksBox = new VBox(15);
+        employeeTasksBox.getStyleClass().add("pad-label");
         Scene employeeTasksScene = new Scene(employeeTasksBox,300,250);
         Label employeeTasksLabel = new Label("Employee Tasks Popup view");
+        HBox employeeTasksLabelBox = new HBox();
+        employeeTasksLabelBox.getStyleClass().add("center-label");
+        employeeTasksLabelBox.getChildren().add(employeeTasksLabel);
         employeeTasksLabel.getStyleClass().add("page-label");
         Label employeeNameLabel = new Label();
+        HBox employeeNameLabelBox = new HBox();
+        employeeNameLabelBox.getStyleClass().add("center-label");
+        employeeNameLabelBox.getChildren().add(employeeNameLabel);
         employeeNameLabel.getStyleClass().add("text-field-label");
 
         Button employeeTasks = new Button("View Tasks");
