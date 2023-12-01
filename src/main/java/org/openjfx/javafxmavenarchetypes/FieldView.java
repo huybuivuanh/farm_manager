@@ -138,6 +138,10 @@ public class FieldView extends StackPane implements ModelSubscriber {
             }
             if (fieldSize != -1.0){
                 fieldController.addField(fieldIDInput.getText(),fieldNameInput.getText(), fieldSize, fieldLocation.getText());
+                fieldIDInput.setText("");
+                fieldNameInput.setText("");
+                fieldSizeInput.setText("");
+                fieldLocation.setText("");
                 stage.setScene(fieldScene);
             }
         });
@@ -311,6 +315,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
         });
 
         submitCropInfo.setOnMouseClicked(e ->{
+
             double bWeight = -1.0;
             double seedingRate = -1.0;
             try {
@@ -339,8 +344,11 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
                     // clear the form
                     cropTypeInput.setValue(null);
+                    newCropTypeInput.setText("");
                     cropVarietyInput.setValue(null);
-                    newCropTypeInput.clear();
+                    bushelWeight.setText("");
+                    seedingRateInput.setText("");
+                    seedingDateInput.setValue(null);
                     stage.setScene(fieldScene);
                 }
             }
@@ -429,6 +437,10 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 if (fertilizerRate != -1.0){
                     fieldController.addChemical(chemFieldID.getText(), fertilizerRate,
                             chemSprayedInput.getText(), chemGroupInput.getText(), sprayDate.getValue());
+                    chemSprayedInput.setText("");
+                    fertilizerInput.setText("");
+                    chemGroupInput.setText("");
+                    sprayDate.setValue(null);
                     stage.setScene(fieldScene);
                 }
             }
