@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -397,8 +398,15 @@ public class UserView extends StackPane {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Todo 4.3: User Table Formatting (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        HBox userFunctionBar = new HBox();
+        userFunctionBar.getStyleClass().add("function-bar");
+        userBackToMain.getStyleClass().add("back-button");
         HBox topUserBar= new HBox();
-        topUserBar.getChildren().addAll(addUser,editUser,removeUser, promoteUser ,employeeTasks ,userBackToMain);
+        topUserBar.getStyleClass().add("top-bar");
+        HBox.setHgrow(userFunctionBar, Priority.ALWAYS);
+        HBox.setHgrow(userBackToMain, Priority.ALWAYS);
+        userFunctionBar.getChildren().addAll(addUser,editUser,removeUser, promoteUser ,employeeTasks);
+        topUserBar.getChildren().addAll(userFunctionBar,userBackToMain);
 
         TableColumn<User, String> userIDCol = new TableColumn<User, String>("User ID");
         userIDCol.setMinWidth(130);
@@ -439,10 +447,14 @@ public class UserView extends StackPane {
                 new PropertyValueFactory<User, Boolean>("owner")
         );
 
+
         userTable.setItems(userData);
         userTable.setEditable(true);
         userTable.getColumns().addAll(userFirstNameCol, userLastNameCol, userOwnership,userIDCol,userEmailCol,userPasswordCol, userDOBCol);
-        userPage.getChildren().addAll(topUserBar,userTable);
+        VBox userTableContainer = new VBox();
+        userTableContainer.getStyleClass().add("table-container");
+        userTableContainer.getChildren().add(userTable);
+        userPage.getChildren().addAll(topUserBar,userTableContainer);
 
         // css
         addUserScene2.getStylesheets().add(getClass().getClassLoader().getResource("user.css").toExternalForm());
