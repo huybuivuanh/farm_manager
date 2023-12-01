@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -757,12 +758,25 @@ public class FieldView extends StackPane {
 //            }
 //        });
 
+        HBox topBar= new HBox();
+        HBox fieldFunctionsBar = new HBox();
+        fieldFunctionsBar.getStyleClass().add("function-bar");
+        fieldsBackToMain.getStyleClass().add("back-button");
+        topBar.getStyleClass().add("top-bar");
+        HBox.setHgrow(fieldFunctionsBar, Priority.ALWAYS);
+        HBox.setHgrow(fieldsBackToMain, Priority.ALWAYS);
+        topBar.getChildren().addAll(fieldFunctionsBar, fieldsBackToMain);
+
 
         cropPage.getChildren().addAll(cropBackToField, cropPageTitle, currentYearLabel, currentYearTable, cropHistoryLabel, yearTable);
 
 
-        fieldFunctionsBar.getChildren().addAll(addField, editField, viewField, deleteField, addCrop, harvest, sprayChemical, fieldsBackToMain);
-        fieldPage.getChildren().addAll(fieldFunctionsBar, fieldTable);
+        fieldFunctionsBar.getChildren().addAll(addField, editField, viewField, deleteField, addCrop, harvest, sprayChemical);
+        VBox taskTableContainer = new VBox();
+        taskTableContainer.getStyleClass().add("table-container");
+        taskTableContainer.getChildren().add(fieldTable);
+
+        fieldPage.getChildren().addAll(topBar, taskTableContainer);
 
         // css
         addFieldScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
