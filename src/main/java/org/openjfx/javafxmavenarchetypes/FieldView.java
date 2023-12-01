@@ -149,8 +149,9 @@ public class FieldView extends StackPane {
             if (selectedData != null){
                 try {
                     fieldController.harvest(selectedData.getID(), Double.parseDouble(harvestInput.getText()));
-                    showPopup("Harvested field (" + selectedData.getName() + ") successfully");
                     yearTable.refresh();
+                    stage.setScene(fieldScene);
+                    showPopup("Harvested field (" + selectedData.getName() + ") successfully");
                 } catch (Exception e){
                     System.out.println("Invalid harvest input");
                     showErrorPopup("Invalid harvest input");
@@ -160,7 +161,6 @@ public class FieldView extends StackPane {
                 System.out.println("Select a field");
                 showErrorPopup("Select a field");
             }
-            stage.setScene(fieldScene);
         });
         HBox buttonBox = new HBox(15,submitHarvest, cancelHarvest);
         harvestPage.getChildren().addAll(harvestlabel,harvestInput,buttonBox);
@@ -391,6 +391,7 @@ public class FieldView extends StackPane {
                     seedingRateInput.setText("");
                     seedingDateInput.setValue(null);
                     stage.setScene(fieldScene);
+                    showPopup("Added Crop");
                 }
             }
         });
@@ -459,7 +460,6 @@ public class FieldView extends StackPane {
                     chemFieldID.setText(selectedData.getID());
                     addChemPageTitle.setText("Add Chemical to Field named (" + selectedData.getName() + ")");
                     addChemPageTitle.getStyleClass().add("page-label");
-                    showPopup("Added Crop");
                     stage.setScene(addChemScene);
                 } else {
                     System.out.println("Field with ID (" + selectedData.getID() + ") current has no crop to spray chemical");
@@ -493,6 +493,7 @@ public class FieldView extends StackPane {
                     chemGroupInput.setText("");
                     sprayDate.setValue(null);
                     stage.setScene(fieldScene);
+                    showPopup("Added Chemical");
                 }
             }
         });

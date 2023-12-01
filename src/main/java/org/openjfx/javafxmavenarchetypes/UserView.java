@@ -374,6 +374,24 @@ public class UserView extends StackPane {
 
         userTable.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2){
+                userTaskData= userTable.getSelectionModel().getSelectedItem().getTaskList();
+                userTasksTable.setItems(userTaskData);
+                String firstName = userTable.getSelectionModel().getSelectedItem().getFirstName();
+                String lastName =  userTable.getSelectionModel().getSelectedItem().getLastName();
+                employeeNameLabel.setText("Employee: " + firstName +" " + lastName);
+                taskTable.refresh();
+                allTasksInUserViewTable.refresh();
+                userTasksTable.refresh();
+                CompletedTaskTable.refresh();
+                taskUsersTable.refresh();
+                allUsersInTaskViewTable.refresh();
+                userTable.refresh();
+                stage.setScene(employeeTasksScene);
+            }
+        });
+
+        userTable.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2){
                 if (userTable.getSelectionModel().getSelectedItem() != null) {
                     userTaskData = userTable.getSelectionModel().getSelectedItem().getTaskList();
                     userTasksTable.setItems(userTaskData);
