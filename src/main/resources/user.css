@@ -5,6 +5,10 @@
     -fx-font-size: 15px;
     -fx-cursor: hand;
 }
+.text-field-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
 
 .button:hover {
     -fx-background-color: #2ecc71;
