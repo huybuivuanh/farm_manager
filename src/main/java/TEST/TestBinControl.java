@@ -41,8 +41,6 @@ public class TestBinControl {
         Crop newCrop2 = new Crop(null,"beans","honey beans", 35.0);
         Crop newCrop2db = manager.saveClass(newCrop2);
 
-
-        //System.out.println(BinController.binList.get(0).getBinName());
         String reason1 = "Testing get bin list size using data manager";
         int result1 = BinController.binList.size();
         int expected1 = 0;
@@ -87,9 +85,11 @@ public class TestBinControl {
         /*
             to ensure a clean slate after testing, delete all bins added during testing.
          */
-        BinController.deleteBin(BinController.binList.get(0).getDbId());
-        BinController.deleteBin(BinController.binList.get(1).getDbId());
         BinController.deleteBin(BinController.binList.get(2).getDbId());
+        BinController.deleteBin(BinController.binList.get(1).getDbId());
+        BinController.deleteBin(BinController.binList.get(0).getDbId());
+        manager.removeClass(newCrop1db);
+        manager.removeClass(newCrop2db);
 
 
         String[] reasons = {reason1, reason2, reason3, reason4, reason5, reason6};
