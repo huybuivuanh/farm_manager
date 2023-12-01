@@ -93,7 +93,7 @@ public class TestBinControl {
 
 
         String[] reasons = {reason1, reason2, reason3, reason4, reason5, reason6};
-        System.out.println("*** GrainBin Class Testing  ***\n");
+        System.out.println("*** Bin Control Class Testing  ***\n");
         for (String reason : reasons) {
             count ++;
             System.out.println("Passed " + (count - failed) + " out of total " + (count) + " tests"); // reason  8 isn't tested
