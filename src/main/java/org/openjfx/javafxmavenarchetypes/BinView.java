@@ -4,12 +4,12 @@ import control.BinControl;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.InitialFarm.Crop;
@@ -17,7 +17,7 @@ import org.InitialFarm.GrainBin;
 import org.bson.types.ObjectId;
 
 
-public class BinView extends StackPane implements ModelSubscriber {
+public class BinView extends StackPane {
 
     private VBox binPage = new VBox();
     private Scene MenuScene ;
@@ -37,7 +37,7 @@ public class BinView extends StackPane implements ModelSubscriber {
     private final int binMaxCapacity = 20;
 
     public BinView(){
-        VBox binCropPage = new VBox(30);
+        VBox binCropPage = new VBox(15);
         Scene binCropScene = new Scene(binCropPage, 300, 250);
 
         TableColumn<GrainBin, ObjectId> binIDCol = new TableColumn<GrainBin, ObjectId>("Bin ID");
@@ -99,14 +99,24 @@ public class BinView extends StackPane implements ModelSubscriber {
         binTable.getColumns().addAll(binIDCol, binNameCol, binLocationCol, binSizeCol, binBushelsCol, binCropLbsCol, cropTypeCol, binHopperCol, binFanCol, binToughCol, binCleanCol);
 
 
-        VBox addBinBox = new VBox(30);
+        VBox addBinBox = new VBox(15);
         Scene addBinScene = new Scene(addBinBox,300,250);
 
         Label addBinPageTitle = new Label("Add New Bin");
         addBinPageTitle.getStyleClass().add("page-label");
-        TextField binNameInput = new TextField("Bin Name");
-        TextField binSizeInput = new TextField("Bin Size (bushel) ie: 20");
-        TextField binLocation = new TextField("Bin Location");
+
+        Label binNameInputLabel = new Label("Bin Name:");
+        binNameInputLabel.getStyleClass().add("text-field-label");
+        TextField binNameInput = new TextField();
+
+        Label binSizeInputLabel = new Label("Bin Size (bushel):");
+        binSizeInputLabel.getStyleClass().add("text-field-label");
+        TextField binSizeInput = new TextField();
+
+        Label binLocationLabel = new Label("Bin Location");
+        binLocationLabel.getStyleClass().add("text-field-label");
+        TextField binLocation = new TextField();
+
         CheckBox hopperInput = new CheckBox("Hopper?");
         CheckBox fanInput = new CheckBox("Fan?");
         Button submitBinInfo = new Button("Submit");
@@ -119,7 +129,8 @@ public class BinView extends StackPane implements ModelSubscriber {
         HBox submitAndCancelBox1 = new HBox(submitBinInfo, space1, cancelAddBin);
 
 
-        addBinBox.getChildren().addAll(addBinPageTitle ,binNameInput, binSizeInput, binLocation, hopperInput, fanInput, submitAndCancelBox1);
+        addBinBox.getChildren().addAll(addBinPageTitle, binNameInputLabel, binNameInput, binSizeInputLabel, binSizeInput,
+                binLocationLabel, binLocation, hopperInput, fanInput, submitAndCancelBox1);
         Button addBin = new Button("Add Bin");
         addBin.setOnMouseClicked(e ->{
             stage.setScene(addBinScene);
@@ -140,8 +151,14 @@ public class BinView extends StackPane implements ModelSubscriber {
                 } else {
                     binController.addBin(binNameInput.getText(), binSize, binLocation.getText(), hopperInput.isSelected(), fanInput.isSelected() );
                     stage.setScene(binScene);
+                    showPopup("Added Bin");
                 }
             }
+            binNameInput.setText("");
+            binSizeInput.setText("");
+            binLocation.setText("");
+            hopperInput.setSelected(false);
+            fanInput.setSelected(false);
         });
 
         Button deleteBin = new Button("Delete Bin");
@@ -157,24 +174,28 @@ public class BinView extends StackPane implements ModelSubscriber {
         });
 
 
-        VBox addCropBox = new VBox(30);
+        VBox addCropBox = new VBox(15);
         Scene addCropScene = new Scene(addCropBox,300,250);
         TextField addCropBinID = new TextField();
 
         Label addCropPageTitle = new Label();
         Label cropTypeLabel = new Label("Select Crop Type");
+        cropTypeLabel.getStyleClass().add("text-field-label");
         ComboBox<String> cropTypeInput = new ComboBox<>();
         cropTypeInput.getItems().addAll(binController.cropType);
 
         Label newCropTypeLabel = new Label("Or Add New Crop Type");
+        newCropTypeLabel.getStyleClass().add("text-field-label");
         TextField newCropTypeInput = new TextField();
 
-        Label space2 = new Label("\t\t");
+        Label space2 = new Label("\t");
         Label space3 = new Label("\t\t");
-        HBox groupBox1 = new HBox(cropTypeLabel, space2, cropTypeInput);
-        HBox groupBox2 = new HBox(newCropTypeLabel, space3, newCropTypeInput);
+        Label space20 = new Label("\t");
+        HBox groupBox1 = new HBox(cropTypeLabel, space2, cropTypeInput, space3, newCropTypeLabel, space20, newCropTypeInput );
+//        HBox groupBox2 = new HBox(newCropTypeLabel, space3, newCropTypeInput);
 
         Label cropVarietyLabel = new Label("Select Crop Variety");
+        cropVarietyLabel.getStyleClass().add("text-field-label");
         ComboBox<String> cropVarietyInput = new ComboBox<>();
         cropVarietyInput.getItems().addAll("LibertyLink", "RoundupReady", "Navigator", "ClearField", "All Other Grains");
 
@@ -182,8 +203,13 @@ public class BinView extends StackPane implements ModelSubscriber {
             cropTypeInput.setItems(binController.cropType);
         });
 
-        TextField bushelWeight = new TextField("Bushel Weight (lbs)");
-        TextField grainInput = new TextField("Grain ie: 10");
+        Label bushelWeighLabel = new Label("Bushel Weight (lbs):");
+        bushelWeighLabel.getStyleClass().add("text-field-label");
+        TextField bushelWeight = new TextField();
+
+        Label grainInputLabel = new Label("Grain ie: 10");
+        grainInputLabel.getStyleClass().add("text-field-label");
+        TextField grainInput = new TextField();
         CheckBox inputBushels = new CheckBox("Crop is in bushels?");
         CheckBox cleanCrop = new CheckBox("Crop is clean?");
         CheckBox toughCrop = new CheckBox("Crop is tough?");
@@ -199,8 +225,8 @@ public class BinView extends StackPane implements ModelSubscriber {
         Label space4 = new Label("\t\t");
         HBox submitAndCancelBox2 = new HBox(submitCropInfo, space4, cancelAddCrop);
 
-        addCropBox.getChildren().addAll(addCropPageTitle, groupBox1, groupBox2, cropVarietyLabel, cropVarietyInput, bushelWeight, grainInput,
-                groupBox3, submitAndCancelBox2);
+        addCropBox.getChildren().addAll(addCropPageTitle, groupBox1, cropVarietyLabel, cropVarietyInput, bushelWeighLabel,
+                bushelWeight, grainInputLabel, grainInput, groupBox3, submitAndCancelBox2);
 
 
         Button addCrop = new Button("Add Crop");
@@ -211,6 +237,13 @@ public class BinView extends StackPane implements ModelSubscriber {
                     addCropBinID.setText(selectedData.getDbId().toString());
                     addCropPageTitle.setText("Add Crop to bin named (" + selectedData.getBinName() + ")");
                     addCropPageTitle.getStyleClass().add("page-label");
+                    Crop currentCrop = selectedData.getCurrentCrop();
+                    if (currentCrop != null){
+                        cropTypeInput.setValue(currentCrop.getCropType());
+                        bushelWeight.setText(String.valueOf(currentCrop.getBushelWeight()));
+                        cropVarietyInput.setValue(currentCrop.getCropVariety());
+                        bushelWeight.setText(String.valueOf(currentCrop.getBushelWeight()));
+                    }
                     stage.setScene(addCropScene);
                 } else {
                     System.out.println("Bin is full");
@@ -265,11 +298,17 @@ public class BinView extends StackPane implements ModelSubscriber {
                             }
                         }
                         cropTypeInput.setValue(null);
+                        newCropTypeInput.setText("");
                         cropVarietyInput.setValue(null);
-                        newCropTypeInput.clear();
+                        bushelWeight.setText("");
+                        grainInput.setText("");
+                        inputBushels.setSelected(false);
+                        cleanCrop.setSelected(false);
+                        toughCrop.setSelected(false);
                         binTable.setItems(grainBinData);
                         binTable.refresh();
                         stage.setScene(binScene);
+                        showPopup("Added Crop");
                     } else {
                         System.out.println("Maximum capacity exceeded");
                         showErrorPopup("Maximum capacity exceeded");
@@ -278,14 +317,18 @@ public class BinView extends StackPane implements ModelSubscriber {
                     if (selectedCrop.getCropType().equals(cropType) && selectedCrop.getCropVariety().equals(cropVarietyInput.getValue()) && selectedCrop.getBushelWeight() == bWeight) {
                         if (inputBushels.isSelected() && grain + selectedData.getCropBushels() <= selectedData.getBinSize() || !inputBushels.isSelected() && lbsToBushels(grain, bWeight) + selectedData.getCropBushels() <= selectedData.getBinSize()) {
                             binController.addCrop(new ObjectId(addCropBinID.getText()), selectedCrop, grain, inputBushels.isSelected(), cleanCrop.isSelected(), toughCrop.isSelected());
-                            // clear the form
                             cropTypeInput.setValue(null);
+                            newCropTypeInput.setText("");
                             cropVarietyInput.setValue(null);
-                            newCropTypeInput.clear();
-
+                            bushelWeight.setText("");
+                            grainInput.setText("");
+                            inputBushels.setSelected(false);
+                            cleanCrop.setSelected(false);
+                            toughCrop.setSelected(false);
                             binTable.setItems(grainBinData);
                             binTable.refresh();
                             stage.setScene(binScene);
+                            showPopup("Added Crop");
                         } else {
                             System.out.println("Maximum capacity exceeded");
                             showErrorPopup("Maximum capacity exceeded");
@@ -306,6 +349,7 @@ public class BinView extends StackPane implements ModelSubscriber {
             if (selectedData != null){
                 if (!selectedData.isEmpty()){
                     binController.clearBin(binTable.getSelectionModel().getSelectedItem().getDbId());
+                    showPopup("Bin Cleared");
                     binTable.refresh();
                 } else {
                     System.out.println("Bin is empty");
@@ -351,7 +395,7 @@ public class BinView extends StackPane implements ModelSubscriber {
         lastCropLabel.getStyleClass().add("page-label");
 
         TableColumn<Crop, ObjectId> lastCropIDCol = new TableColumn<Crop, ObjectId>("Crop ID");
-        lastCropIDCol.setMinWidth(70);
+        lastCropIDCol.setPrefWidth(70);
         lastCropIDCol.setCellValueFactory(
                 new PropertyValueFactory<Crop, ObjectId>("DbId"));
 
@@ -422,12 +466,14 @@ public class BinView extends StackPane implements ModelSubscriber {
             }
         });
 
-        VBox unloadPage = new VBox(30);
+        VBox unloadPage = new VBox(15);
         Scene unloadScene = new Scene(unloadPage);
 
         Label unloadCropPageTitle = new Label();
         TextField unloadBinID = new TextField();
-        TextField unloadGrainInput = new TextField("Grain");
+        Label unloadGranInputLabel = new Label("How much grain to unload?");
+        unloadGranInputLabel.getStyleClass().add("text-field-label");
+        TextField unloadGrainInput = new TextField();
         CheckBox unloadInputBushels = new CheckBox("Crop is in bushels?");
         Button submitUnloadInfo = new Button("Submit");
         Button cancelUnloadCrop = new Button("Cancel");
@@ -450,8 +496,10 @@ public class BinView extends StackPane implements ModelSubscriber {
                 binController.unload(new ObjectId(unloadBinID.getText()), Integer.parseInt(unloadGrainInput.getText()), unloadInputBushels.isSelected());
                 stage.setScene(binScene);
                 unloadGrainInput.setText("");
+                unloadInputBushels.setSelected(false);
                 binTable.refresh();
                 stage.setScene(binScene);
+                showPopup("Crop Unloaded");
             }
         });
 
@@ -462,8 +510,7 @@ public class BinView extends StackPane implements ModelSubscriber {
                 if (!selectedData.isEmpty()){
                     unloadBinID.setText(selectedData.getDbId().toString());
                     unloadCropPageTitle.setText("Unload crop from bin named (" + selectedData.getBinName() + ")");
-                    unloadCropPageTitle.setFont(new Font("Arial", 20));
-                    unloadCropPageTitle.setStyle("-fx-font-weight: bold;");
+                    unloadCropPageTitle.getStyleClass().add("page-label");
                     stage.setScene(unloadScene);
                 } else {
                     System.out.println("Bin is empty");
@@ -475,12 +522,24 @@ public class BinView extends StackPane implements ModelSubscriber {
             }
         });
 
-        unloadPage.getChildren().addAll(unloadCropPageTitle, unloadGrainInput, unloadInputBushels, submitAndCancelBox3);
+        unloadPage.getChildren().addAll(unloadCropPageTitle, unloadGranInputLabel, unloadGrainInput, unloadInputBushels, submitAndCancelBox3);
 
+        // boxes for css styling :(
         HBox binFunctionBar = new HBox();
-        binFunctionBar.getChildren().addAll(addBin, deleteBin, addCrop, viewBin, unload, clearBin, binsBackToMain);
+        binFunctionBar.getStyleClass().add("function-bar");
+        HBox.setHgrow(binFunctionBar, Priority.ALWAYS);
+        HBox.setHgrow(binsBackToMain, Priority.ALWAYS);
+        binFunctionBar.getChildren().addAll(addBin, deleteBin, addCrop, viewBin, unload, clearBin);
+        HBox topBar = new HBox();
+        binsBackToMain.getStyleClass().add("back-button");
+        topBar.getStyleClass().add("top-bar");
+        topBar.getChildren().addAll(binFunctionBar, binsBackToMain);
 
-        binPage.getChildren().addAll(binFunctionBar, binTable);
+        VBox binTableContainer = new VBox();
+        binTableContainer.getStyleClass().add("table-container");
+        binTableContainer.getChildren().add(binTable);
+        binPage.getChildren().addAll(topBar, binTableContainer);
+
 
         //css
         addBinScene.getStylesheets().add(getClass().getClassLoader().getResource("bin.css").toExternalForm());
@@ -490,6 +549,16 @@ public class BinView extends StackPane implements ModelSubscriber {
         this.getChildren().addAll(binPage);
     }
 
+
+    /**
+     * Sets the primary stage and scenes of the application. Specifically handles the
+     * menu and bin scenes. Additionally, applies a stylesheet to the bin scene.
+     *
+     * @param stage The primary JavaFX stage where scenes will be displayed.
+     * @param MenuScene The scene representing the application's main menu.
+     * @param binScene The scene representing the bin view of the application and to which the style sheet is to be applied.
+     *
+     */
     public void setStageMenu(Stage stage, Scene MenuScene, Scene binScene){
         this.stage = stage;
         this.MenuScene = MenuScene;
@@ -497,6 +566,11 @@ public class BinView extends StackPane implements ModelSubscriber {
         binScene.getStylesheets().add(getClass().getClassLoader().getResource("bin.css").toExternalForm());
     }
 
+
+    /**
+     * A function that throws the content of the string passed to it as an error message.
+     * @param content: The content of the error message popup
+     */
     private void showErrorPopup(String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error Message");
@@ -508,8 +582,11 @@ public class BinView extends StackPane implements ModelSubscriber {
     private Double lbsToBushels(double lbs, double bushelWeight){
         return (lbs/bushelWeight);
     }
-    @Override
-    public void modelChanged() {
-
+    private void showPopup(String content) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("MESSAGE");
+        alert.setHeaderText("CONFIRM MESSAGE");
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

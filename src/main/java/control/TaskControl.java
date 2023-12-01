@@ -2,12 +2,14 @@ package control;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import org.entities.Employee;
 import org.entities.Task;
 import org.entities.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.InitialFarm.DataFetch;
 import org.InitialFarm.dataManager;
@@ -41,7 +43,7 @@ public class TaskControl {
      */
     public TaskControl(){
         taskList = dataManager.initializeTasksFromDB();
-        finishedTaskList=  FXCollections.observableArrayList();
+        finishedTaskList= dataManager.initializeFinishedTasksFromDB();
     }
 
     /**
@@ -68,6 +70,7 @@ public class TaskControl {
         }
         else {
             System.out.println("There already is a task with the desired ID");
+            showErrorPopup("There already is a task with the desired ID");
         }
     }
 
@@ -110,9 +113,11 @@ public class TaskControl {
                 edited.setDescription(newDescription);
                 edited.setDueDate(newDueDate);
                 dataManager.updateClass(edited);
+                showPopup("Task Edited");
             }
             else{
                 System.out.println("The suggested new task ID is already in use.");
+                showErrorPopup("The suggested new task ID is already in use.");
             }
         }
     }
@@ -136,9 +141,24 @@ public class TaskControl {
         else{
             completed.markAsCompleted(true);
             //completed.setInProgress(false);
-            finishedTaskList.add(completed);
+
+            List<User> employeeList = new ArrayList<>();
+            for (User iter: completed.getStaffList())
+            {
+                employeeList.add(iter);
+            }
+            for(User s2ndIter: employeeList){
+                s2ndIter.removeTask(completed.getID());
+                s2ndIter= dataManager.updateClass(s2ndIter);
+            }
+
+            // remove the task from the list of uncompleted tasks
             taskList.remove(completed);
             dataManager.removeClass(completed);
+
+            // add the task to the list of completed tasks and save it to db
+            completed = dataManager.saveFinishedTask(completed);
+            finishedTaskList.add(completed);
         }
     }
 
@@ -162,6 +182,7 @@ public class TaskControl {
         if (task == null)
         {
             System.out.println("Task you are trying to assign a user to wasn't in the list of tasks!");
+            showErrorPopup("Task you are trying to assign a user to wasn't in the list of tasks!");
         }
         else{
             task.addStaff(user);
@@ -199,7 +220,11 @@ public class TaskControl {
     }
 
 
-
+    /**
+     * Returns a string value of the task to be viewed .
+     * @param id: The id of the task to which a user is to be unassigned
+     * @return returned: a string representation of the task to be viewed.
+     */
     public String viewTask (String id)
     {
         Task viewed = null;
@@ -221,6 +246,22 @@ public class TaskControl {
             returned = viewed.toString();
         }
         return returned;
+    }
+
+    private void showErrorPopup(String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Message");
+        alert.setHeaderText("INVALID");
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    private void showPopup(String content) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("MESSAGE");
+        alert.setHeaderText("CONFIRM MESSAGE");
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
 }

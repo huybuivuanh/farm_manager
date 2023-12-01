@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -26,7 +27,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 
-public class FieldView extends StackPane implements ModelSubscriber {
+public class FieldView extends StackPane {
 
     private Stage stage;
     private Scene MenuScene ;
@@ -34,6 +35,9 @@ public class FieldView extends StackPane implements ModelSubscriber {
     private VBox cropPage = new VBox();
     private Scene cropScene = new Scene(cropPage);
 
+    private VBox harvestPage = new VBox(15);
+
+    private Scene harvestScene = new Scene(harvestPage);
     private VBox fieldPage = new VBox();
 
     // field functions bar
@@ -128,6 +132,40 @@ public class FieldView extends StackPane implements ModelSubscriber {
             stage.setScene(addFieldScene);
         });
 
+        //Harvest page
+
+
+        Label harvestlabel = new Label("Please enter harvest information in pounds");
+        harvestlabel.getStyleClass().add("page-label");
+        TextField harvestInput = new TextField("Enter in pounds (lb) ex: 15 000");
+        harvestInput.getStyleClass().add("text-field-label");
+        Button submitHarvest = new Button("Submit");
+        Button cancelHarvest = new Button("Cancel");
+        cancelHarvest.setOnMouseClicked(event -> {
+            stage.setScene(fieldScene);
+        });
+        submitHarvest.setOnMouseClicked(event -> {
+            Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
+            if (selectedData != null){
+                try {
+                    fieldController.harvest(selectedData.getID(), Double.parseDouble(harvestInput.getText()));
+                    showPopup("Harvested field (" + selectedData.getName() + ") successfully");
+                    yearTable.refresh();
+                } catch (Exception e){
+                    System.out.println("Invalid harvest input");
+                    showErrorPopup("Invalid harvest input");
+                }
+            }
+            else {
+                System.out.println("Select a field");
+                showErrorPopup("Select a field");
+            }
+            stage.setScene(fieldScene);
+        });
+        HBox buttonBox = new HBox(15,submitHarvest, cancelHarvest);
+        harvestPage.getChildren().addAll(harvestlabel,harvestInput,buttonBox);
+
+
         submitFieldInfo.setOnMouseClicked(e ->{
             double fieldSize = -1.0;
             try {
@@ -138,6 +176,11 @@ public class FieldView extends StackPane implements ModelSubscriber {
             }
             if (fieldSize != -1.0){
                 fieldController.addField(fieldIDInput.getText(),fieldNameInput.getText(), fieldSize, fieldLocation.getText());
+                showPopup("Added Field!");
+                fieldIDInput.setText("");
+                fieldNameInput.setText("");
+                fieldSizeInput.setText("");
+                fieldLocation.setText("");
                 stage.setScene(fieldScene);
             }
         });
@@ -193,6 +236,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 fieldController.editField(fieldTable.getSelectionModel().getSelectedItem().getID(),
                         idInputEdit.getText(), fieldNameFEdit.getText(), fieldSize,
                         locationEdit.getText());
+                showPopup("Field Edited");
                 stage.setScene(fieldScene);
                 fieldTable.refresh();
             }
@@ -224,6 +268,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
         deleteField.setOnAction(event -> {
             if (fieldTable.getSelectionModel().getSelectedItem() != null){
                 fieldController.deleteField(fieldTable.getSelectionModel().getSelectedItem().getID());
+                showPopup("Field Deleted");
                 fieldTable.refresh();
             }
             else {
@@ -237,20 +282,24 @@ public class FieldView extends StackPane implements ModelSubscriber {
         Scene addCropScene = new Scene(addCropBox,300,250);
 
         Label addCropPageTitle = new Label();
-        TextField addCropfieldId = new TextField();
-        Label newCropTypeLabel = new Label("Or Add New Crop Type");
-        TextField newCropTypeInput = new TextField();
-
-        Label cropTypeLabel = new Label("Select Crop Type");
+        TextField addCropFieldID = new TextField();
+        Label cropTypeLabel = new Label("Select Crop Type:");
+        cropTypeLabel.getStyleClass().add("text-field-label");
         ComboBox<String> cropTypeInput = new ComboBox<>();
         cropTypeInput.getItems().addAll(fieldController.cropType);
 
-        Label space5 = new Label("\t\t");
-        Label space6 = new Label("\t\t");
-        HBox groupBox1 = new HBox(cropTypeLabel, space5, cropTypeInput);
-        HBox groupBox2 = new HBox(newCropTypeLabel, space6, newCropTypeInput);
+        Label newCropTypeLabel = new Label("Or Add New Crop Type:");
+        newCropTypeLabel.getStyleClass().add("text-field-label");
+        TextField newCropTypeInput = new TextField();
 
-        Label cropVarietyLabel = new Label("Select Crop Variety");
+        Label space5 = new Label("\t");
+        Label space6 = new Label("\t\t");
+        Label space7 = new Label("\t");
+        HBox groupBox1 = new HBox(cropTypeLabel, space5, cropTypeInput, space6, newCropTypeLabel, space7, newCropTypeInput);
+//        HBox groupBox2 = new HBox(newCropTypeLabel, space6, newCropTypeInput);
+
+        Label cropVarietyLabel = new Label("Select Crop Variety:");
+        cropVarietyLabel.getStyleClass().add("text-field-label");
 
         ComboBox<String> cropVarietyInput = new ComboBox<>();
         cropVarietyInput.getItems().addAll("LibertyLink", "RoundupReady", "Navigator", "ClearField", "All Other Grains");
@@ -261,9 +310,17 @@ public class FieldView extends StackPane implements ModelSubscriber {
             cropTypeInput.setItems(fieldController.cropType);
         });
 
-        TextField bushelWeight = new TextField("Bushel Weight (lbs) ie: 20");
-        TextField seedingRateInput = new TextField("Seeding Rate (lbs/acre) ie: 20");
+        Label bushelWeightLabel = new Label("Bushel Weight (lbs):");
+        bushelWeightLabel.getStyleClass().add("text-field-label");
+        TextField bushelWeight = new TextField();
+
+        Label seedingRateInputLabel = new Label("Seeding Rate (lbs/acre):");
+        seedingRateInputLabel.getStyleClass().add("text-field-label");
+
+        TextField seedingRateInput = new TextField();
         Label seedingDateLabel = new Label("Seeding Date");
+        seedingDateLabel.getStyleClass().add("text-field-label");
+
         DatePicker seedingDateInput = new DatePicker();
         Button submitCropInfo = new Button("Submit");
         Button addCropCancel = new Button("Cancel");
@@ -274,8 +331,9 @@ public class FieldView extends StackPane implements ModelSubscriber {
         Label space3 = new Label("\t\t");
         HBox submitAndCancelBox3 = new HBox(submitCropInfo, space3, addCropCancel);
 
-        addCropBox.getChildren().addAll(addCropPageTitle, groupBox1, groupBox2, cropVarietyLabel,
-                cropVarietyInput, bushelWeight, seedingRateInput, seedingDateLabel, seedingDateInput, submitAndCancelBox3);
+        addCropBox.getChildren().addAll(addCropPageTitle, groupBox1, cropVarietyLabel,
+                cropVarietyInput, bushelWeightLabel, bushelWeight, seedingRateInputLabel, seedingRateInput,
+                seedingDateLabel, seedingDateInput, submitAndCancelBox3);
         Button addCrop = new Button("Add Crop");
         addCrop.setOnMouseClicked(e ->{
             Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
@@ -284,8 +342,8 @@ public class FieldView extends StackPane implements ModelSubscriber {
                     System.out.println("Farm is currently full of crop");
                     showErrorPopup("Farm is currently full of crop");
                 } else {
-                    addCropfieldId.setText(selectedData.getID());
-                    addCropPageTitle.setText("Add Crop to Field with ID (" + selectedData.getID() + ")");
+                    addCropFieldID.setText(selectedData.getID());
+                    addCropPageTitle.setText("Add Crop to Field named (" + selectedData.getName() + ")");
                     addCropPageTitle.getStyleClass().add("page-label");
                     stage.setScene(addCropScene);
                 }
@@ -298,6 +356,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
         });
 
         submitCropInfo.setOnMouseClicked(e ->{
+
             double bWeight = -1.0;
             double seedingRate = -1.0;
             try {
@@ -322,12 +381,15 @@ public class FieldView extends StackPane implements ModelSubscriber {
                     else {
                         crop = fieldController.makeCrop(null, cropTypeInput.getValue(), cropVarietyInput.getValue(), bWeight);
                     }
-                    fieldController.addCrop(addCropfieldId.getText(), crop, seedingRate, seedingDateInput.getValue());
+                    fieldController.addCrop(addCropFieldID.getText(), crop, seedingRate, seedingDateInput.getValue());
 
                     // clear the form
                     cropTypeInput.setValue(null);
+                    newCropTypeInput.setText("");
                     cropVarietyInput.setValue(null);
-                    newCropTypeInput.clear();
+                    bushelWeight.setText("");
+                    seedingRateInput.setText("");
+                    seedingDateInput.setValue(null);
                     stage.setScene(fieldScene);
                 }
             }
@@ -338,12 +400,21 @@ public class FieldView extends StackPane implements ModelSubscriber {
         harvest.setOnMouseClicked(event ->{
             Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
             if (selectedData != null){
-                fieldController.harvest(selectedData.getID());
-                showPopup("Harvested field (" + selectedData.getName() + ") successfully");
+                if (selectedData.getCurrent_Year() != null){
+                    if (selectedData.getCurrent_Year().getCrop() != null){
+                        stage.setScene(harvestScene);
+                    }
+                    else{
+                        showErrorPopup("Error, we do not have a current crop");
+                    }
+                }
+                else{
+                    showErrorPopup("Error, we do not have a current crop");
+                }
+
             }
-            else {
-                System.out.println("Select a field");
-                showErrorPopup("Select a field");
+            else{
+                showErrorPopup("Error, we do not have a current crop");
             }
         });
 
@@ -352,14 +423,25 @@ public class FieldView extends StackPane implements ModelSubscriber {
         VBox addChemPage = new VBox(15);
         Scene addChemScene = new Scene(addChemPage,300,250);
 
-
-
         Label addChemPageTitle = new Label();
         TextField chemFieldID = new TextField();
-        TextField fertilizerInput = new TextField("Fertilizer Rate (lbs/acre)");
-        TextField chemSprayedInput = new TextField("Chemical Sprayed");
-        TextField chemGroupInput = new TextField("Chemical Group");
+
+        Label fertilizerInputLabel = new Label("Fertilizer Rate (lbs/acre):");
+        fertilizerInputLabel.getStyleClass().add("text-field-label");
+        TextField fertilizerInput = new TextField();
+
+        Label chemicalSprayedInputLabel = new Label("Chemical Sprayed:");
+        chemicalSprayedInputLabel.getStyleClass().add("text-field-label");
+        TextField chemSprayedInput = new TextField();
+
+        Label chemGroupInputLabel = new Label("Chemical Group:");
+        chemGroupInputLabel.getStyleClass().add("text-field-label");
+        TextField chemGroupInput = new TextField();
+
+        Label sprayDateLabel = new Label("Spray Date:");
+        sprayDateLabel.getStyleClass().add("text-field-label");
         DatePicker sprayDate = new DatePicker();
+
         Button submitChemInfo = new Button("Submit");
         Button addChemCancel = new Button("Cancel");
         addChemCancel.setOnMouseClicked(event -> {
@@ -375,8 +457,9 @@ public class FieldView extends StackPane implements ModelSubscriber {
             if (selectedData != null){
                 if (selectedData.getCurrent_Year() != null) {
                     chemFieldID.setText(selectedData.getID());
-                    addChemPageTitle.setText("Add Chemical to Field with Field ID (" + selectedData.getID() + ")");
+                    addChemPageTitle.setText("Add Chemical to Field named (" + selectedData.getName() + ")");
                     addChemPageTitle.getStyleClass().add("page-label");
+                    showPopup("Added Crop");
                     stage.setScene(addChemScene);
                 } else {
                     System.out.println("Field with ID (" + selectedData.getID() + ") current has no crop to spray chemical");
@@ -405,12 +488,17 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 if (fertilizerRate != -1.0){
                     fieldController.addChemical(chemFieldID.getText(), fertilizerRate,
                             chemSprayedInput.getText(), chemGroupInput.getText(), sprayDate.getValue());
+                    chemSprayedInput.setText("");
+                    fertilizerInput.setText("");
+                    chemGroupInput.setText("");
+                    sprayDate.setValue(null);
                     stage.setScene(fieldScene);
                 }
             }
         });
 
-        addChemPage.getChildren().addAll(addChemPageTitle, fertilizerInput, chemSprayedInput, chemGroupInput, sprayDate, submitAndCancelBox4);
+        addChemPage.getChildren().addAll(addChemPageTitle, fertilizerInputLabel, fertilizerInput, chemicalSprayedInputLabel,
+                chemSprayedInput, chemGroupInputLabel, chemGroupInput, sprayDateLabel, sprayDate, submitAndCancelBox4);
 
 
         Label cropPageTitle = new Label();
@@ -521,6 +609,12 @@ public class FieldView extends StackPane implements ModelSubscriber {
                 new SimpleStringProperty(cellData.getValue().getChemicalRecordData(cellData.getValue().getChemical_records()))
         );
 
+        TableColumn<Year,Double> harvestYieldCol = new TableColumn<>("Harvest Yield (lbs)");
+        harvestYieldCol.setMinWidth(100);
+        harvestYieldCol.setCellValueFactory(
+                new PropertyValueFactory<Year, Double>("yield")
+        );
+
         TableColumn<Year, LocalDate> harvestDateCol = new TableColumn<Year, LocalDate>("Harvest Date");
         harvestDateCol.setMinWidth(100);
         harvestDateCol.setCellValueFactory(
@@ -529,7 +623,7 @@ public class FieldView extends StackPane implements ModelSubscriber {
 
         yearTable.setItems(yearData);
         yearTable.getColumns().addAll(fieldNameCol2, yearIDCol, yearCol, cropTypeCol, cropVarietyCol,
-                bushelWeightCol, seedingRateCol, seedingDateCol, fertilizerRateCol, chemicalRecordCol, harvestDateCol);
+                bushelWeightCol, seedingRateCol, seedingDateCol, fertilizerRateCol, chemicalRecordCol,harvestYieldCol, harvestDateCol);
 
 
         // current year table columns
@@ -664,12 +758,25 @@ public class FieldView extends StackPane implements ModelSubscriber {
 //            }
 //        });
 
+        HBox topBar= new HBox();
+        HBox fieldFunctionsBar = new HBox();
+        fieldFunctionsBar.getStyleClass().add("function-bar");
+        fieldsBackToMain.getStyleClass().add("back-button");
+        topBar.getStyleClass().add("top-bar");
+        HBox.setHgrow(fieldFunctionsBar, Priority.ALWAYS);
+        HBox.setHgrow(fieldsBackToMain, Priority.ALWAYS);
+        topBar.getChildren().addAll(fieldFunctionsBar, fieldsBackToMain);
+
 
         cropPage.getChildren().addAll(cropBackToField, cropPageTitle, currentYearLabel, currentYearTable, cropHistoryLabel, yearTable);
 
 
-        fieldFunctionsBar.getChildren().addAll(addField, editField, viewField, deleteField, addCrop, harvest, sprayChemical, fieldsBackToMain);
-        fieldPage.getChildren().addAll(fieldFunctionsBar, fieldTable);
+        fieldFunctionsBar.getChildren().addAll(addField, editField, viewField, deleteField, addCrop, harvest, sprayChemical);
+        VBox taskTableContainer = new VBox();
+        taskTableContainer.getStyleClass().add("table-container");
+        taskTableContainer.getChildren().add(fieldTable);
+
+        fieldPage.getChildren().addAll(topBar, taskTableContainer);
 
         // css
         addFieldScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
@@ -677,12 +784,20 @@ public class FieldView extends StackPane implements ModelSubscriber {
         addChemScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
         addCropScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
         cropScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
+        harvestScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
         this.getChildren().addAll(fieldPage);
     }
 
 
 
-
+    /**
+     * Sets the primary stage and scenes of the application. Specifically handles the
+     * menu and field scenes. Additionally, applies a stylesheet to the field scene.
+     *
+     * @param stage The primary JavaFX stage where scenes will be displayed.
+     * @param main The scene representing the application's main menu.
+     * @param field The scene representing the field view of the application and to which the style sheet is to be applied.
+     */
     public void setStageMainField(Stage stage, Scene main, Scene field){
         this.stage = stage;
         this.MenuScene = main;
@@ -690,6 +805,11 @@ public class FieldView extends StackPane implements ModelSubscriber {
         fieldScene.getStylesheets().add(getClass().getClassLoader().getResource("field.css").toExternalForm());
     }
 
+
+    /**
+     * A function that throws the content of the string passed to it as an error message.
+     * @param content: The content of the error message popup
+     */
     private void showErrorPopup(String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("ERROR");
@@ -721,8 +841,4 @@ public class FieldView extends StackPane implements ModelSubscriber {
         return String.format("#%02x%02x%02x", r, g, b);
     }
 
-    @Override
-    public void modelChanged() {
-
-    }
 }

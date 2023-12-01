@@ -2,6 +2,7 @@ package control;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import org.InitialFarm.dataManager;
 import org.bson.types.ObjectId;
 import org.entities.Employee;
@@ -124,6 +125,7 @@ public class UserControl {
      */
     public void promoteUser(String id){
 
+        // check if the user exists
         Employee promoted = null;
         for (User employee: allEmployees)
         {
@@ -137,9 +139,11 @@ public class UserControl {
             System.out.println("User to be promoted could not be found!");
         }
         else {
+            // check if they are already an owner
             if (promoted.isOwner)
             {
                 System.out.println("User to be promoted is already an owner!");
+                showErrorPopup("User to be promoted is already an owner!");
             }
             else {
                 promoted.isOwner = true;
@@ -155,7 +159,7 @@ public class UserControl {
      */
     public void removeUser(String id){
         Employee removed = null;
-
+        // try to find the user in the system
         for (User employee: allEmployees)
         {
             if (employee.getID().equals(id))
@@ -174,6 +178,7 @@ public class UserControl {
                 System.out.println("owner boolean is null");
             }
             else {
+                // remeove references to owner locally and in db
                 if (removed.isOwner)
                 {
                     owners.remove(removed);
@@ -250,7 +255,12 @@ public class UserControl {
         }
     }
 
-
+    /**
+     * Returns a string value of the User to be viewed .
+     * @param id: The id of the user to which a user is to be unassigned
+     *
+     * @return returned: a string representation of the user to be viewed.
+     */
     public String viewUser (String id)
     {
         Employee viewed = null;
@@ -274,5 +284,12 @@ public class UserControl {
           return returned;
     }
 
+    private void showErrorPopup(String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Message");
+        alert.setHeaderText("INVALID");
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 
 }

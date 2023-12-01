@@ -28,7 +28,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class GraphView extends StackPane implements ModelSubscriber {
+public class GraphView extends StackPane {
 
 
     private Field selectedField;
@@ -50,6 +50,7 @@ public class GraphView extends StackPane implements ModelSubscriber {
     GraphControl graphController;
 
 
+    //Making a custom layout for the combo box
     private HBox buildLayout(Field field) {
         VBox layout = new VBox();
         HBox.setHgrow(layout, Priority.ALWAYS);
@@ -61,14 +62,22 @@ public class GraphView extends StackPane implements ModelSubscriber {
         topRow.getChildren().addAll(getLabel("Name :","bold"),getLabel(field.getName(),"normal"), getLabel("Acres :","bold"),getLabel(field.getSize()+"","normal"));
         HBox bottomRow = new HBox();
         bottomRow.setSpacing(5);
-        bottomRow.getChildren().addAll(getLabel("Current Crop :","bold"),getLabel(field.getCurrent_Year().getCrop().getCropType(),"normal"));
+        if (field.getCurrent_Year() != null) {
+            bottomRow.getChildren().addAll(getLabel("Current Crop :", "bold"), getLabel(field.getCurrent_Year().getCrop().getCropType(), "normal"));
+        }
         layout.getChildren().addAll(topRow, bottomRow);
 
         HBox pane = new HBox();
         pane.setAlignment(Pos.CENTER_LEFT);
         pane.setSpacing(5);
         pane.setPadding(new Insets(2));
-        Label num = new Label(field.getCurrent_Year().getYear()+"");
+        Label num;
+        if (field.getCurrent_Year() != null) {
+            num = new Label(field.getCurrent_Year().getYear() + "");
+        }
+        else{
+            num = new Label("");
+        }
         num.setStyle("-fx-font-size:20px;-fx-font-weight:bold;-fx-text-fill:black;");
         pane.getChildren().addAll(num,layout);
         return pane;
@@ -84,6 +93,12 @@ public class GraphView extends StackPane implements ModelSubscriber {
         fieldList = FXCollections.observableArrayList(graphController.getAllFields());
         comboBox.setItems(fieldList);
     }
+
+    /**
+     * Constructor for the graph view. Initializes the graph controller and
+     * creates the graph view's layout.
+     *
+     */
     public GraphView() {
 
         graphController = new GraphControl();
@@ -150,23 +165,27 @@ public class GraphView extends StackPane implements ModelSubscriber {
         }
 
         comboBox.setOnAction(e -> {
-            this.selectedField = (Field) comboBox.getValue();
+                this.selectedField = (Field) comboBox.getValue();
+                if (this.selectedField != null) {
+                dataSeries1.getData().clear();
 
-            dataSeries1.getData().clear();
+                if (selectedField != null) {
+                    dataSeries1.setName(selectedField.getName() + "");
+                }
 
+                if (selectedField.getCurrent_Year() != null) {
+                    dataSeries1.getData().add(new XYChart.Data((selectedField.getCurrent_Year().getYear() + " " + selectedField.getCurrent_Year().getCrop().getCropType()), selectedField.getCurrent_Year().getYield()));
+                }
+                for (int x = 0; x < selectedField.getYears().size(); x++) {
+                    System.out.println(selectedField.getYears().get(x).getYear());
+                    System.out.println(selectedField.getYears().get(x).getCrop().getBushelWeight());
+                    dataSeries1.getData().add(new XYChart.Data(((selectedField.getYears().get(x).getYear()) + " " + selectedField.getYears().get(x).getCrop().getCropType()), selectedField.getYears().get(x).getYield()));
+                    System.out.println(selectedField.getYears().get(x).getYear());
 
-            dataSeries1.setName(selectedField.getName() + "");
-            dataSeries1.getData().add(new XYChart.Data((selectedField.getCurrent_Year().getYear() + " " + selectedField.getCurrent_Year().getCrop().getCropType()),selectedField.getCurrent_Year().getCrop().getBushelWeight()));
-            for (int x = 0;x < selectedField.getYears().size();x++){
-                System.out.println(selectedField.getYears().get(x).getYear());
-                System.out.println(selectedField.getYears().get(x).getCrop().getBushelWeight());
-                dataSeries1.getData().add(new XYChart.Data(((selectedField.getYears().get(x).getYear()) + " " + selectedField.getYears().get(x).getCrop().getCropType()),selectedField.getYears().get(x).getCrop().getBushelWeight()));
-                System.out.println(selectedField.getYears().get(x).getYear());
+                }
+
 
             }
-
-
-
         });
 
 
@@ -177,33 +196,48 @@ public class GraphView extends StackPane implements ModelSubscriber {
         barchart.setAnimated(false);
         if (selectedField != null){
             if (selectedField.getCurrent_Year() != null) {
-                dataSeries1.getData().add(new XYChart.Data((selectedField.getCurrent_Year().getYear() + " " + selectedField.getCurrent_Year().getCrop().getCropType()), selectedField.getCurrent_Year().getCrop().getBushelWeight()));
+                dataSeries1.getData().add(new XYChart.Data((selectedField.getCurrent_Year().getYear() + " " + selectedField.getCurrent_Year().getCrop().getCropType()), selectedField.getCurrent_Year().getYield()));
             }
             for (int x = 0;x < selectedField.getYears().size();x++){
                 System.out.println(selectedField.getYears().get(x).getYear());
                 System.out.println(selectedField.getYears().get(x).getCrop().getBushelWeight());
-                dataSeries1.getData().add(new XYChart.Data(((selectedField.getYears().get(x).getYear()) + " " + selectedField.getYears().get(x).getCrop().getCropType()),selectedField.getYears().get(x).getCrop().getBushelWeight()));
+                dataSeries1.getData().add(new XYChart.Data(((selectedField.getYears().get(x).getYear()) + " " + selectedField.getYears().get(x).getCrop().getCropType()),selectedField.getYears().get(x).getYield()));
                 System.out.println(selectedField.getYears().get(x).getYear());
 
             }
         }
         //Making the actual bar chart
 
-        yAxis.setLabel("Bushel Weight");
+        yAxis.setLabel("Yield in Pounds (lbs)");
         xAxis.setLabel("Years");
         barchart.getData().add(dataSeries1);
 
-        barchart.setTitle("Yearly growth");
+        barchart.setTitle("Yearly harvest");
 
         Button graphToMain = new Button("Back To Main");
         graphToMain.setOnMouseClicked(event -> {
             stage.setScene(MenuScene);
         });
 
-        graphPage.getChildren().addAll(graphToMain ,comboBox,barchart);
+        HBox topBar = new HBox();
+        graphToMain.getStyleClass().add("back-button");
+        topBar.getStyleClass().add("top-bar");
+        HBox.setHgrow(graphToMain, Priority.ALWAYS);
+        topBar.alignmentProperty().set(Pos.CENTER_RIGHT);
+        topBar.getChildren().add(graphToMain);
+        graphPage.getChildren().addAll(topBar ,comboBox,barchart);
         this.getChildren().add(graphPage);
     }
 
+    /**
+     * Sets the primary stage and scenes of the application. Specifically handles the
+     * menu and graph scenes. Additionally, applies a stylesheet to the graph scene.
+     *
+     * @param stage The primary JavaFX stage where scenes will be displayed.
+     * @param MenuScene The scene representing the application's main menu.
+     * @param graphScene The scene representing the graph view of the application and to which the style sheet is to be applied.
+     *
+     */
     public void setStageMenu(Stage stage, Scene MenuScene, Scene graphScene){
         this.stage = stage;
         this.MenuScene = MenuScene;
@@ -211,8 +245,4 @@ public class GraphView extends StackPane implements ModelSubscriber {
         graphScene.getStylesheets().add(getClass().getClassLoader().getResource("graph.css").toExternalForm());
     }
 
-    @Override
-    public void modelChanged() {
-
-    }
 }
