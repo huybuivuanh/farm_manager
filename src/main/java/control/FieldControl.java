@@ -202,6 +202,7 @@ public class FieldControl {
 
                 searchedField.getCurrent_Year().setFertilizer_rate(fertilizerRate);
                 searchedField.getCurrent_Year().addChemicalRecord(dbChemRec);
+                dataManager.updateClass(searchedField.getCurrent_Year());
                 dataManager.updateClass(searchedField);
             } else {
                 System.out.println("Field with ID (" + fieldID + ") is already harvested or no crop is planted.");
