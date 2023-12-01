@@ -70,6 +70,7 @@ public class TaskControl {
         }
         else {
             System.out.println("There already is a task with the desired ID");
+            showErrorPopup("There already is a task with the desired ID");
         }
     }
 
@@ -112,9 +113,11 @@ public class TaskControl {
                 edited.setDescription(newDescription);
                 edited.setDueDate(newDueDate);
                 dataManager.updateClass(edited);
+                showPopup("Task Edited");
             }
             else{
                 System.out.println("The suggested new task ID is already in use.");
+                showErrorPopup("The suggested new task ID is already in use.");
             }
         }
     }
@@ -249,6 +252,14 @@ public class TaskControl {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error Message");
         alert.setHeaderText("INVALID");
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    private void showPopup(String content) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("MESSAGE");
+        alert.setHeaderText("CONFIRM MESSAGE");
         alert.setContentText(content);
         alert.showAndWait();
     }

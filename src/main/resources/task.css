@@ -57,6 +57,10 @@
     -fx-background-color: #34495e;
 }
 
+.text-field-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
 
 
 .root {
