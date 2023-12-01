@@ -4,9 +4,6 @@
 ***
 
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
 ## Project Name: Farm Manager
 
 
@@ -54,6 +51,7 @@ Let people know what your project can do specifically. Provide context and add a
 
 ## Market advantage
 The program allows for the Management of bins and grain storage. According to our client, this feature is highly desired and existing applications on the market lack this feature. 
+The history feature within the app is also of great utility to allow for deeper understanding of soil, farming practices, and harvest yield relations. 
 
 ## Tech Stack
 
@@ -61,40 +59,36 @@ The program allows for the Management of bins and grain storage. According to ou
 - **Front end:**  [JavaFX](https://openjfx.io/)
 - **Database:** [MongoDB Atlas](https://www.mongodb.com/atlas/database) 
 - **Styling:** [Cascading Style Sheets](https://www.w3schools.com/css/)
+- **Build Automation and Dependency management:** [Apache Maven](https://maven.apache.org/)
 
 
 
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
 
 ## Installation
-Installation is done by simply opening the project in intellij and running the maven dependencies. If intellij cannot discover the maven build. Launching the class Main located in the src/java/org/openjfx.javafxmavenarchetypes will allow you to launch the program in intellij. Launching the jar build can be done by opening the target folder and launching the javafx-maven-archetypes-1.0-SNAPSHOT-shaded.jar file with jdk 21 or later.
+Installation is done by simply opening the project in intellij from VCS, copying in the gitlab repository link, and running the maven dependencies. If intellij cannot discover the maven build. Launching the class Main located in the src/java/org/openjfx.javafxmavenarchetypes will allow you to launch the program in intellij. The program can also be installed in developer mode by downloading the zip folder of the main branch on gitlab. The contents are then unzipped and the project is opened in Intellij. In case the Intellij run button of the main java class is faded, in Intellij go to File -> Invalidates Caches ... -> tick the first, second and last boxes, and then click Invalidate and Restart.
+
+Launching the jar version of the build can be done by opening the target folder and launching the javafx-maven-archetypes-1.0-SNAPSHOT-shaded.jar file with jdk 21 or later.
+  
 
 ## Usage
 Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
 ## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+For any technical support, please contact the development team on Gitlab or our links provided above. 
 
 ## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+For the future, if we get the chance we would like to incorporate a login system for better security and access control. We would also like to add a history search feature for quicker access to data. 
+Another upgrade we would aim to incorporate is the use of better performing paid version of the MongoDB database services as to not bottleneck the speed of task execution. 
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Contributions to the project are welcome granted 3/6 author access is given. 
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+To begin your contribution journey, make sure to follow the installation guide provided above an also watch the demo video explaining the process of installing and providing a brief overview of the code base and application usage. 
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
 
 ## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
+The contributions of the authors mentioned above were indisposable for the successful completion of this project. We acknowledge their great contributions. 
+The guidance and assitace of Professor Zadia Codabux and the TA teams were also essential for project success.
 
 ## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Our team sees a lot of potential for future expansion and improvement of the project. Regrettably, due to the time, budget, and personel limitations placed on the project due it being part of a deliverable for CMPT 370, the project will go on hold for the forseable future. 
