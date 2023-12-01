@@ -150,14 +150,6 @@ public class dataManager {
                 classType= "Employee";}
 
 
-            // Was getting an error that this ill always be wrong, that's because owner inherits from employee,
-            // so if it is an owner, it will never get here. Left comment. not sure how you want to handle this
-
-//            else if ( test instanceof Owner){
-//              newID=   insertDoc(doc, "FarmData", "owner_list");
-//              newDoc= grabByID("FarmData", "employee_list", newID);
-//              classType= "Owner";}
-
             else if ( test instanceof Field){
                 newID=  insertDoc(doc, "FarmData","field_list");
                 newDoc= grabByID("FarmData", "field_list", newID);
@@ -227,9 +219,10 @@ public class dataManager {
 
     /**
      * A function that fetches objects from the Database using the dataBase internal ID. This is done by using the grabByID and fetchObject functions.
-     *
      * @param classType: a string representing the type of data being fetched.
      * @param id: the internal id within the MongoDB database.
+     *
+     * @return : The object that was fetched. Must be of type that implements DatabaseInterface.
      */
     public <T extends DatabaseInterface<T>> T fetchObjectById(String classType, ObjectId id){
 
@@ -295,9 +288,10 @@ public class dataManager {
 
     /**
      * Given the type of class, the object document, and its id, return the object itself.
-     *
      * @param classType: a string representing the type of data being fetched
      * @param objectDoc: a Document containing the inner details of the object!
+     *
+     * @return : The object that was fetched. Must be of type that implements DatabaseInterface.
      */
     public  <T extends DatabaseInterface<T>> T fetchObject(String classType, Document objectDoc){
 
@@ -515,6 +509,8 @@ public class dataManager {
     /**
     * Translates a dummy object into a JSON Document representation of itself.
      * @param dum: is a dummy class created in the early stages to be able to better plan for future classes.
+     *
+     * @return : A document translation of an object of class dummy.
     */
     public static Document translateToDoc ( dummy dum)
     {
