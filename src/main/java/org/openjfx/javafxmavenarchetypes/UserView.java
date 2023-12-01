@@ -72,46 +72,58 @@ public class UserView extends StackPane {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        Button busers= new Button();
-        busers.setText("Users");
-        busers.setOnAction(e-> {
-            stage.setScene(userScene);
-        });
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // TODO: adding functionality to the user tab (connecting to tasks) (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Todo: adding users (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        VBox userBox2 = new VBox(30);
+        VBox userBox2 = new VBox(15);
         Scene addUserScene2 = new Scene(userBox2,300,250);
-        Label userLabel = new Label("User Popup");
-        userLabel.setFont(new Font("Arial", 20));
+
+        Label addUserLabel = new Label("Add New User");
+        addUserLabel.getStyleClass().add("page-label");
+
+        Label userIDInputLabel = new Label("User ID:");
+        userIDInputLabel.getStyleClass().add("text-field-label");
+        TextField userIdInput = new TextField();
+
+        Label emailInpuLabel = new Label("User Email:");
+        emailInpuLabel.getStyleClass().add("text-field-label");
+        TextField emailInput = new TextField();
+
+        Label passwordInputLabel = new Label("User Password:");
+        passwordInputLabel.getStyleClass().add("text-field-label");
+        TextField passwordInput = new TextField();
+
+        Label fNameInputLabel = new Label("User First Name:");
+        fNameInputLabel.getStyleClass().add("text-field-label");
+        TextField fNameInput = new TextField();
+
+        Label lNameInputLabel = new Label("User Last Name:");
+        lNameInputLabel.getStyleClass().add("text-field-label");
+        TextField lNameInput = new TextField();
 
 
-        TextField userIdInput = new TextField("Input User ID");
-        TextField emailInput = new TextField("User Email");
-        TextField passwordInput = new TextField("User Password");
-        TextField fNameInput = new TextField("User First Name");
-        TextField lNameInput = new TextField("User Last Name");
-        TextField ownerInput = new TextField("Ownership");
+//        TextField ownerInput = new TextField("Ownership");
+        CheckBox ownerInput = new CheckBox("User is owner?");
+        ownerInput.getStyleClass().add("text-field-label");
+
+        Label dobLabel = new Label("Date Of Birth:");
+        dobLabel.getStyleClass().add("text-field-label");
         DatePicker dob = new DatePicker();
+
         Button submitAddUserInfo = new Button("Submit");
         Button cancelAddUser = new Button("Cancel");
+        HBox cancelSubmitBox = new HBox(15, submitAddUserInfo, cancelAddUser);
         cancelAddUser.setOnMouseClicked(event -> {
             stage.setScene(userScene);
         });
 
-        userBox2.getChildren().addAll(fNameInput,lNameInput, ownerInput,userIdInput,emailInput,passwordInput,dob,submitAddUserInfo, cancelAddUser);
+        userBox2.getChildren().addAll(addUserLabel, fNameInputLabel, fNameInput, lNameInputLabel,lNameInput,
+                ownerInput, userIDInputLabel, userIdInput, emailInpuLabel,emailInput, passwordInputLabel, passwordInput, dobLabel,dob, cancelSubmitBox);
 
         Button addUser = new Button("Add User");
         addUser.setOnMouseClicked(e ->{
-            userIdInput.setText("Input User ID");
-            emailInput.setText("User Email");
-            passwordInput.setText("User Password");
-            fNameInput.setText("User First Name");
-            lNameInput.setText("User Last Name");
-            ownerInput.setText("Ownership");
-            dob.setValue(null);
             stage.setScene(addUserScene2);
         });
         submitAddUserInfo.setOnMouseClicked(e ->{
@@ -119,15 +131,17 @@ public class UserView extends StackPane {
             //userData.add(newUser);
             try {
                 if (dob.getValue() != null){
-                    userController.addUser(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), parseBoolean(ownerInput.getText()));
+                    userController.addUser(userIdInput.getText(),emailInput.getText(), passwordInput.getText(), fNameInput.getText(), lNameInput.getText() ,dob.getValue(), ownerInput.isSelected());
 
                 } else {
                     System.out.println("Select Date Of Birth");
+                    showErrorPopup("Select Date Of Birth");
                 }
             } catch (NoSuchFieldException ex) {
                 throw new RuntimeException(ex);
             }
             if (dob.getValue() != null){
+                showPopup("Added User");
                 stage.setScene(userScene);
                 taskTable.refresh();
                 allTasksInUserViewTable.refresh();
@@ -161,8 +175,10 @@ public class UserView extends StackPane {
                 allUsersInTaskViewTable.refresh();
                 userTable.refresh();
                 System.out.println(userController.allEmployees);
+                showPopup("User removed");
             } else {
                 System.out.println("Need to select a user");
+                showErrorPopup("Need to select a user");
             }
 
         });
@@ -172,23 +188,47 @@ public class UserView extends StackPane {
         Button editUser = new Button("Edit User");
 
         //Making editPopup
-        VBox actualUserEditBox = new VBox(30);
+        VBox actualUserEditBox = new VBox(15);
         Scene actualUserEditScene = new Scene(actualUserEditBox,300,250);
 
+        Label editUserLabel = new Label();
+        editUserLabel.getStyleClass().add("page-label");
+
+        Label userIDEditLabel = new Label("User ID:");
+        userIDEditLabel.getStyleClass().add("text-field-label");
         TextField userIdEdit = new TextField("");
+
+        Label emailEditLabel = new Label("User Email:");
+        emailEditLabel.getStyleClass().add("text-field-label");
         TextField emailEdit = new TextField("");
+
+        Label passwordEditLabel = new Label("User Password:");
+        passwordEditLabel.getStyleClass().add("text-field-label");
         TextField passwordEdit = new TextField("");
+
+        Label fNameEditLabel = new Label("First Name:");
+        fNameEditLabel.getStyleClass().add("text-field-label");
         TextField fNameEdit = new TextField("");
+
+        Label lNameEditLabel = new Label("Last Name:");
+        lNameEditLabel.getStyleClass().add("text-field-label");
         TextField lNameEdit = new TextField("");
-        TextField ownerEdit = new TextField("");
+
+        CheckBox ownerEdit = new CheckBox("Is user owner?");
+        ownerEdit.getStyleClass().add("text-field-label");
+
+        Label dobEditLabel = new Label("Date of Birth:");
+        dobEditLabel.getStyleClass().add("text-field-label");
         DatePicker dobEdit = new DatePicker();
         Button submitUserInfoEdit = new Button("Submit");
         Button cancelEditUser = new Button("Cancel");
+        HBox cancelSubmitEditUser = new HBox(15, submitUserInfoEdit, cancelEditUser);
         cancelEditUser.setOnMouseClicked(event -> {
             stage.setScene(userScene);
         });
 
-        actualUserEditBox.getChildren().addAll(fNameEdit,lNameEdit,ownerEdit,userIdEdit, emailEdit, passwordEdit, dobEdit,submitUserInfoEdit, cancelEditUser);
+        actualUserEditBox.getChildren().addAll(editUserLabel, fNameEditLabel ,fNameEdit, lNameEditLabel,lNameEdit,ownerEdit,
+                userIDEditLabel ,userIdEdit, emailEditLabel, emailEdit, passwordEditLabel, passwordEdit, dobEdit, cancelSubmitEditUser);
         submitUserInfoEdit.setOnMouseClicked(e-> {
             userController.editUser(userTable.getSelectionModel().getSelectedItem().getID(),
                     userIdEdit.getText(), fNameEdit.getText(),lNameEdit.getText(),
@@ -203,15 +243,16 @@ public class UserView extends StackPane {
             taskUsersTable.refresh();
             allUsersInTaskViewTable.refresh();
             userTable.refresh();
-
+            showPopup("Added User");
             stage.setScene(userScene);
         });
 
         editUser.setOnMouseClicked(e-> {
             if (userTable.getSelectionModel().getSelectedItem() != null){
+                editUserLabel.setText("Edit user with ID (" + userTable.getSelectionModel().getSelectedItem().getID() + ")");
                 fNameEdit.setText(userTable.getSelectionModel().getSelectedItem().getFirstName());
                 lNameEdit.setText(userTable.getSelectionModel().getSelectedItem().getLastName());
-                ownerEdit.setText(String.valueOf(userTable.getSelectionModel().getSelectedItem().getOwner()));
+                ownerEdit.setSelected(userTable.getSelectionModel().getSelectedItem().getOwner());
                 userIdEdit.setText(userTable.getSelectionModel().getSelectedItem().getID());
                 emailEdit.setText(userTable.getSelectionModel().getSelectedItem().getEmail());
                 passwordEdit.setText(userTable.getSelectionModel().getSelectedItem().getPassword());
@@ -228,6 +269,7 @@ public class UserView extends StackPane {
                 stage.setScene(actualUserEditScene);
                 System.out.println(userController.allEmployees);
             } else {
+                showErrorPopup("Need to select a user");
                 System.out.println("Need to select a user");
             }
 
@@ -242,8 +284,8 @@ public class UserView extends StackPane {
                 //userTable.getSelectionModel().getSelectedItem().
                 userController.promoteUser(userTable.getSelectionModel().getSelectedItem().getID());
                 //userTable.getSelectionModel().getSelectedItem().setOwner(true);
+                showPopup("User promoted");
                 System.out.println(userController.allEmployees);
-
                 taskTable.refresh();
                 allTasksInUserViewTable.refresh();
                 userTasksTable.refresh();
@@ -253,6 +295,7 @@ public class UserView extends StackPane {
                 userTable.refresh();
             } else {
                 System.out.println("Need to select a user");
+                showErrorPopup("Need to select a user");
             }
 
         });
@@ -261,12 +304,12 @@ public class UserView extends StackPane {
         //Todo 4: Employee Tasks view. ( assigning and unassigning tasks to Employee) (done)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        VBox employeeTasksBox = new VBox(30);
+        VBox employeeTasksBox = new VBox(15);
         Scene employeeTasksScene = new Scene(employeeTasksBox,300,250);
         Label employeeTasksLabel = new Label("Employee Tasks Popup view");
-        employeeTasksLabel.getStyleClass().add("page-label");
+        employeeTasksLabel.getStyleClass().add("text-field-label");
         Label employeeNameLabel = new Label();
-        employeeNameLabel.getStyleClass().add("page-label");
+        employeeNameLabel.getStyleClass().add("text-field-label");
 
         Button employeeTasks = new Button("View Tasks");
         employeeTasks.setOnMouseClicked(e->{
@@ -286,8 +329,29 @@ public class UserView extends StackPane {
                 stage.setScene(employeeTasksScene);
             } else {
                 System.out.println("Need to select a user");
+                showErrorPopup("Need to select a user");
             }
 
+        });
+
+        userTable.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2){
+                if (userTable.getSelectionModel().getSelectedItem() != null) {
+                    userTaskData = userTable.getSelectionModel().getSelectedItem().getTaskList();
+                    userTasksTable.setItems(userTaskData);
+                    String firstName = userTable.getSelectionModel().getSelectedItem().getFirstName();
+                    String lastName = userTable.getSelectionModel().getSelectedItem().getLastName();
+                    employeeNameLabel.setText("Employee: " + firstName + " " + lastName);
+                    taskTable.refresh();
+                    allTasksInUserViewTable.refresh();
+                    userTasksTable.refresh();
+                    CompletedTaskTable.refresh();
+                    taskUsersTable.refresh();
+                    allUsersInTaskViewTable.refresh();
+                    userTable.refresh();
+                    stage.setScene(employeeTasksScene);
+                }
+            }
         });
 
         Button employeeAddTasks = new Button("Add Task");
@@ -467,6 +531,22 @@ public class UserView extends StackPane {
         this.MenuScene = MenuScene;
         this.userScene = userScene;
         userScene.getStylesheets().add(getClass().getClassLoader().getResource("user.css").toExternalForm());
+    }
+
+    private void showPopup(String content) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("MESSAGE");
+        alert.setHeaderText("CONFIRM MESSAGE");
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    private void showErrorPopup(String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Message");
+        alert.setHeaderText("INVALID");
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
 }

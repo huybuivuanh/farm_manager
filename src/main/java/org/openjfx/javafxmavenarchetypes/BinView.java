@@ -576,8 +576,4 @@ public class BinView extends StackPane {
         alert.setContentText(content);
         alert.showAndWait();
     }
-    @Override
-    public void modelChanged() {
-
-    }
 }

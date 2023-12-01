@@ -2,6 +2,7 @@ package control;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import org.InitialFarm.dataManager;
 import org.bson.types.ObjectId;
 import org.entities.Employee;
@@ -142,6 +143,7 @@ public class UserControl {
             if (promoted.isOwner)
             {
                 System.out.println("User to be promoted is already an owner!");
+                showErrorPopup("User to be promoted is already an owner!");
             }
             else {
                 promoted.isOwner = true;
@@ -282,5 +284,12 @@ public class UserControl {
           return returned;
     }
 
+    private void showErrorPopup(String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Message");
+        alert.setHeaderText("INVALID");
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 
 }
