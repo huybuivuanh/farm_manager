@@ -232,7 +232,7 @@ public class BinView extends StackPane implements ModelSubscriber {
         addCrop.setOnMouseClicked(e ->{
             GrainBin selectedData = binTable.getSelectionModel().getSelectedItem();
             if (selectedData != null){
-                if (selectedData.getBinSize() <= selectedData.getCropBushels()){
+                if (selectedData.getBinSize() > selectedData.getCropBushels()){
                     addCropBinID.setText(selectedData.getDbId().toString());
                     addCropPageTitle.setText("Add Crop to bin named (" + selectedData.getBinName() + ")");
                     addCropPageTitle.getStyleClass().add("page-label");
