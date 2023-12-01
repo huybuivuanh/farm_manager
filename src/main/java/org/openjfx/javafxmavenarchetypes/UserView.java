@@ -454,6 +454,15 @@ public class UserView extends StackPane implements ModelSubscriber {
     }
 
 
+    /**
+     * Sets the primary stage and scenes of the application. Specifically handles the
+     * menu and user scenes. Additionally, applies a stylesheet to the user scene.
+     *
+     * @param stage The primary JavaFX stage where scenes will be displayed.
+     * @param MenuScene The scene representing the application's main menu.
+     * @param userScene The scene representing the user view of the application and to which the style sheet is to be applied.
+     *
+     */
     public void setStageMenuUser(Stage stage, Scene MenuScene, Scene userScene){
         this.stage = stage;
         this.MenuScene = MenuScene;

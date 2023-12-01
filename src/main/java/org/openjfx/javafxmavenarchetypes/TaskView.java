@@ -491,6 +491,15 @@ public class TaskView extends StackPane implements ModelSubscriber {
         this.getChildren().addAll(taskPage);
     }
 
+    /**
+     * Sets the primary stage and scenes of the application. Specifically handles the
+     * menu and task scenes. Additionally, applies a stylesheet to the task scene.
+     *
+     * @param stage The primary JavaFX stage where scenes will be displayed.
+     * @param MenuScene The scene representing the application's main menu.
+     * @param taskScene The scene representing the task view of the application and to which the style sheet is to be applied.
+     *
+     */
     public void setStageMenuTask(Stage stage, Scene MenuScene, Scene taskScene){
         this.stage = stage;
         this.MenuScene = MenuScene;

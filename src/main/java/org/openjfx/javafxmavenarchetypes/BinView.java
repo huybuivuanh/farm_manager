@@ -523,6 +523,16 @@ public class BinView extends StackPane implements ModelSubscriber {
         this.getChildren().addAll(binPage);
     }
 
+
+    /**
+     * Sets the primary stage and scenes of the application. Specifically handles the
+     * menu and bin scenes. Additionally, applies a stylesheet to the bin scene.
+     *
+     * @param stage The primary JavaFX stage where scenes will be displayed.
+     * @param MenuScene The scene representing the application's main menu.
+     * @param binScene The scene representing the bin view of the application and to which the style sheet is to be applied.
+     *
+     */
     public void setStageMenu(Stage stage, Scene MenuScene, Scene binScene){
         this.stage = stage;
         this.MenuScene = MenuScene;
