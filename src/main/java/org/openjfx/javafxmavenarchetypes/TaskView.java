@@ -135,6 +135,7 @@ public class TaskView extends StackPane {
                 throw new RuntimeException(ex);
             }
             if (dueDate.getValue() != null){
+                stage.setScene(taskScene);
                 taskTable.refresh();
                 allTasksInUserViewTable.refresh();
                 userTasksTable.refresh();
@@ -142,7 +143,6 @@ public class TaskView extends StackPane {
                 taskUsersTable.refresh();
                 allUsersInTaskViewTable.refresh();
                 userTable.refresh();
-                stage.setScene(taskScene);
                 showPopup("Task Added");
             }
         });

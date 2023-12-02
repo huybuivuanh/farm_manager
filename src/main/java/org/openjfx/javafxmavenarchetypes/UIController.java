@@ -100,11 +100,16 @@ public class UIController extends Application implements Runnable {
     }
 
     public static void main(String[] args) {
-        TestAll test = new TestAll();
+
         UIController UItest = new UIController();
-        Thread t1 = new Thread(test);
-        Thread t2 = new Thread(UItest);
-        t2.start(); t1.start();
+        UItest.run();
+
+//        UnCommment below to run tests
+
+//        TestAll test = new TestAll();
+//        Thread t1 = new Thread(test);
+//        Thread t2 = new Thread(UItest);
+//        t2.start(); t1.start();
 
 
     }
