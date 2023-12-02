@@ -6,23 +6,31 @@ import org.entities.DatabaseInterface;
 
 public class GrainBin implements DatabaseInterface<GrainBin> {
     //dynamic
-    private Crop currentCrop;
-    private String currentCropType = "";
-    private Crop lastCrop;
-    private Double cropBushels = 0.0;
-    private Double cropLbs = 0.0;
-    private boolean tough;// moisture
-    private boolean clean;
+    private Crop currentCrop; // the crop that is currently in the bin
+    private String currentCropType = ""; // the type of crop that is currently in the bin
+    private Crop lastCrop; // the crop that was last in the bin
+    private Double cropBushels = 0.0; // the amount of grain in the bin in bushels
+    private Double cropLbs = 0.0; // the amount of grain in the bin in lbs
+    private boolean tough; // refers to moisture content of grain (if it is too high it can cause issues and is considered tough
+    private boolean clean; // refers to whether the grain has been cleaned or not
 
-    //Static
-    private final String binName;
-    private final String binLocation;
-    private final int binSize;
-    private final boolean hopper;
-    private final boolean fan;
-    private ObjectId dbID;
+    //these values do not change after creation
+    private final String binName; // the name of the bin
+    private final String binLocation; // the location of the bin
+    private final int binSize; // the size of the bin in bushels
+    private final boolean hopper; // whether the bin has a hopper or not
+    private final boolean fan; // whether the bin has a fan or not
+    private ObjectId dbID; // the id of the bin in the database
 
-
+    /**
+     * Constructor for a grain bin
+     * @param dbID
+     * @param binName
+     * @param binLocation
+     * @param binSize
+     * @param hopper
+     * @param fan
+     */
     public GrainBin(ObjectId dbID,String binName, String binLocation, int binSize, boolean hopper, boolean fan){
         this.dbID = dbID;
         this.binName = binName;
@@ -30,13 +38,21 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
         this.binSize = binSize;
         this.hopper = hopper;
         this.fan = fan;
-        //TODO binID
     }
 
+    /**
+     * Sets the current crop in the bin
+     * @param crop
+     */
     public void setCurrentCrop(Crop crop){
         this.currentCrop = crop;
     }
 
+    /**
+     * Unloads grain from the bin
+     * @param grain: amount of grain to be unloaded
+     * @param isBushels: unit of measure of the grain amount (if true in bushels, if false in lbs)
+     */
     public void unloadBin(int grain, boolean isBushels){
         if(isBushels){
             this.cropBushels -= grain;
@@ -67,6 +83,10 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
         return this.currentCropType;
     }
 
+    /**
+     * Checks if the bin is empty
+     * @return true if the bin is empty, false otherwise
+     */
     public Boolean isEmpty(){
         if (cropBushels <= 0){
             return true;
@@ -77,6 +97,9 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
 
     /**
      * Adds a crop to a bin
+     * checks if the bin is empty, if it is it adds the crop to the bin
+     * otherwise it checks if the crop being added is the same as the crop already in the bin
+     * if it is it adds the crop to the bin
      * @param cropToBeAdded : a crop to be added to the bin.
      * @param grain: amount of the crop is being added.
      * @param inputBushels: Unit of measure of the grain amount ( if true in bushels, if false in lbs).
@@ -104,6 +127,10 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
         this.tough = tough;
     }
 
+    /**
+     * Adds crop to bin in lbs and updates bushels accordingly
+     * @param lbs
+     */
     private void fillLbs( int lbs){
         if (lbs > binSize){
             //TODO throw exception
@@ -114,6 +141,10 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
         this.cropBushels += lbsToBushels(lbs);
     }
 
+    /**
+     * Adds crop to bin in bushels and updates lbs accordingly
+     * @param bushels
+     */
     private void fillBushels(int bushels){
         if (cropBushels + bushels > binSize){
             //TODO throw exception
@@ -124,19 +155,36 @@ public class GrainBin implements DatabaseInterface<GrainBin> {
         this.cropLbs += bushelsToLbs(bushels);
     }
 
+    /**
+     * Converts lbs to bushels
+     * @param lbs
+     * @return
+     */
     private Double lbsToBushels(double lbs){
         return (lbs/currentCrop.getBushelWeight());
     }
 
+    /**
+     * Converts bushels to lbs
+     * @param bushels
+     * @return
+     */
     private Double bushelsToLbs(double bushels){
         return (bushels*currentCrop.getBushelWeight());
     }
 
+    /**
+     * Clears the bin
+     */
     public void clearBin(){
         cropBushels = (double) 0;
         cropLbs = (double) 0;
     }
 
+    /***
+     * Converts the bin to a document for use in database
+     * @return
+     */
     @Override
     public Document classToDoc() {
         Document newDoc = new Document();

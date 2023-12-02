@@ -7,11 +7,16 @@ import org.entities.DatabaseInterface;
 import java.util.List;
 
 public class Chemical implements DatabaseInterface<Chemical> {
-    private String chemicalName;
-    private ObjectId dbID = null;
-    private List<String> chemicalGroup;
+    private String chemicalName; // the name of the chemical
+    private ObjectId dbID = null; // the id of the chemical in the database
+    private List<String> chemicalGroup; // the group classifications the chemical belongs to
     
-    
+    /**
+     * Constructor for a chemical
+     * @param dbid
+     * @param chemicalName
+     * @param chemicalGroup
+     */
     public Chemical (ObjectId dbid,String chemicalName, List<String> chemicalGroup){
         dbID = dbid;
         this.chemicalName = chemicalName;
