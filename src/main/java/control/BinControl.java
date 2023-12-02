@@ -13,7 +13,6 @@ public class BinControl {
      * list of Bins
      */
     public ObservableList<GrainBin> binList;
-
     public ObservableList<String> cropType;
 
     private dataManager dataManager = new dataManager();
@@ -24,16 +23,29 @@ public class BinControl {
      * constructor
      */
     public BinControl(){
+        // fetch from data base
         binList = dataManager.initializeGrainBinsFromDB();
         cropType = FXCollections.observableArrayList();
     }
 
+    /**
+     * add bin to database
+     * @param bin_name bin name
+     * @param bin_size bin size
+     * @param bin_location bin location
+     * @param hopper bin has hopper?
+     * @param fan bin has fan?
+     */
     public void addBin(String bin_name, int bin_size, String bin_location, boolean hopper, boolean fan) {
         GrainBin Bin = new GrainBin(null, bin_name, bin_location, bin_size, hopper, fan);
         GrainBin dbBin = dataManager.saveClass(Bin);
         binList.add(dbBin);
     }
 
+    /**
+     * delete a bin from database
+     * @param bin_id bin ID
+     */
     public void deleteBin(ObjectId bin_id){
         GrainBin deleted = null;
         for (GrainBin bin : binList){
@@ -52,6 +64,15 @@ public class BinControl {
         }
     }
 
+    /**
+     * add crop to bin
+     * @param bin_id bin Id
+     * @param cropType crop type
+     * @param grain how much grain to add
+     * @param inputBushels is crop in bushel?
+     * @param clean is crop clean?
+     * @param tough is crop tough?
+     */
     public void addCrop(ObjectId bin_id, Crop cropType, int grain, boolean inputBushels, boolean clean, boolean tough){
         GrainBin binSearched = null;
         for (GrainBin bin : binList){
@@ -69,6 +90,10 @@ public class BinControl {
         }
     }
 
+    /**
+     * clear all grains in the bin
+     * @param bin_id bin ID
+     */
     public void clearBin(ObjectId bin_id) {
         GrainBin binSearched = null;
         for (GrainBin bin : binList) {
@@ -91,12 +116,12 @@ public class BinControl {
     }
 
     /**
-     * Makes a new Crop initalized in database.
-     * @param dbid
-     * @param cropType
-     * @param cropVariety
-     * @param bushelWeight
-     * @return
+     * make a crop object and add to database
+     * @param dbid database id
+     * @param cropType crop type
+     * @param cropVariety crop variety
+     * @param bushelWeight bushel weight
+     * @return a crop object that is saved in database
      */
     public Crop makeCrop(ObjectId binID, int grain, boolean inputBushels, ObjectId dbid,String cropType, String cropVariety, double bushelWeight){
         GrainBin binSearched = null;
@@ -125,6 +150,11 @@ public class BinControl {
         }
         return dbCrop;
     }
+
+    /**
+     * add a new crop type to the list
+     * @param crop_type new crop type
+     */
     public void addCropType(String crop_type){
         boolean existed = false;
         for (String type : cropType){
@@ -140,6 +170,12 @@ public class BinControl {
         }
     }
 
+    /**
+     * unload crop from bin
+     * @param binID
+     * @param grain
+     * @param isBushel
+     */
     public void unload(ObjectId binID, int grain, boolean isBushel){
         GrainBin binSearched = null;
         for (GrainBin bin : binList){
@@ -156,10 +192,20 @@ public class BinControl {
         }
     }
 
+    /**
+     * convert lbs to bushel
+     * @param lbs crop weight in pounds
+     * @param bushelWeight 1 bushel weight in pounds
+     * @return
+     */
     private Double lbsToBushels(double lbs, double bushelWeight){
         return (lbs/bushelWeight);
     }
 
+    /**
+     * error popup
+     * @param content
+     */
     private void showErrorPopup(String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error Message");
