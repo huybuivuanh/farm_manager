@@ -14,10 +14,9 @@ public class Crop implements DatabaseInterface<Crop> {
 
     public Crop(ObjectId dbid,String cropType, String cropVariety, double bushelWeight){
         dbID = dbid;
-        this.cropType = cropType;
-        this.cropVariety = cropVariety;
-        this.bushelWeight = bushelWeight;
-        //TODO cropID
+        this.cropType = cropType; // the type of crop (corn, soybeans, etc.)
+        this.cropVariety = cropVariety; // the variety of the crop (Pioneer 1234, etc.)
+        this.bushelWeight = bushelWeight; // the weight of a bushel of the crop(in lbs)
     }
 
     public String getCropType(){ return this.cropType;}
