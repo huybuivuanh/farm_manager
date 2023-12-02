@@ -65,6 +65,10 @@ The history feature within the app is also of great utility to allow for deeper 
 
 
 ## Installation
+
+REQUIRES JDK 21 TO RUN
+
+
 Installation is done by simply opening the project in intellij from VCS, copying in the gitlab repository link, and running the maven dependencies. If intellij cannot discover the maven build. Launching the class Main located in the src/java/org/openjfx.javafxmavenarchetypes will allow you to launch the program in intellij. The program can also be installed in developer mode by downloading the zip folder of the main branch on gitlab. The contents are then unzipped and the project is opened in Intellij. In case the Intellij run button of the main java class is faded, in Intellij go to File -> Invalidates Caches ... -> tick the first, second and last boxes, and then click Invalidate and Restart.
 
 Launching the jar version of the build can be done by opening the target folder and launching the javafx-maven-archetypes-1.0-SNAPSHOT-shaded.jar file with jdk 21 or later.
