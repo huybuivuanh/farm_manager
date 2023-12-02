@@ -19,27 +19,40 @@ import org.bson.types.ObjectId;
 
 public class BinView extends StackPane {
 
+    /**
+     * bin page page container
+     */
     private VBox binPage = new VBox();
+    /**
+     * menu scene
+     */
     private Scene MenuScene ;
 
+    /**
+     * bin scene
+     */
     private Scene binScene;
+    /**
+     * stage
+     */
     private Stage stage;
+    private TableView<GrainBin> binTable = new TableView<>();   // bin tableview
+    private BinControl binController = new BinControl(); // bin controller
+    private ObservableList<GrainBin> grainBinData = binController.binList;  // bin data
 
-    private TableView<GrainBin> binTable = new TableView<>();
-    private BinControl binController = new BinControl();
-    private ObservableList<GrainBin> grainBinData = binController.binList;
+    private TableView<Crop> currentCropTable = new TableView<>();   // current crop tableview
+    private ObservableList<Crop> currentCropData = FXCollections.observableArrayList(); // current crop data
+    private TableView<Crop> lastCropTable = new TableView<>();  // last crop tableview
+    private ObservableList<Crop> lastCropData = FXCollections.observableArrayList();    // last crop data
 
-    private TableView<Crop> currentCropTable = new TableView<>();
-    private ObservableList<Crop> currentCropData = FXCollections.observableArrayList();
-    private TableView<Crop> lastCropTable = new TableView<>();
-    private ObservableList<Crop> lastCropData = FXCollections.observableArrayList();
-
-    private final int binMaxCapacity = 20;
+    private final int binMaxCapacity = 100000;  // bin max capacity
 
     public BinView(){
+        // crop page container and scene
         VBox binCropPage = new VBox(15);
         Scene binCropScene = new Scene(binCropPage, 300, 250);
 
+        // bin tableview columns
         TableColumn<GrainBin, ObjectId> binIDCol = new TableColumn<GrainBin, ObjectId>("Bin ID");
         binIDCol.setMinWidth(70);
         binIDCol.setCellValueFactory(
@@ -99,6 +112,7 @@ public class BinView extends StackPane {
         binTable.getColumns().addAll(binIDCol, binNameCol, binLocationCol, binSizeCol, binBushelsCol, binCropLbsCol, cropTypeCol, binHopperCol, binFanCol, binToughCol, binCleanCol);
 
 
+        // add bin page container and scene
         VBox addBinBox = new VBox(15);
         Scene addBinScene = new Scene(addBinBox,300,250);
 
@@ -131,11 +145,13 @@ public class BinView extends StackPane {
 
         addBinBox.getChildren().addAll(addBinPageTitle, binNameInputLabel, binNameInput, binSizeInputLabel, binSizeInput,
                 binLocationLabel, binLocation, hopperInput, fanInput, submitAndCancelBox1);
+        // button to open add bin form
         Button addBin = new Button("Add Bin");
         addBin.setOnMouseClicked(e ->{
             stage.setScene(addBinScene);
         });
 
+        // submit bin info
         submitBinInfo.setOnMouseClicked(e ->{
             int binSize = -1;
             try {
@@ -161,6 +177,7 @@ public class BinView extends StackPane {
             fanInput.setSelected(false);
         });
 
+        // delete a bin function
         Button deleteBin = new Button("Delete Bin");
         deleteBin.setOnAction(event -> {
             if (binTable.getSelectionModel().getSelectedItem() != null){
@@ -174,6 +191,7 @@ public class BinView extends StackPane {
         });
 
 
+        // add crop page and scene
         VBox addCropBox = new VBox(15);
         Scene addCropScene = new Scene(addCropBox,300,250);
         TextField addCropBinID = new TextField();
@@ -192,7 +210,6 @@ public class BinView extends StackPane {
         Label space3 = new Label("\t\t");
         Label space20 = new Label("\t");
         HBox groupBox1 = new HBox(cropTypeLabel, space2, cropTypeInput, space3, newCropTypeLabel, space20, newCropTypeInput );
-//        HBox groupBox2 = new HBox(newCropTypeLabel, space3, newCropTypeInput);
 
         Label cropVarietyLabel = new Label("Select Crop Variety");
         cropVarietyLabel.getStyleClass().add("text-field-label");
@@ -229,6 +246,8 @@ public class BinView extends StackPane {
                 bushelWeight, grainInputLabel, grainInput, groupBox3, submitAndCancelBox2);
 
 
+        // button to open add crop form
+        // lots of error checking
         Button addCrop = new Button("Add Crop");
         addCrop.setOnMouseClicked(e ->{
             GrainBin selectedData = binTable.getSelectionModel().getSelectedItem();
@@ -257,6 +276,8 @@ public class BinView extends StackPane {
 
         });
 
+        // submit crop info
+        // needed to include a giant amount of error checking cause crop can only be added under certain conditions
         submitCropInfo.setOnMouseClicked(e ->{
             GrainBin selectedData = binTable.getSelectionModel().getSelectedItem();
             Crop selectedCrop = selectedData.getCurrentCrop();
@@ -343,6 +364,8 @@ public class BinView extends StackPane {
 
 
 
+        // Clear bin functionality
+        // lots of error checking
         Button clearBin = new Button("Clear Bin");
         clearBin.setOnMouseClicked(event -> {
             GrainBin selectedData = binTable.getSelectionModel().getSelectedItem();
@@ -416,6 +439,8 @@ public class BinView extends StackPane {
 
         lastCropTable.getColumns().addAll(lastCropIDCol, lastCropTypeCol, lastCropVarietyCol, lastBushelWeightCol);
 
+        // double-click a bin to open details
+        // lots of error checking
         binTable.setOnMouseClicked(event -> {
             GrainBin selectedData = binTable.getSelectionModel().getSelectedItem();
             if (event.getClickCount() == 2) {
@@ -455,6 +480,8 @@ public class BinView extends StackPane {
             stage.setScene(MenuScene);
         });
 
+        // open bin details by select a bin and click View Bin
+        // lots of error checking
         Button viewBin = new Button("View Bin");
         viewBin.setOnMouseClicked(event -> {
             GrainBin selectedData = binTable.getSelectionModel().getSelectedItem();
@@ -484,6 +511,7 @@ public class BinView extends StackPane {
             }
         });
 
+        // unload crop a page and scene
         VBox unloadPage = new VBox(15);
         Scene unloadScene = new Scene(unloadPage);
 
@@ -502,6 +530,7 @@ public class BinView extends StackPane {
         Label space5 = new Label("\t\t");
         HBox submitAndCancelBox3 = new HBox(submitUnloadInfo, space5, cancelUnloadCrop);
 
+        // submit unloading
         submitUnloadInfo.setOnMouseClicked(event -> {
             int grain = -1;
             try {
@@ -521,6 +550,8 @@ public class BinView extends StackPane {
             }
         });
 
+        // open unloading page
+        // lots of error checking
         Button unload = new Button("Unload");
         unload.setOnMouseClicked(event -> {
             GrainBin selectedData = binTable.getSelectionModel().getSelectedItem();

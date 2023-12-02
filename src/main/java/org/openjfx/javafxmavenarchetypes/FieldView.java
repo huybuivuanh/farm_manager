@@ -29,38 +29,36 @@ import java.util.*;
 
 public class FieldView extends StackPane {
 
-    private Stage stage;
-    private Scene MenuScene ;
-    private Scene fieldScene;
-    private VBox cropPage = new VBox();
-    private Scene cropScene = new Scene(cropPage);
+    private Stage stage;    // stage
+    private Scene MenuScene ;   // menu scene
+    private Scene fieldScene;   // field scene
+    private VBox cropPage = new VBox(); // crop page container
+    private Scene cropScene = new Scene(cropPage);  // crop scene
 
-    private VBox harvestPage = new VBox(15);
+    private VBox harvestPage = new VBox(15);    // harvest page
 
-    private Scene harvestScene = new Scene(harvestPage);
-    private VBox fieldPage = new VBox();
-
-    // field functions bar
-    private HBox fieldFunctionsBar = new HBox();
+    private Scene harvestScene = new Scene(harvestPage);    // harvest scene
+    private VBox fieldPage = new VBox();    // field page container
 
 
-    private FieldControl fieldController = new FieldControl();
-    private TableView<Field> fieldTable = new TableView<Field>();
 
-    private ObservableList<Field> fieldData = fieldController.fieldList;
+    private FieldControl fieldController = new FieldControl();  // field controller
+    private TableView<Field> fieldTable = new TableView<Field>();   // field table view
+    private ObservableList<Field> fieldData = fieldController.fieldList;    // field data
 
-    private TableView<Year> yearTable = new TableView<>();
-    private ObservableList<Year> yearData = fieldController.yearList;
+    private TableView<Year> yearTable = new TableView<>();      // crop history table view
+    private ObservableList<Year> yearData = fieldController.yearList;   // crop history data
 
-    private TableView<Year> currentYearTable = new TableView<>();
+    private TableView<Year> currentYearTable = new TableView<>();   // current year table view
 
-    private ObservableList<Year> currentYearData = FXCollections.observableArrayList();
+    private ObservableList<Year> currentYearData = FXCollections.observableArrayList(); // current year data
 
 
 
 
     public FieldView(){
 
+        // field table view columns
         TableColumn<Field, String> fieldIDCol = new TableColumn<Field, String>("Field ID");
         fieldIDCol.setMinWidth(130);
         fieldIDCol.setCellValueFactory(
@@ -92,7 +90,7 @@ public class FieldView extends StackPane {
 
 
 
-
+        // add field page container and scene
         VBox addFieldBox = new VBox(15);
         Scene addFieldScene = new Scene(addFieldBox,300,250);
 
@@ -132,9 +130,27 @@ public class FieldView extends StackPane {
             stage.setScene(addFieldScene);
         });
 
-        //Harvest page
+        // submit field info
+        submitFieldInfo.setOnMouseClicked(e ->{
+            double fieldSize = -1.0;
+            try {
+                fieldSize = Double.parseDouble(fieldSizeInput.getText());
+            } catch (Exception b){
+                System.out.println("Invalid field size");
+                showErrorPopup("Invalid field Size");
+            }
+            if (fieldSize != -1.0){
+                fieldController.addField(fieldIDInput.getText(),fieldNameInput.getText(), fieldSize, fieldLocation.getText());
+                showPopup("Added Field!");
+                fieldIDInput.setText("");
+                fieldNameInput.setText("");
+                fieldSizeInput.setText("");
+                fieldLocation.setText("");
+                stage.setScene(fieldScene);
+            }
+        });
 
-
+        // Harvest page
         Label harvestlabel = new Label("Please enter harvest information in pounds");
         harvestlabel.getStyleClass().add("page-label");
         TextField harvestInput = new TextField("Enter in pounds (lb) ex: 15 000");
@@ -144,6 +160,8 @@ public class FieldView extends StackPane {
         cancelHarvest.setOnMouseClicked(event -> {
             stage.setScene(fieldScene);
         });
+        // submit harvest info
+        // lots of error checking
         submitHarvest.setOnMouseClicked(event -> {
             Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
             if (selectedData != null){
@@ -166,25 +184,7 @@ public class FieldView extends StackPane {
         harvestPage.getChildren().addAll(harvestlabel,harvestInput,buttonBox);
 
 
-        submitFieldInfo.setOnMouseClicked(e ->{
-            double fieldSize = -1.0;
-            try {
-                fieldSize = Double.parseDouble(fieldSizeInput.getText());
-            } catch (Exception b){
-                System.out.println("Invalid field size");
-                showErrorPopup("Invalid field Size");
-            }
-            if (fieldSize != -1.0){
-                fieldController.addField(fieldIDInput.getText(),fieldNameInput.getText(), fieldSize, fieldLocation.getText());
-                showPopup("Added Field!");
-                fieldIDInput.setText("");
-                fieldNameInput.setText("");
-                fieldSizeInput.setText("");
-                fieldLocation.setText("");
-                stage.setScene(fieldScene);
-            }
-        });
-
+        // edit field page container and scene
         VBox fieldEditBox = new VBox(15);
         Scene editFieldScene = new Scene(fieldEditBox,300,250);
 
@@ -224,6 +224,7 @@ public class FieldView extends StackPane {
 
         fieldEditBox.getChildren().addAll(editFieldPageTitle, editFieldIDInputLabel, idInputEdit, editFieldNameInputLabel,
                 fieldNameFEdit, editFieldSizeInputLabel, fieldSizeEdit, editFieldLocationInputLabel, locationEdit,submitAndCancelBox2);
+        // submit field edit info
         submitFieldEdit.setOnMouseClicked(e ->{
             double fieldSize = -1.0;
             try {
@@ -242,6 +243,7 @@ public class FieldView extends StackPane {
             }
         });
 
+        // open edit field page
         editField.setOnMouseClicked(e ->{
             Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
             if (selectedData != null){
@@ -264,6 +266,7 @@ public class FieldView extends StackPane {
             stage.setScene(MenuScene);
         });
 
+        // delete field function
         Button deleteField = new Button("Delete Field");
         deleteField.setOnAction(event -> {
             if (fieldTable.getSelectionModel().getSelectedItem() != null){
@@ -278,6 +281,7 @@ public class FieldView extends StackPane {
         });
 
 
+        // add crop page container and scene
         VBox addCropBox = new VBox(15);
         Scene addCropScene = new Scene(addCropBox,300,250);
 
@@ -296,7 +300,6 @@ public class FieldView extends StackPane {
         Label space6 = new Label("\t\t");
         Label space7 = new Label("\t");
         HBox groupBox1 = new HBox(cropTypeLabel, space5, cropTypeInput, space6, newCropTypeLabel, space7, newCropTypeInput);
-//        HBox groupBox2 = new HBox(newCropTypeLabel, space6, newCropTypeInput);
 
         Label cropVarietyLabel = new Label("Select Crop Variety:");
         cropVarietyLabel.getStyleClass().add("text-field-label");
@@ -334,6 +337,8 @@ public class FieldView extends StackPane {
         addCropBox.getChildren().addAll(addCropPageTitle, groupBox1, cropVarietyLabel,
                 cropVarietyInput, bushelWeightLabel, bushelWeight, seedingRateInputLabel, seedingRateInput,
                 seedingDateLabel, seedingDateInput, submitAndCancelBox3);
+        // open add crop page
+        // lots of error checking
         Button addCrop = new Button("Add Crop");
         addCrop.setOnMouseClicked(e ->{
             Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
@@ -355,6 +360,8 @@ public class FieldView extends StackPane {
 
         });
 
+        // submit crop info
+        // lots of error checking
         submitCropInfo.setOnMouseClicked(e ->{
 
             double bWeight = -1.0;
@@ -397,6 +404,8 @@ public class FieldView extends StackPane {
         });
 
 
+        // harvest function
+        // lots of error checking
         Button harvest = new Button("Harvest");
         harvest.setOnMouseClicked(event ->{
             Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
@@ -420,7 +429,7 @@ public class FieldView extends StackPane {
         });
 
 
-
+        // add chemical page and scene
         VBox addChemPage = new VBox(15);
         Scene addChemScene = new Scene(addChemPage,300,250);
 
@@ -452,6 +461,7 @@ public class FieldView extends StackPane {
         Label space4 = new Label("\t\t");
         HBox submitAndCancelBox4 = new HBox(submitChemInfo, space4, addChemCancel);
 
+        // open add chemical form
         Button sprayChemical = new Button("Add Chemical Sprayed");
         sprayChemical.setOnMouseClicked(event -> {
             Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
@@ -472,6 +482,7 @@ public class FieldView extends StackPane {
             }
         });
 
+        // submit chemical form
         submitChemInfo.setOnMouseClicked(event -> {
             double fertilizerRate = -1.0;
             try {
@@ -502,6 +513,7 @@ public class FieldView extends StackPane {
                 chemSprayedInput, chemGroupInputLabel, chemGroupInput, sprayDateLabel, sprayDate, submitAndCancelBox4);
 
 
+        // double click to open field info
         Label cropPageTitle = new Label();
         cropPageTitle.getStyleClass().add("page-label");
         fieldTable.setOnMouseClicked(event -> {
@@ -531,6 +543,7 @@ public class FieldView extends StackPane {
             stage.setScene(fieldScene);
         });
 
+        // open field details by using view field button
         Button viewField = new Button("View Field");
         viewField.setOnMouseClicked(event -> {
             Field selectedData = fieldTable.getSelectionModel().getSelectedItem();
@@ -554,6 +567,7 @@ public class FieldView extends StackPane {
         });
 
 
+        // year history table columns
         TableColumn<Year, String> fieldNameCol2 = new TableColumn<Year, String>("Field Name");
         fieldNameCol2.setPrefWidth(100);
         fieldNameCol2.setCellValueFactory(
