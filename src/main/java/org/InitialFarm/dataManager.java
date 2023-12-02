@@ -506,48 +506,6 @@ public class dataManager {
     }
 
 
-    /**
-    * Translates a dummy object into a JSON Document representation of itself.
-     * @param dum: is a dummy class created in the early stages to be able to better plan for future classes.
-     *
-     * @return : A document translation of an object of class dummy.
-    */
-    public static Document translateToDoc ( dummy dum)
-    {
-        Document newDoc = new Document();
-        int dumsInt = dum.dummyHeight;
-        String dumsName = dum.dummyName;
-        ObjectId dumsId= dum.dummyId;
-
-        newDoc.append("_id", dumsId);
-        newDoc.append("fieldName", dumsName);
-        newDoc.append("acres", dumsInt);
-        Date added = new Date();
-        newDoc.append("Date Added:",added.getTime());
-
-        return newDoc;
-    }
-
-
-    /**
-     * A function that served as a prototype for the update function
-     * @param dum: is a dummy class created in the early stages to be able to better plan for future classes.
-     */
-    public static void sync (dummy dum){
-        Document synced = translateToDoc(dum);
-        ObjectId id = synced.getObjectId("_id");
-        System.out.println("this is whats in synced: " + id);
-        System.out.println( existsID(synced.getObjectId("_id"),"FarmData", "farm_list"));
-        if (existsID(synced.getObjectId("_id"),"FarmData", "farm_list"))
-        {
-            //Document old = grabByID("FarmData", "farmer_list",  synced.getObjectId("_id"));
-            modifyID(synced, synced.getObjectId("_id") ,"FarmData", "farm_list");
-        }
-        else {
-            insertDoc(synced, "FarmData", "farm_list");
-        }
-
-    }
 
 
     /**
