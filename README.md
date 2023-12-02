@@ -69,6 +69,8 @@ Installation is done by simply opening the project in intellij from VCS, copying
 
 Launching the jar version of the build can be done by opening the target folder and launching the javafx-maven-archetypes-1.0-SNAPSHOT-shaded.jar file with jdk 21 or later.
   
+  Automated can be ran by going to UIController and uncommenting the threads in public static void main. It is a thread for test and UITest.
+  Testing code can be viewed inside the TEST file
 
 ## Usage
 Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
